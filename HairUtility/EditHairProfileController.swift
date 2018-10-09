@@ -56,6 +56,8 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
             s3UrlArray.append(contentsOf: [firstImageUrl, secondImageUrl, thirdImageUrl, fourthImageUrl])
             s3StringArray.append(contentsOf: [firstImageString, secondImageString, thirdImageString, fourthImageString])
             
+            
+            print("This is the descritrpoignsdflkgnsdfgs: \(profileDescription)")
         }
     }
     
@@ -149,6 +151,8 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
             
             imageArray = [firstImage, secondImage, thirdImage, fourthImage]
             
+            
+            
             let imagePickerController = UIImagePickerController()
             imagePickerController.delegate = self
             imagePickerController.allowsEditing = false
@@ -198,7 +202,6 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
 
         }
         
-//        Ok, the image will update ased on the index selected now. Thee problem is using the dictionary and a for loop to upload the images to specific keys. Match the indexchanged with the s3urlarray to uplaod to a certain key
 
 //        if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
 //
@@ -215,15 +218,13 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
     lazy var profileDescriptionTextView: UITextView = {
         let tv = UITextView()
         tv.isEditable = false
-        tv.text = "Add any descriptions"
         tv.textColor = UIColor.lightGray
         tv.layer.borderWidth = 0.5
         tv.layer.borderColor = UIColor.lightGray.cgColor
-        tv.layer.backgroundColor = UIColor.blue.cgColor
         tv.font = .systemFont(ofSize: 16)
         tv.delegate = self
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
-        self.view.addGestureRecognizer(tapRecognizer)
+//        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+//        self.view.addGestureRecognizer(tapRecognizer)
         
         return tv
     }()
@@ -266,6 +267,11 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
     
     @objc func editButtonTapped() {
         
+        
+        
+        
+        
+        
         print("Edit button tapped")
         editButton.preventRepeatedPresses()
         
@@ -278,11 +284,24 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
             self.profileDescriptionTextView.isUserInteractionEnabled = true
             
         } else {
-            editButton.setTitle("Edit", for: .normal)
- 
-            self.profileDescriptionTextView.isEditable = false
-            self.tagsTextView.isEditable = false
-            self.uploadImagesToS3()
+            
+        
+       
+            let noAction = UIAlertAction(title: "noAction", style: .cancel) { (action) in
+                
+            }
+            let yesAction = UIAlertAction(title: "yesAction", style: .default) { (action) in
+                self.editButton.setTitle("Edit", for: .normal)
+                
+                self.profileDescriptionTextView.isEditable = false
+                self.tagsTextView.isEditable = false
+                self.uploadImagesToS3()
+            }
+            let actions = [noAction, yesAction]
+            self.alertWithActions(message: "", title: "Are you sure you want to save? This will overwrite your images", actions: actions)
+            
+            
+
             
         }
     }

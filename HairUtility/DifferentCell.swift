@@ -35,7 +35,7 @@ class DifferentCell: UICollectionViewCell {
     lazy var hairstyleImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
-        iv.backgroundColor = .blue
+
         
         return iv
     }()

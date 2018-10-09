@@ -173,7 +173,6 @@ class CompanyProfileController: UICollectionViewController, UICollectionViewDele
             
             print(self.users)
      
-            
         }) { (failure) in
             
             self.alert(message: "There was an error saving the profile")

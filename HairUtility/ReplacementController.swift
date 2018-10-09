@@ -93,7 +93,6 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
         
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ImageCell
-        cell.backgroundColor = .blue
         cell.hairProfile = hairProfiles[indexPath.item]
         
         //        cell.hairstyleImageView.frame = cell.contentView.frame

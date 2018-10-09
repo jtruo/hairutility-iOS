@@ -189,6 +189,7 @@ class CreateCompanyController: UIViewController, UIImagePickerControllerDelegate
         guard let address = addressTextField.text else { return }
         guard let phoneNumber = phoneNumberTextField.text else { return }
         
+        
         Keychain.getAuthToken { (authToken) in
             self.authToken = authToken
         }

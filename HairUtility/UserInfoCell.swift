@@ -15,7 +15,7 @@ class UserInfoCell: UITableViewCell {
     
     lazy var firstAndLastNameLabel: UILabel = {
         let label = UILabel()
-        label.text = "First Last"
+        label.text = "This is where you can edit your profile information"
         label.font = UIFont.boldSystemFont(ofSize: 14)
         return label
     }()
@@ -23,7 +23,7 @@ class UserInfoCell: UITableViewCell {
     
     lazy var phoneNumberLabel: UILabel = {
         let label = UILabel()
-        label.text = "Phone"
+        label.text = ""
         label.font = UIFont.boldSystemFont(ofSize: 14)
         return label
     }()

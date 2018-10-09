@@ -18,44 +18,6 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
     var isStylist: Bool = false
     let defaults = UserDefaults.standard
     
-    let plusPhotoButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "photoButton").withRenderingMode(.alwaysOriginal), for: .normal)
-        button.addTarget(self, action: #selector(handlePlusPhoto), for: .touchUpInside)
-        
-        return button
-        
-        
-    }()
-    
-    @objc func handlePlusPhoto() {
-        let imagePickerController = UIImagePickerController()
-        present(imagePickerController, animated: true, completion: nil)
-        imagePickerController.delegate = self
-        imagePickerController.allowsEditing = true
-        
-    }
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        
-        
-        
-        if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
-            
-            plusPhotoButton.setImage(editedImage.withRenderingMode(.alwaysOriginal), for: .normal)
-            
-        } else if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
-            plusPhotoButton.setImage(originalImage.withRenderingMode(.alwaysOriginal), for: .normal)
-        }
-        
-        plusPhotoButton.layer.cornerRadius = plusPhotoButton.frame.width/2
-        plusPhotoButton.layer.masksToBounds = true
-        plusPhotoButton.layer.borderColor = UIColor.black.cgColor
-        plusPhotoButton.layer.borderWidth = 1
-        
-        dismiss(animated: true, completion: nil)
-    }
-    
     
     lazy var emailTextField: BottomBorderTextField = {
         let textField = BottomBorderTextField()
@@ -140,12 +102,6 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
         
         view.backgroundColor = .white
         
-        view.addSubview(plusPhotoButton)
-        
-        plusPhotoButton.anchor(top: topLayoutGuide.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 40, paddingLeft: 0, paddingBottom:0, paddingRight: 0, width: 140, height: 140)
-        
-        plusPhotoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-
         setupInputFields()
         
         
@@ -161,7 +117,7 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
         
         view.addSubview(stackView)
         
-        stackView.anchor(top: plusPhotoButton.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 40, paddingBottom: 0, paddingRight: 40, width: 0, height: 250)
+        stackView.anchor(top: topLayoutGuide.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 40, paddingBottom: 0, paddingRight: 40, width: 0, height: 250)
     }
     
     var user: User?

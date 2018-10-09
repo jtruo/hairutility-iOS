@@ -190,7 +190,6 @@ class EditCompanyController: UIViewController, UIImagePickerControllerDelegate, 
         
     }
     
-    
     func uploadImageToS3() {
         print("Uploading image #: \(index)")
         

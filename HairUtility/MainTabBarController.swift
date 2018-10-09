@@ -86,7 +86,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         let profilesNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "profile_unselected"), selectedImage: #imageLiteral(resourceName: "profile_selected"), rootViewController: ReplacementController(collectionViewLayout: UICollectionViewFlowLayout()))
         
         let createProfileNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "plus_unselected"), selectedImage: #imageLiteral(resourceName: "like_selected"))
-        createProfileNavController.view.backgroundColor = .blue
+    
        
         let companyNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "home_unselected"), selectedImage: #imageLiteral(resourceName: "home_selected"), rootViewController: CompanyProfileController(collectionViewLayout: UICollectionViewFlowLayout()))
         

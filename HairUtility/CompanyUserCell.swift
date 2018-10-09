@@ -18,7 +18,7 @@ class CompanyUserCell: UICollectionViewCell {
             guard let lastName = user.lastName else { return }
             guard let profileImageString = user.profileImageUrl else { return}
             let profileImageUrl = URL(string: profileImageString)
-            let fullName = firstName + "" + lastName
+            let fullName = firstName + " " + lastName
             self.profileImageView.kf.setImage(with: profileImageUrl)
             self.label.text = fullName
             print("Got to first name")
@@ -28,7 +28,6 @@ class CompanyUserCell: UICollectionViewCell {
     
     lazy var profileImageView: UIImageView = {
         let iv = UIImageView()
-        iv.backgroundColor = .red
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
         return iv

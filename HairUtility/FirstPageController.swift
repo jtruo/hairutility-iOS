@@ -253,7 +253,7 @@ class FirstPageController: UIViewController, UIScrollViewDelegate, UITextFieldDe
             
         }) { (err) in
             print(err)
-            self.alert(message: "", title: "\(err)")
+            self.alert(message: "", title: "Error: \(err)")
         }
         
     }

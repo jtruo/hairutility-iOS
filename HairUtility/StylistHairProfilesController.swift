@@ -41,7 +41,6 @@ class StylistHairProfilesController: UICollectionViewController, UICollectionVie
         
 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ImageCell
-        cell.backgroundColor = .blue
         cell.hairProfile = hairProfiles?[indexPath.item]
         
         //        cell.hairstyleImageView.frame = cell.contentView.frame

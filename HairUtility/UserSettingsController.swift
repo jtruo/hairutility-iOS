@@ -63,10 +63,12 @@ class UserSettingsController: UIViewController, UITableViewDelegate, UITableView
         
         case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? UserSettingsCell
+            cell?.cellTitleLabel.text = "Log out"
             return cell!
             
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? UserSettingsCell
+            cell?.cellTitleLabel.text = "App Settings"
             return cell!
             
         }

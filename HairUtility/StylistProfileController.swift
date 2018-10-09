@@ -8,6 +8,8 @@
 import UIKit
 import Alamofire
 import KeychainAccess
+import AWSS3
+import Lottie
 
 class StylistProfileController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -177,6 +179,80 @@ class StylistProfileController: UIViewController, UIImagePickerControllerDelegat
         stackView.anchor(top: plusPhotoButton.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 40, paddingBottom: 0, paddingRight: 40, width: 0, height: 250)
     }
     
+    func uploadImageToS3() {
+        print("Before image array")
+        guard let image = plusPhotoButton.currentImage else { return }
+        
+        print("Image array was passed")
+        
+        let expression = AWSS3TransferUtilityUploadExpression()
+        expression.progressBlock = {(task, progress) in
+            DispatchQueue.main.async(execute: {
+                
+                let progressFloat = CGFloat(progress.fractionCompleted)
+                
+                print(progressFloat)
+                
+//         Or just have refresh control runnign
+//                self.firstAnimationView.play(toProgress: progressFloat, withCompletion: { (finished) in
+//                    print(finished)
+//                    print("Animation is finished")
+//
+//                })
+                
+            })
+        }
+        
+        var completionHandler: AWSS3TransferUtilityUploadCompletionHandlerBlock?
+        completionHandler = { (task, error) -> Void in
+            DispatchQueue.main.async(execute: {
+                
+                print("Completion task: \(task)")
+                print("Completion error: \(String(describing: error))")
+                
+            })
+        }
+        
+        guard let snapshotImageURL = NSURL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("\(UUID().uuidString).png") else {
+            print("There was an error with snapshot image url")
+            return
+        }
+        do {
+            try UIImageJPEGRepresentation(image, 1)?.write(to: snapshotImageURL)
+        } catch let error {
+            print(error)
+        }
+        
+        let transferUtility = AWSS3TransferUtility.default()
+        
+        let userDefaults = UserDefaults.standard
+        guard let email = userDefaults.string(forKey: "email") else { return }
+        let encodedEmail = email.replacingOccurrences(of: "@", with: "%40")
+        
+        let key = "images/\(encodedEmail)/\(UUID().uuidString).png"
+        let fullS3Key = "https://s3.us-east-2.amazonaws.com/hairutilityimages/\(key)"
+        
+        self.fullS3Key = fullS3Key
+        print(fullS3Key)
+        transferUtility.uploadFile(snapshotImageURL, bucket: "hairutilityimages", key: key, contentType: "image/png",expression: expression,
+                                   completionHandler: completionHandler).continueWith(executor: AWSExecutor.immediate(), block: {
+                                    (task) -> Any? in
+                                    if let error = task.error {
+                                        print("Error: \(error.localizedDescription)")
+                                    }
+                                    
+                                    if let _ = task.result {
+                                        // Do something with uploadTask.
+                                        
+                                    }
+                                    return nil;
+                                   })
+        
+        self.updateUserProfile()
+
+    }
+    
+    var fullS3Key: String?
     var user: User?
     var authToken: String?
     var pk: String?
@@ -186,6 +262,7 @@ class StylistProfileController: UIViewController, UIImagePickerControllerDelegat
         guard let firstName = firstNameTextField.text else { return }
         guard let lastName = lastNameTextField.text else { return }
         guard let phoneNumber = phoneNumberTextField.text else { return }
+        guard let fullS3Key = self.fullS3Key else { return }
 
         Keychain.getAuthToken { (authToken) in
             self.authToken = authToken
@@ -197,10 +274,10 @@ class StylistProfileController: UIViewController, UIImagePickerControllerDelegat
         guard let pk = pk else { return }
         
         let parameters = [
-            "first_naassaasdasdme": "dfafafasf",
-//            "last_name": lastName,
-//            "phone_number": phoneNumber,
-//            "dsfad": "adfasdf"
+            "first_name": firstName,
+            "last_name": lastName,
+            "phone_number": phoneNumber,
+            "profile_image_url": fullS3Key
         ]
 //        Need to require stylists to input all their info their first time and then use the if lets to specify parameters
         let headers = [
@@ -217,8 +294,8 @@ class StylistProfileController: UIViewController, UIImagePickerControllerDelegat
             self.alert(message: "Updated your profile successfully")
         }) { (err) in
             print(err)
-            let string = err as? String
-            self.alert(message: "", title: "Error: \(String(describing: string))")
+       
+            self.alert(message: "", title: "Error: \(String(describing: err))")
         }
  
     }

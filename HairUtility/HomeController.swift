@@ -106,7 +106,6 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     }
     
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! DifferentCell
-    cell.backgroundColor = .blue
     cell.hairProfile = hairProfiles[indexPath.item]
 
     //        cell.hairstyleImageView.frame = cell.contentView.frame

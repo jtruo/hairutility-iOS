@@ -418,7 +418,7 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         self.hairLengthTag = hairLengthTag
         self.genderTag = genderTag
         self.isPubliclyDisplayable = isPubliclyDisplayable
-
+//Optional extra tags
         if extraTags.isEmpty == false {
             firstExtraTag = extraTags[safe: 0]
             secondExtraTag = extraTags[safe: 1]
