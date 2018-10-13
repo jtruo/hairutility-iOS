@@ -482,4 +482,102 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         }
     }
     
+    var documentsUrl: URL {
+        return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+    }
+    
+    let firstFileName = "savedimage1.jpg"
+    let secondFileName = "savedimage2.jpg"
+    let thirdFileName = "savedimage3.jpg"
+    let fourthFileName = "savedimage4.jpg"
+    
+    
+    func saveInDocumentsDirectory() {
+        
+        
+        
+        if firstImageView.image != nil || secondImageView.image != nil || thirdImageView.image != nil || fourthImageView.image != nil {
+            saveImages()
+        } else {
+            let alert = UIAlertController(title: "Please select four images in order to save", message: "", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (alert: UIAlertAction) in
+                self.dismiss(animated: true, completion: nil)
+            }))
+            present(alert, animated: true, completion: nil)
+            
+            
+        }
+        
+    }
+    
+    
+    
+    
+    func saveImages() {
+        
+        let documentsDirectoryURL = try! FileManager().url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+        
+        
+        
+        let fileURLOne = documentsDirectoryURL.appendingPathComponent(firstFileName)
+        let fileURLTwo = documentsDirectoryURL.appendingPathComponent(secondFileName)
+        let fileURLThree = documentsDirectoryURL.appendingPathComponent(thirdFileName)
+        let fileURLFour = documentsDirectoryURL.appendingPathComponent(fourthFileName)
+//        For index, image in array.enumerated
+        if !FileManager.default.fileExists(atPath: fileURLOne.path) {
+            do {
+                
+                try UIImageJPEGRepresentation(firstImageView.image!, 0.9)!.write(to: fileURLOne)
+                
+                print("Image 1 Added Successfully")
+            } catch {
+                print(error)
+            }
+        } else {
+            print("Image 2 Not Added")
+        }
+        
+        if !FileManager.default.fileExists(atPath: fileURLTwo.path) {
+            do {
+                
+                try UIImageJPEGRepresentation(secondImageView.image!, 0.9)!.write(to: fileURLTwo)
+                
+                print("Image 2 Added Successfully")
+            } catch {
+                print(error)
+            }
+        } else {
+            print("Image 2 Not Added")
+        }
+        
+        if !FileManager.default.fileExists(atPath: fileURLThree.path) {
+            do {
+                
+                try UIImageJPEGRepresentation(thirdImageView.image!, 0.9)!.write(to: fileURLThree)
+                
+                print("Image 3 Added Successfully")
+            } catch {
+                print(error)
+            }
+        } else {
+            print("Image 3 Not Added")
+        }
+        
+        if !FileManager.default.fileExists(atPath: fileURLFour.path) {
+            do {
+                
+                try UIImageJPEGRepresentation(fourthImageView.image!, 0.9)!.write(to: fileURLFour)
+                
+                print("Image 4 Added Successfully")
+            } catch {
+                print(error)
+            }
+        } else {
+            print("Image 4 Not Added")
+        }
+        
+        
+    }
+    
+    
 }

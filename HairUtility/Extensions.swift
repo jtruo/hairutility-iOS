@@ -392,3 +392,21 @@ extension Array where Element: Equatable {
         return false
     }
 }
+
+
+// Removes images at document directory
+
+func removeImage(itemName:String, fileExtension: String) {
+    let fileManager = FileManager.default
+    let nsDocumentDirectory = FileManager.SearchPathDirectory.documentDirectory
+    let nsUserDomainMask = FileManager.SearchPathDomainMask.userDomainMask
+    let paths = NSSearchPathForDirectoriesInDomains(nsDocumentDirectory, nsUserDomainMask, true)
+    guard let dirPath = paths.first else {
+        return
+    }
+    let filePath = "\(dirPath)/\(itemName).\(fileExtension)"
+    do {
+        try fileManager.removeItem(atPath: filePath)
+    } catch let error as NSError {
+        print(error.debugDescription)
+    }}
