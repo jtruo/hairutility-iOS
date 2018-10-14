@@ -95,7 +95,7 @@ class CustomAlert: UIView, Modal {
     
     lazy var tagsTextField: UITextField = {
         let tf = UITextField()
-        tf.placeholder = "two-layered, undercut, jennifer-lawrence"
+        tf.placeholder = "two-layered, undercut, ethnicity"
         tf.backgroundColor = UIColor(white: 0, alpha: 0.03)
         tf.borderStyle = .roundedRect
         tf.font = UIFont.systemFont(ofSize: 14)

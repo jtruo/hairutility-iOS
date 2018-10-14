@@ -8,6 +8,7 @@
 
 import UIKit
 import Kingfisher
+import Disk
 
 class ImageCell: UICollectionViewCell {
 
@@ -19,6 +20,23 @@ class ImageCell: UICollectionViewCell {
             let firstImageUrl = URL(string: firstImageString)
             hairstyleImageView.kf.setImage(with: firstImageUrl)
             hairstyleNameLabel.text = hairstyleName
+            
+        }
+    }
+    
+    var coreHairProfile: CoreHairProfile? {
+        didSet {
+            guard let coreHairProfile = coreHairProfile else { return }
+            let directory = "\(coreHairProfile.creationDate)/0.png"
+            do {
+                let retrievedImage = try Disk.retrieve(directory, from: .documents, as: [UIImage].self)
+                hairstyleImageView.image = retrievedImage[0]
+                hairstyleNameLabel.text = coreHairProfile.hairstyleName
+//                Do we need to retrieve all images?
+// DOes this even work? Maybe add images array optionallly
+            } catch let err {
+                print("Error retrieving core hair profile: \(err)")
+            }
             
         }
     }

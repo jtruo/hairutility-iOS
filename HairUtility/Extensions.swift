@@ -410,3 +410,15 @@ func removeImage(itemName:String, fileExtension: String) {
     } catch let error as NSError {
         print(error.debugDescription)
     }}
+
+//Converts date to string
+extension Date
+{
+    func convertDateToString( dateFormat format  : String ) -> String
+    {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format
+        return dateFormatter.string(from: self)
+    }
+    
+}

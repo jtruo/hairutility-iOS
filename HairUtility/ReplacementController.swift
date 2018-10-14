@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 import KeychainAccess
+import Disk
 
 class ReplacementController: UICollectionViewController, UICollectionViewDelegateFlowLayout, GetHairstyleDelegate {
     
@@ -133,6 +134,25 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
     }
     
     
+//    Retrieving hair profiles from documents/core data
+    var coreProfiles = [CoreHairProfile]()
+    
+    @objc func retrieveHairProfiles() {
+        
+        do {
+            let retrievedProfiles = try Disk.retrieve("corehairprofiles.json", from: .documents, as: [CoreHairProfile].self)
+            self.coreProfiles = retrievedProfiles
+            
+//        What if we stored the thumbnail image in a separate file on the top of the model, and then append the thumnail images to cell array. Have to figure out how to add the local cells onto the array of cells. 
+            print("These are the messages \(retrievedProfiles)")
+        } catch let err {
+            print(err)
+        }
+        
+        
+    }
+    
+//    Retrieving hair profiles form API
     var authToken: String?
     var totalCount: Int = 0
     var hairProfiles = [HairProfile]()
@@ -222,5 +242,9 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
             self.alert(message: "There was an error with saving the profile")
         }
     }
+    
+    
+    
+    
     
 }

@@ -12,7 +12,7 @@ import AWSS3
 import Alamofire
 import KeychainAccess
 import Lottie
-
+import Disk
 //TODO: Change UILabel "Step 1" to rounded button or rects
 // Add three other animation views.
 
@@ -162,6 +162,7 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
     
     @objc func cancelButtonTapped() {
         self.dismiss(animated: true, completion: nil)
+  
     }
     
     lazy var uploadPhotoButton: UIButton = {
@@ -169,6 +170,7 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         let uploadButton = UIButton(type: .system)
         uploadButton.setImage(#imageLiteral(resourceName: "right_arrow_shadow"), for: .normal)
         uploadButton.addTarget(self, action: #selector(uploadPhotoButtonTapped), for: .touchUpInside)
+
         return uploadButton
         
     }()
@@ -187,7 +189,18 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
             customAlert.delegate = self
             customAlert.show(animated: true)
         } else {
-            uploadImagesToS3()
+
+            let locallyAction = UIAlertAction(title: "Locally", style: .default) { (alert) in
+                self.storeInDocumentsDirectory()
+            }
+            
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+            let actions = [locallyAction, cancelAction]
+            
+            self.alertWithActions(message: "", title: "Are you sure you want to save?", actions: actions)
+            
+        
+        
         }
         
     }
@@ -418,7 +431,9 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         self.hairLengthTag = hairLengthTag
         self.genderTag = genderTag
         self.isPubliclyDisplayable = isPubliclyDisplayable
-//Optional extra tags
+
+        
+        //Optional extra tags
         if extraTags.isEmpty == false {
             firstExtraTag = extraTags[safe: 0]
             secondExtraTag = extraTags[safe: 1]
@@ -482,102 +497,56 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         }
     }
     
-    var documentsUrl: URL {
-        return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-    }
+
+//Storing the data works, now add an option for users to store online or locally. Or just make all non-stylists store locally which is probably better.
+  
     
-    let firstFileName = "savedimage1.jpg"
-    let secondFileName = "savedimage2.jpg"
-    let thirdFileName = "savedimage3.jpg"
-    let fourthFileName = "savedimage4.jpg"
-    
-    
-    func saveInDocumentsDirectory() {
+    @objc func storeInDocumentsDirectory() {
         
         
+        //        Store images in folder with the date and time, and then store date and time. Retrieve images with the date with the received hair profile
+        guard let hairstyleName = hairstyleNameTextField.text else { return }
+        guard let profileDescription = profileDescriptionTextView.text else { return }
+        guard let imageArray = imageArray else { return }
         
-        if firstImageView.image != nil || secondImageView.image != nil || thirdImageView.image != nil || fourthImageView.image != nil {
-            saveImages()
-        } else {
-            let alert = UIAlertController(title: "Please select four images in order to save", message: "", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (alert: UIAlertAction) in
+        let date = Date()
+        let creationDate = date.convertDateToString(dateFormat: "yyyy-MM-dd HH:mm:ss")
+        print(creationDate)
+        
+        do {
+             try Disk.save(imageArray, to: .documents, as: "\(creationDate)/")
+            
+        } catch let err {
+            print("Could not save images \(err)")
+        }
+
+        let coreHairProfile = CoreHairProfile(hairstyleName: hairstyleName , profileDescription: profileDescription, creationDate: creationDate)
+        
+        do {
+            try Disk.append(coreHairProfile, to: "corehairprofiles.json", in: .documents)
+            let okAction = UIAlertAction(title: "Ok", style: .default) { (alert) in
                 self.dismiss(animated: true, completion: nil)
-            }))
-            present(alert, animated: true, completion: nil)
-            
-            
+            }
+            self.alertWithActions(message: "", title: "The hair profile was stored successfully!", actions: [okAction])
+        } catch let err {
+            print("Could not append to hair profiles \(err)")
         }
-        
+       
     }
     
+    var coreProfiles = [CoreHairProfile]()
     
-    
-    
-    func saveImages() {
+    @objc func retrieveHairProfiles() {
         
-        let documentsDirectoryURL = try! FileManager().url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-        
-        
-        
-        let fileURLOne = documentsDirectoryURL.appendingPathComponent(firstFileName)
-        let fileURLTwo = documentsDirectoryURL.appendingPathComponent(secondFileName)
-        let fileURLThree = documentsDirectoryURL.appendingPathComponent(thirdFileName)
-        let fileURLFour = documentsDirectoryURL.appendingPathComponent(fourthFileName)
-//        For index, image in array.enumerated
-        if !FileManager.default.fileExists(atPath: fileURLOne.path) {
-            do {
-                
-                try UIImageJPEGRepresentation(firstImageView.image!, 0.9)!.write(to: fileURLOne)
-                
-                print("Image 1 Added Successfully")
-            } catch {
-                print(error)
-            }
-        } else {
-            print("Image 2 Not Added")
+        do {
+            let retrievedMessages = try Disk.retrieve("corehairprofiles.json", from: .documents, as: [CoreHairProfile].self)
+            
+            print("These are the messages \(retrievedMessages)")
+        } catch let err {
+            print(err)
         }
-        
-        if !FileManager.default.fileExists(atPath: fileURLTwo.path) {
-            do {
-                
-                try UIImageJPEGRepresentation(secondImageView.image!, 0.9)!.write(to: fileURLTwo)
-                
-                print("Image 2 Added Successfully")
-            } catch {
-                print(error)
-            }
-        } else {
-            print("Image 2 Not Added")
-        }
-        
-        if !FileManager.default.fileExists(atPath: fileURLThree.path) {
-            do {
-                
-                try UIImageJPEGRepresentation(thirdImageView.image!, 0.9)!.write(to: fileURLThree)
-                
-                print("Image 3 Added Successfully")
-            } catch {
-                print(error)
-            }
-        } else {
-            print("Image 3 Not Added")
-        }
-        
-        if !FileManager.default.fileExists(atPath: fileURLFour.path) {
-            do {
-                
-                try UIImageJPEGRepresentation(fourthImageView.image!, 0.9)!.write(to: fileURLFour)
-                
-                print("Image 4 Added Successfully")
-            } catch {
-                print(error)
-            }
-        } else {
-            print("Image 4 Not Added")
-        }
-        
+ 
         
     }
-    
-    
+
 }

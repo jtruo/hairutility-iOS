@@ -15,10 +15,9 @@ struct RawApiResponse: Decodable {
 }
 
 struct HairProfile: Decodable {
-//    Convert the struct to Result? Or a custom struct that returns the count, previous, etc, values, and then nest the hairprofiles. Pagination also works on the client levels though
-    let pk: String
-    let user: String
-    let firstName: String
+
+    let pk: String?
+    let user: String?
     let creator: String
     let hairstyleName: String
     let firstImageUrl: String
@@ -30,4 +29,11 @@ struct HairProfile: Decodable {
 
 }
 
+struct CoreHairProfile: Codable {
+
+    let hairstyleName: String
+    let profileDescription: String
+    let creationDate: String
+    
+}
 
