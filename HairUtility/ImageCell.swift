@@ -27,10 +27,10 @@ class ImageCell: UICollectionViewCell {
     var coreHairProfile: CoreHairProfile? {
         didSet {
             guard let coreHairProfile = coreHairProfile else { return }
-            let directory = "\(coreHairProfile.creationDate)/0.png"
+            let directory = "\(coreHairProfile.creationDate)"
             do {
-                let retrievedImage = try Disk.retrieve(directory, from: .documents, as: [UIImage].self)
-                hairstyleImageView.image = retrievedImage[0]
+                let retrievedImages = try Disk.retrieve(directory, from: .documents, as: [UIImage].self)
+                hairstyleImageView.image = retrievedImages[0]
                 hairstyleNameLabel.text = coreHairProfile.hairstyleName
 //                Do we need to retrieve all images?
 // DOes this even work? Maybe add images array optionallly

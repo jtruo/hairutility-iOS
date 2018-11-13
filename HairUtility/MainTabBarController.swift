@@ -33,6 +33,12 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
                 self.alertWithActions(message: "", title: "Whose phone is being used to take photos?", actions: actions)
                 
             } else {
+                
+                //                Check here if stylist has a profile, if not redirect. Please set up your personal profile before creating a hair profile.
+                //                Two ways to do this. Option 1: Ping the server \?user and see if a first name, last name are returned. Option 2: NSUserdefaults HasStylistSetUpProfile: Bool. Set default = false for very first launch, and true once successfully set up. Use option 2 because we don't want to ping the server every time someone is creating a profile.
+                
+//                The problem with option 2 is that whenever someone reinstalls the app, the variabl will be reset. So in order to fix this, have the ping that the stylist checked their profile after they PATCH and when they load that view controller.
+                
                 let hairProfileCreationController = CreateHairProfileController()
                 self.present(hairProfileCreationController, animated: true)
             }

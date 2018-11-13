@@ -9,7 +9,7 @@
 import UIKit
 import KeychainAccess
 import Alamofire
-
+//If no companyPk is found, go look up the company pk from user profile
 class CompanyProfileController: UICollectionViewController, UICollectionViewDelegateFlowLayout, CompanyHeaderDelegate {
     
     let cellId = "cellId"
@@ -43,17 +43,31 @@ class CompanyProfileController: UICollectionViewController, UICollectionViewDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-     
+
         collectionView?.backgroundColor = .white
         collectionView?.register(CompanyUserCell.self, forCellWithReuseIdentifier: cellId)
-        
         collectionView?.register(CompanyHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerId)
-        
+
         collectionView?.refreshControl = refreshControl
         
         self.navigationItem.title = "Please join a company"
         
+        
+        //        This is necessary so that any stylist that is added to a company can get the companyPk they were added to. The function makes an api call if no companyPk is stored in the keychain
+
+        let keychain = Keychain(service: "HairUtility.com")
+        keychain["companyPk"] = nil
+        Keychain.getKeychainValue(name: "companyPk") { (companyPk) in
+//            Return something when getting the pk fails.
+            if companyPk.isEmpty {
+                self.getCompanyPk()
+                print("Getting company pk")
+            } else {
+                self.companyPk = companyPk
+            }
+        }
+        
+        print("Moved to tab 4")
         getCompanyInfo()
     }
     
@@ -123,7 +137,6 @@ class CompanyProfileController: UICollectionViewController, UICollectionViewDele
         
     }
     
- 
     
     var authToken: String?
     var company: Company?
@@ -131,8 +144,48 @@ class CompanyProfileController: UICollectionViewController, UICollectionViewDele
     var users = [User]()
     
     
+//    Gets company pk from the users profile info
+    func getCompanyPk() {
+        
+        Keychain.getAuthToken { (authToken) in
+            self.authToken = authToken
+        }
+
+        guard let authToken = authToken else { return }
+
+        let headers: [String: String] = [
+            "Content-Type": "application/json",
+            "Authorization": "Token \(authToken)"
+        ]
+        
+        let appendingUrl = "api/v1/users/"
+        
+        print("The data request is \(appendingUrl)")
+        Alamofire.DataRequest.userRequest(requestType: "GET", appendingUrl: appendingUrl, headers: headers, parameters: nil, success: { (user) in
+            guard let user = user as? User else { return }
+            
+            self.companyPk = user.companyPk
+            
+            DispatchQueue.main.async {
+            
+                
+                self.collectionView?.reloadData()
+                self.refreshControl.endRefreshing()
+                
+            }
+            
+            
+            print(self.users)
+            
+        }) { (failure) in
+            
+            self.alert(message: "There was an error saving the profile")
+        }
+    }
     
-//    Retrieves company info from API using
+//    Retrieves company info from API using the companyPk stored
+//    Need to fill the bio text view and banner image -
+    
     func getCompanyInfo() {
         
         Keychain.getAuthToken { (authToken) in

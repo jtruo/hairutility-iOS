@@ -283,9 +283,7 @@ class EditCompanyController: UIViewController, UIImagePickerControllerDelegate, 
         guard let companyPk = companyPk else { return }
  
  
-        var parameters: [String: Any] = [
-            :
-        ]
+        var parameters = [String: Any]()
         
         if let stylistEmail = stylistEmail {
             parameters["users"] = [stylistEmail]

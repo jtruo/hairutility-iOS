@@ -69,6 +69,7 @@
 		6FE1799220E2926100B687A4 /* progress_bar.json in Resources */ = {isa = PBXBuildFile; fileRef = 6FE1799120E2926100B687A4 /* progress_bar.json */; };
 		6FE1799420E2A73200B687A4 /* blueprogress.json in Resources */ = {isa = PBXBuildFile; fileRef = 6FE1799320E2A73200B687A4 /* blueprogress.json */; };
 		6FFCE1B32163845C002ED530 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FFCE1B22163845C002ED530 /* Default-568h@2x.png */; };
+		6FFCE2132173CE66002ED530 /* SectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFCE2122173CE66002ED530 /* SectionHeaderView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -137,6 +138,7 @@
 		6FE1799120E2926100B687A4 /* progress_bar.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = progress_bar.json; sourceTree = "<group>"; };
 		6FE1799320E2A73200B687A4 /* blueprogress.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = blueprogress.json; sourceTree = "<group>"; };
 		6FFCE1B22163845C002ED530 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		6FFCE2122173CE66002ED530 /* SectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderView.swift; sourceTree = "<group>"; };
 		A77D17FE40FEABBF63EED833 /* Pods_HairUtility.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HairUtility.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -342,6 +344,7 @@
 				6F782CAE21335B3100359DE2 /* ReplacementController.swift */,
 				6FA9E62A20DC01AB00292566 /* PersonalProfileCell.swift */,
 				6F6137BD20F43407009A0E60 /* GetHairstyleView.swift */,
+				6FFCE2122173CE66002ED530 /* SectionHeaderView.swift */,
 			);
 			name = HairProfiles;
 			sourceTree = "<group>";
@@ -540,6 +543,7 @@
 				6F6B7F4E20E6C75F00EDEDE5 /* EditHairProfileController.swift in Sources */,
 				6F6137BE20F43407009A0E60 /* GetHairstyleView.swift in Sources */,
 				6F6B7F5420EC575200EDEDE5 /* Modal.swift in Sources */,
+				6FFCE2132173CE66002ED530 /* SectionHeaderView.swift in Sources */,
 				6F782CB32138746800359DE2 /* DifferentCell.swift in Sources */,
 				6FA9E62D20DC39C000292566 /* CreateHairProfileController.swift in Sources */,
 				6F46D67220D86CA40013E08B /* UserSettingsController.swift in Sources */,

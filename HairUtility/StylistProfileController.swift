@@ -10,9 +10,23 @@ import Alamofire
 import KeychainAccess
 import AWSS3
 import Lottie
+import Kingfisher
 
 class StylistProfileController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    
+    var user: User? {
+        didSet {
+            guard let user = user else { return }
+            
+            firstNameTextField.text = user.firstName
+            lastNameTextField.text = user.lastName
+            guard let profileImageString = user.profileImageUrl else { return }
+            guard let profileImageUrl = URL(string: profileImageString) else { return }
+            
+            plusPhotoButton.kf.setImage(with: profileImageUrl, for: .normal)
+        }
+    }
     
     let plusPhotoButton: UIButton = {
         let button = UIButton(type: .system)
@@ -53,47 +67,26 @@ class StylistProfileController: UIViewController, UIImagePickerControllerDelegat
     }
     
     
-    let firstNameTextField: UITextField = {
-        let tf = UITextField()
-        tf.placeholder = "First Name"
-        tf.backgroundColor = UIColor(white: 0, alpha: 0.03)
-        tf.borderStyle = .roundedRect
-        tf.font = UIFont.systemFont(ofSize: 14)
-        tf.autocorrectionType = .no
-        tf.autocapitalizationType = .none
-        tf.spellCheckingType = .no
-        tf.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
-        return tf
-        
+    lazy var firstNameTextField: BottomBorderTextField = {
+        let textField = BottomBorderTextField()
+        textField.placeholder = "First Name"
+        textField.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
+        return textField
     }()
     
-    let lastNameTextField: UITextField = {
-        let tf = UITextField()
-        tf.placeholder = "Last Name"
-        tf.backgroundColor = UIColor(white: 0, alpha: 0.03)
-        tf.borderStyle = .roundedRect
-        tf.font = UIFont.systemFont(ofSize: 14)
-        tf.autocorrectionType = .no
-        tf.autocapitalizationType = .none
-        tf.spellCheckingType = .no
-        tf.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
-        return tf
-        
+    lazy var lastNameTextField: BottomBorderTextField = {
+        let textField = BottomBorderTextField()
+        textField.placeholder = "Second Name"
+        textField.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
+        return textField
     }()
     
-    var phoneNumberTextField: UITextField = {
-        let tf = UITextField()
-        tf.placeholder = "Phone number"
-        tf.backgroundColor = UIColor(white: 0, alpha: 0.03)
-        tf.borderStyle = .roundedRect
-        tf.font = UIFont.systemFont(ofSize: 14)
-        tf.autocorrectionType = .no
-        tf.autocapitalizationType = .none
-        tf.spellCheckingType = .no
+    lazy var phoneNumberTextField: BottomBorderTextField = {
+        let textField = BottomBorderTextField()
+        textField.placeholder = "Phone Number"
+        textField.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
 //        tf.keyboardType = .numberPad
-        tf.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
-        return tf
-        
+        return textField
     }()
     
     @objc func handleTextInputChange() {
@@ -253,7 +246,7 @@ class StylistProfileController: UIViewController, UIImagePickerControllerDelegat
     }
     
     var fullS3Key: String?
-    var user: User?
+
     var authToken: String?
     var pk: String?
     

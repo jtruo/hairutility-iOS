@@ -268,10 +268,12 @@ extension Keychain {
             result = try self.keychain.get(name)
         } catch let error {
             print("Error: \(error)")
+   
         }
         
         if result?.isEmpty ?? true {
             print("PK is empty")
+//            Return signal the error
         } else {
             completion(result!)
         }

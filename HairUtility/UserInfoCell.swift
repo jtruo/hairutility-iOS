@@ -50,6 +50,7 @@ class UserInfoCell: UITableViewCell {
     var pk: String?
     
     fileprivate func getUserInfo() {
+//        Option click
         
         
 //        Keychain.getAuthToken { (authToken) in

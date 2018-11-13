@@ -12,9 +12,12 @@ import KeychainAccess
 import Disk
 
 class ReplacementController: UICollectionViewController, UICollectionViewDelegateFlowLayout, GetHairstyleDelegate {
-    
+//    We need some way to check if the 
     
     private let cellId = "cellId"
+    private let sectionHeaderId = "sectionHeaderId"
+    
+    let sections = ["Your Profiles", "Downloaded Profiles"]
     var isStylist: Bool?
     
     
@@ -32,11 +35,11 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
         
         let button = UIButton(type: .system)
         button.setImage(#imageLiteral(resourceName: "save_shadow"), for: .normal)
-        button.addTarget(self, action: #selector(addProfileButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(createProfileButtonTapped), for: .touchUpInside)
         return button
     }()
     
-    @objc func addProfileButtonTapped() {
+    @objc func createProfileButtonTapped() {
         
         if isStylist == false {
             
@@ -76,40 +79,51 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
         self.isStylist = UserDefaults.standard.bool(forKey: "isStylist")
         
         collectionView?.register(ImageCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView?.register(SectionHeaderView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: sectionHeaderId)
         collectionView?.backgroundColor = .white
         collectionView?.refreshControl = self.refreshControl
         
         collectionView?.anchor(top: topLayoutGuide.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 8, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         
-        
+
         title = "Profiles"
         view.backgroundColor = .white
+        
+        retrieveHairProfiles()
+        getUserHairProfiles()
 
         
     }
     
-
+//    UICollectionView Cells
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
+        if indexPath.section == 0 {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ImageCell
+            cell.coreHairProfile = coreProfiles[indexPath.item]
+            return cell
+        } else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ImageCell
+            cell.hairProfile = hairProfiles[indexPath.item]
+            return cell
+        }
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! ImageCell
-        cell.hairProfile = hairProfiles[indexPath.item]
-        
-        //        cell.hairstyleImageView.frame = cell.contentView.frame
-        
-        return cell
     }
     
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return hairProfiles.count
-    }
-    
+
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("Selected")
-        let editHairProfileController = EditHairProfileController()
-        editHairProfileController.hairProfile = hairProfiles[indexPath.item]
-        self.navigationController?.pushViewController(editHairProfileController, animated: true)
+        if indexPath.section == 0 {
+            let editHairProfileController = EditHairProfileController()
+            editHairProfileController.coreHairProfile = coreProfiles[indexPath.item]
+            self.navigationController?.pushViewController(editHairProfileController, animated: true)
+        } else {
+            let editHairProfileController = EditHairProfileController()
+            editHairProfileController.hairProfile = hairProfiles[indexPath.item]
+            self.navigationController?.pushViewController(editHairProfileController, animated: true)
+        }
+
     }
     
     
@@ -127,7 +141,40 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
         return CGSize(width: width, height: width)
     }
     
+    
+//    UICollectionView Sections
 
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        if section == 0 {
+            return CGSize(width: collectionView.frame.size.width, height: 80)
+        } else {
+            return CGSize(width: collectionView.frame.size.width, height: 80)
+        }
+    }
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        let sectionHeaderView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: sectionHeaderId, for: indexPath) as! SectionHeaderView
+        let section = self.sections[indexPath.section]
+//        sectionHeaderView.backgroundColor = .blue
+        sectionHeaderView.sectionLabel.text = section
+            return sectionHeaderView
+        
+    }
+    
+    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 2
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if section == 0 {
+            return coreProfiles.count
+      
+        }
+        
+        return hairProfiles.count
+    }
+    
+    
     func downloadButtonTapped(appendingUrl: String) {
         self.appendingUrl = appendingUrl
         getUserHairProfiles()
@@ -243,8 +290,5 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
         }
     }
     
-    
-    
-    
-    
+
 }

@@ -14,6 +14,7 @@ import Kingfisher
 import Alamofire
 import Lottie
 import Lightbox
+import Disk
 
 class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, UICollectionViewDelegate, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
@@ -56,11 +57,32 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
             s3UrlArray.append(contentsOf: [firstImageUrl, secondImageUrl, thirdImageUrl, fourthImageUrl])
             s3StringArray.append(contentsOf: [firstImageString, secondImageString, thirdImageString, fourthImageString])
             
-            
             print("This is the descritrpoignsdflkgnsdfgs: \(profileDescription)")
         }
     }
     
+    var coreHairProfile: CoreHairProfile? {
+        didSet {
+            guard let coreHairProfile = coreHairProfile else { return }
+            let directory = "\(coreHairProfile.creationDate)"
+            do {
+                let retrievedImages = try Disk.retrieve(directory, from: .documents, as: [UIImage].self)
+                firstImageView.image = retrievedImages[0]
+                secondImageView.image = retrievedImages[1]
+                thirdImageView.image = retrievedImages[2]
+                fourthImageView.image = retrievedImages[3]
+                profileDescriptionTextView.text = coreHairProfile.profileDescription
+              
+                self.navigationItem.title = coreHairProfile.hairstyleName
+                
+                //                Do we need to retrieve all images?
+                // DOes this even work? Maybe add images array optionallly
+            } catch let err {
+                print("Error retrieving core hair profile: \(err)")
+            }
+            
+        }
+    }
     
     
     let keychain = Keychain(service: "com.HairLinkCustom.HairLink")
@@ -134,7 +156,7 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
     }()
     
     @objc func imageTapped(sender: UITapGestureRecognizer) {
-//        Index needs to be scope wide
+
         
         guard let index = sender.view?.tag else { return }
         guard let firstImage = firstImageView.image else { return }
@@ -185,8 +207,6 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         
         print("This is the changed image \(changedImageArray)")
         
-    
-//         Should only the owner be able to edit? Or should people save the profile into their own aws bucket
         
         switch indexChanged {
         case 0:
@@ -202,15 +222,6 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
 
         }
         
-
-//        if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
-//
-//            plusPhotoButton.setImage(editedImage.withRenderingMode(.alwaysOriginal), for: .normal)
-//
-//        } else if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
-//            plusPhotoButton.setImage(originalImage.withRenderingMode(.alwaysOriginal), for: .normal)
-//        }
-//
         dismiss(animated: true, completion: nil)
     }
     
@@ -267,41 +278,60 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
     
     @objc func editButtonTapped() {
         
-        
-        
-        
-        
-        
         print("Edit button tapped")
         editButton.preventRepeatedPresses()
         
         if editButton.currentTitle == "Edit" {
             editButton.setTitle("Save", for: .normal)
-        
-
             self.profileDescriptionTextView.isEditable = true
             self.tagsTextView.isEditable = true
             self.profileDescriptionTextView.isUserInteractionEnabled = true
             
         } else {
             
-        
-       
-            let noAction = UIAlertAction(title: "noAction", style: .cancel) { (action) in
+            if let coreHairProfile = self.coreHairProfile {
+                
+                let noAction = UIAlertAction(title: "No", style: .cancel) { (action) in
+                    
+                }
+                let yesAction = UIAlertAction(title: "Yes", style: .default) { (action) in
+                    self.editButton.setTitle("Edit", for: .normal)
+                    
+                    self.profileDescriptionTextView.isEditable = false
+                    self.tagsTextView.isEditable = false
+            
+                    for (index, image) in self.changedImageArray {
+                        do {
+                            try Disk.save(image, to: .documents, as: "\(coreHairProfile.creationDate)/\(index).png")
+                        } catch let err {
+                            print("This is an error with the disk \(err)")
+                        }
+    
+                    }
+            
+                
+                }
+                let actions = [noAction, yesAction]
+                self.alertWithActions(message: "", title: "Are you sure you want to save? This will overwrite your images", actions: actions)
+                
+             
+            } else {
+                let noAction = UIAlertAction(title: "No", style: .cancel) { (action) in
+                    
+                }
+                let yesAction = UIAlertAction(title: "Yes", style: .default) { (action) in
+                    self.editButton.setTitle("Edit", for: .normal)
+                    
+                    self.profileDescriptionTextView.isEditable = false
+                    self.tagsTextView.isEditable = false
+                    self.uploadImagesToS3()
+                }
+                let actions = [noAction, yesAction]
+                self.alertWithActions(message: "", title: "Are you sure you want to save? This will overwrite your images", actions: actions)
+                
                 
             }
-            let yesAction = UIAlertAction(title: "yesAction", style: .default) { (action) in
-                self.editButton.setTitle("Edit", for: .normal)
-                
-                self.profileDescriptionTextView.isEditable = false
-                self.tagsTextView.isEditable = false
-                self.uploadImagesToS3()
-            }
-            let actions = [noAction, yesAction]
-            self.alertWithActions(message: "", title: "Are you sure you want to save? This will overwrite your images", actions: actions)
-            
-            
-
+    
             
         }
     }
@@ -335,8 +365,7 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.title = "Hairstyle"
-        
+       
         let rightBarButton = UIBarButtonItem(customView: editButton)
         self.navigationItem.rightBarButtonItem = rightBarButton
         
