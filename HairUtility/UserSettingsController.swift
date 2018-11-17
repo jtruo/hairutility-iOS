@@ -29,7 +29,7 @@ class UserSettingsController: UIViewController, UITableViewDelegate, UITableView
             guard let profileImageString = user.profileImageUrl else { return }
             guard let profileImageUrl = URL(string: profileImageString) else { return }
             
-            plusPhotoButton.kf.setImage(with: profileImageUrl, for: .normal)
+//            .kf.setImage(with: profileImageUrl, for: .normal)
         }
     }
     
@@ -69,8 +69,17 @@ class UserSettingsController: UIViewController, UITableViewDelegate, UITableView
             let cell = tableView.dequeueReusableCell(withIdentifier: infoCellId, for: indexPath) as? UserInfoCell
 //             Wait for users info to load. If it fails, then put Try refreshing
             if let user = self.user {
-                cell?.firstAndLastNameLabel.text = user.firstName + "" + user.lastName
+                
+        
+                cell?.firstAndLastNameLabel.text = user.firstName
                 cell?.phoneNumberLabel.text = user.phoneNumber
+                
+                DispatchQueue.main.async {
+                    
+                    self.tableView.reloadData()
+                    self.refreshControl.endRefreshing()
+                    
+                }
                 
             }
             
