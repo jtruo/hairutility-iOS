@@ -20,16 +20,22 @@ class UserSettingsController: UIViewController, UITableViewDelegate, UITableView
     private let infoCellId = "infoCellId"
     private let companyCellId = "companyCellId"
 
+    var profileImageUrl: URL?
     
     var user: User? {
         didSet {
             guard let user = user else { return }
             
-            
+//            Reloads user info cell when data is updated
             guard let profileImageString = user.profileImageUrl else { return }
             guard let profileImageUrl = URL(string: profileImageString) else { return }
+            self.profileImageUrl = profileImageUrl
             
-//            .kf.setImage(with: profileImageUrl, for: .normal)
+        
+            let indexPath = IndexPath(item: 0, section: 0)
+            tableView.reloadRows(at: [indexPath], with: .fade)
+            
+            
         }
     }
     
@@ -73,6 +79,7 @@ class UserSettingsController: UIViewController, UITableViewDelegate, UITableView
         
                 cell?.firstAndLastNameLabel.text = user.firstName
                 cell?.phoneNumberLabel.text = user.phoneNumber
+                cell?.profileImageView.kf.setImage(with: profileImageUrl)
                 
                 DispatchQueue.main.async {
                     

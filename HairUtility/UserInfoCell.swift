@@ -28,6 +28,13 @@ class UserInfoCell: UITableViewCell {
         return label
     }()
     
+    lazy var profileImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFill
+        iv.clipsToBounds = true
+        return iv
+    }()
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.backgroundColor = .white
@@ -42,6 +49,13 @@ class UserInfoCell: UITableViewCell {
         stackView.spacing = 10
         stackView.distribution = .fillEqually
         self.addSubview(stackView)
+    
+        self.addSubview(profileImageView)
+        
+        profileImageView.layer.cornerRadius = 80 / 2
+        profileImageView.clipsToBounds = true
+        profileImageView.anchor(top: contentView.topAnchor, left: nil, bottom: nil, right: contentView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 4, width: 80, height: 80)
+//        Anchor this to something
         stackView.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor, right: contentView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 50)
         
     }
