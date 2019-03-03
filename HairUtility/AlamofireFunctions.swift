@@ -14,12 +14,18 @@ import Alamofire
 extension DataRequest {
     //    When extra headers is nil. All HTTP header fields become nil. To reduce code, only set the Token header as a parameter. Or code to headers
     // Change base url from http to https
+//    Need a notificatio nwhen failed or reutrned nothing
     
-    static let baseUrl = "https://hairutility-qa.herokuapp.com/"
     
+    //    The problem with posting to the api is that we need to send an authorization header with base credientials. Authorization: Token sfdsfsf, Base64 fdsfaf=
+    
+//    Public or private var that changes where the bucket/folder is stored
+    static let baseUrl = "https://www.hairutility.com/"
+//    Remove inout auth after beat
     static func userRequest(requestType: String, appendingUrl: String, headers: [String: String]?, parameters: [String: Any]?, success:@escaping (Any?) -> Void, failure:@escaping (String) -> Void){
         
         print(baseUrl)
+        
         
         
         let encodedUrl = appendingUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
@@ -137,6 +143,3 @@ extension DataRequest {
         
     }
     
-
-
-

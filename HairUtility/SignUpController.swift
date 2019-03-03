@@ -14,7 +14,7 @@ import KeychainAccess
 class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     
-    let keychain = Keychain(service: "com.HairLinkCustom.HairLink")
+
     var isStylist: Bool = false
     let defaults = UserDefaults.standard
     
@@ -147,8 +147,10 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
             if isActive == true {
                 
                 do {
-                    try self.keychain.set(authToken, key: "authToken")
-                    try self.keychain.set(pk, key: "pk")
+                    
+                    let keychain = Keychain(service: "com.HairUtility")
+                    try keychain.set(authToken, key: "authToken")
+                    try keychain.set(pk, key: "pk")
                     let defaults = UserDefaults.standard
                     defaults.set(isStylist, forKey: "isStylist")
                     defaults.set(isActive, forKey: "isActive")

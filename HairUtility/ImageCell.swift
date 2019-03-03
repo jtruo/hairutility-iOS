@@ -15,11 +15,13 @@ class ImageCell: UICollectionViewCell {
     
     var hairProfile: HairProfile? {
         didSet {
-            guard let firstImageString = hairProfile?.firstImageUrl else { return }
-            guard let hairstyleName = hairProfile?.hairstyleName else { return }
-            let firstImageUrl = URL(string: firstImageString)
-            hairstyleImageView.kf.setImage(with: firstImageUrl)
-            hairstyleNameLabel.text = hairstyleName
+            
+            guard let hairProfile = hairProfile  else { return }
+            let thumbnailUrl = prefixAndConvertToThumbnailS3Url(suffix: hairProfile.thumbnailKey)
+            
+            hairstyleImageView.kf.setImage(with: thumbnailUrl)
+            hairstyleNameLabel.text = hairProfile.hairstyleName
+
             
         }
     }

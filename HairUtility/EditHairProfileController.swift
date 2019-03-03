@@ -28,20 +28,21 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
             
             guard let hairProfile = hairProfile else { return }
             
-            let firstImageString = hairProfile.firstImageUrl
-            let secondImageString = hairProfile.secondImageUrl
-            let thirdImageString = hairProfile.thirdImageUrl
-            let fourthImageString = hairProfile.fourthImageUrl
+            let firstImageKey = hairProfile.firstImageKey
+            let secondImageKey = hairProfile.secondImageKey
+            let thirdImageKey = hairProfile.thirdImageKey
+            let fourthImageKey = hairProfile.fourthImageKey
             let hairstyleName = hairProfile.hairstyleName
             let profileDescription = hairProfile.profileDescription
             let creatorName = hairProfile.creator
             let tags = hairProfile.tags.joined(separator: ", ")
   
             
-            guard let firstImageUrl = URL(string: firstImageString) else { return }
-            guard let secondImageUrl = URL(string: secondImageString) else { return }
-            guard let thirdImageUrl = URL(string: thirdImageString) else { return }
-            guard let fourthImageUrl = URL(string: fourthImageString) else { return }
+            let firstImageUrl = prefixAndConvertToImageS3Url(suffix: firstImageKey)
+            let secondImageUrl = prefixAndConvertToImageS3Url(suffix: secondImageKey)
+            let thirdImageUrl = prefixAndConvertToImageS3Url(suffix: thirdImageKey)
+            let fourthImageUrl = prefixAndConvertToImageS3Url(suffix: fourthImageKey)
+            
         
             firstImageView.kf.setImage(with: firstImageUrl)
             secondImageView.kf.setImage(with: secondImageUrl)
@@ -55,7 +56,7 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
             self.navigationItem.title = hairstyleName
     
             s3UrlArray.append(contentsOf: [firstImageUrl, secondImageUrl, thirdImageUrl, fourthImageUrl])
-            s3StringArray.append(contentsOf: [firstImageString, secondImageString, thirdImageString, fourthImageString])
+            s3StringArray.append(contentsOf: [firstImageKey, secondImageKey, thirdImageKey, fourthImageKey])
             
             print("This is the descritrpoignsdflkgnsdfgs: \(profileDescription)")
         }
@@ -85,8 +86,7 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
     }
     
     
-    let keychain = Keychain(service: "com.HairLinkCustom.HairLink")
-    
+
     var documentsUrl: URL {
         return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
     }
@@ -169,7 +169,6 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         
         switch editButton.titleLabel?.text {
         case "Save":
-//            Patch the new url onto their own profile. Find a way to clean up oldi mages or just leave them.
             
             imageArray = [firstImage, secondImage, thirdImage, fourthImage]
             
@@ -473,22 +472,14 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
                 print(error)
             }
             
-         
-            
-            let userDefaults = UserDefaults.standard
-            guard let email = userDefaults.string(forKey: "email") else { return }
-            
-//            let encodedEmail = email.replacingOccurrences(of: "@", with: "%40")
-//            let key = "images/\(encodedEmail)/\(String(s3StringArray[index].suffix(40)))"
-            
-            let key = "images/\(email)/\(UUID().uuidString).png"
+            let key = "images/\(UUID().uuidString).png"
             let fullS3Key = "https://s3.us-east-2.amazonaws.com/hairutilityimages/\(key)"
       
             
             print(fullS3Key)
             print(s3UrlArray.count)
     
-            updateUserProfile(newS3Url: fullS3Key)
+            updateUserProfile(newS3Key: key)
             
             let transferUtility = AWSS3TransferUtility.default()
 
@@ -515,20 +506,16 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         }
     }
 
-    var authToken: String?
+
     var profilePk: String?
     var parameters: [String: Any] = [
         :
     ]
     
-    func updateUserProfile(newS3Url: String?) {
+    func updateUserProfile(newS3Key: String?) {
 
         
-        Keychain.getAuthToken { (authToken) in
-            self.authToken = authToken
-        }
-
-        guard let authToken = authToken else { return }
+        let authToken = KeychainKeys.authToken
         guard let profilePk = profilePk else { return }
         
 
@@ -538,16 +525,16 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         
         guard let indexChanged = currentIndex else { return }
         
-        if let newS3Url = newS3Url {
+        if let newS3Key = newS3Key {
             switch indexChanged {
             case 0:
-                parameters["first_image_url"] = newS3Url
+                parameters["first_image_key"] = newS3Key
             case 1:
-                parameters["second_image_url"] = newS3Url
+                parameters["second_image_key"] = newS3Key
             case 2:
-                parameters["third_image_url"] = newS3Url
+                parameters["third_image_key"] = newS3Key
             case 3:
-                parameters["fourth_image_url"] = newS3Url
+                parameters["fourth_image_key"] = newS3Key
             default:
                 break
             }

@@ -20,10 +20,11 @@ struct HairProfile: Decodable {
     let user: String?
     let creator: String
     let hairstyleName: String
-    let firstImageUrl: String
-    let secondImageUrl: String
-    let thirdImageUrl: String
-    let fourthImageUrl: String
+    let thumbnailKey: String
+    let firstImageKey: String
+    let secondImageKey: String
+    let thirdImageKey: String
+    let fourthImageKey: String
     let profileDescription: String
     let tags: [String]
 

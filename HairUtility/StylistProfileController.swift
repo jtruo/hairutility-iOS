@@ -248,7 +248,7 @@ class StylistProfileController: UIViewController, UIImagePickerControllerDelegat
     var fullS3Key: String?
 
     var authToken: String?
-    var pk: String?
+  
     
     fileprivate func updateUserProfile() {
         
@@ -257,15 +257,9 @@ class StylistProfileController: UIViewController, UIImagePickerControllerDelegat
         guard let phoneNumber = phoneNumberTextField.text else { return }
         guard let fullS3Key = self.fullS3Key else { return }
 
-        Keychain.getAuthToken { (authToken) in
-            self.authToken = authToken
-        }
-        Keychain.getPk { (pk) in
-            self.pk = pk
-        }
-        guard let authToken = authToken else { return }
-        guard let pk = pk else { return }
-        
+        let authToken = KeychainKeys.authToken
+        let userPk = KeychainKeys.userPk
+
         let parameters = [
             "first_name": firstName,
             "last_name": lastName,
@@ -278,7 +272,7 @@ class StylistProfileController: UIViewController, UIImagePickerControllerDelegat
             "Authorization": "Token \(authToken)"
         ]
    
-        Alamofire.DataRequest.userRequest(requestType: "PATCH", appendingUrl: "api/v1/users/\(pk)/", headers: headers, parameters: parameters, success: { (user) in
+        Alamofire.DataRequest.userRequest(requestType: "PATCH", appendingUrl: "api/v1/users/\(userPk)/", headers: headers, parameters: parameters, success: { (user) in
 
             guard let user = user as? User else { return }
             self.firstNameTextField.text = user.firstName

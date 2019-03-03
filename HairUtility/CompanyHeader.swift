@@ -17,8 +17,6 @@ protocol CompanyHeaderDelegate {
 
 }
 
-
-
 class CompanyHeader: UICollectionViewCell, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     var delegate: CompanyHeaderDelegate?

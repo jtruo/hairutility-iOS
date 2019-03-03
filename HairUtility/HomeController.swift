@@ -72,13 +72,15 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     }
     
     
-    func searchButtonTapped(tags: [String]) {
+    func searchButtonTapped(gender: String, length: String, tags: [String]) {
         
 
         let tagQueries = tags
-        searchBar.text = tags[1]
+        self.gender = gender
+        self.length = length
         
         let formattedQuery = tagQueries.joined(separator: ",")
+        searchBar.text = formattedQuery
         
         self.formattedQuery = formattedQuery
         print(formattedQuery)
@@ -147,23 +149,33 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     var isFinishedPaging = false
     var totalCount: Int = 0
     var formattedQuery = String()
-    
+    var gender = String()
+    var length = String()
 //    icontains checks for men or women all of the time, so it just returns. Have icontains match two tags at once
     
     fileprivate func getDisplayedHairProfiles() {
         
-        Keychain.getAuthToken { (authToken) in
-            self.authToken = authToken
-        }
+        let authToken = KeychainKeys.authToken
         
-        guard let authToken = authToken else { return }
-    
         let headers: [String: String] = [
             "Content-Type": "application/json",
             "Authorization": "Token \(authToken)"
         ]
+//        Search query is basaed on the url
+//         Need to update hair profile creation screen
+//        Right now, we need to make a hair profile with the gender and length tag to test if it works
+//     Chnage filtering to   Icontains 2-3 letters of first words
         
-        let appendingUrl = "api/v1/hairprofiles/?is_approved=True&tags=\(formattedQuery)&offset=\(offset)"
+        
+//        Needs to select length
+//        Do we want to make short, medium, and long innate?
+//        Some people might not care, but it helps with filtering.
+        //        Option 1: Make gender and length innate fields
+        //        Option 2: Make Gender innate, but then have short, medium, and long in tags.
+        //        Option 3: Chain filters
+        
+//        May need tags to be an arrayfield instead if postgres
+        let appendingUrl = "api/v1/hairprofiles/?is_approved=True&gender=\(gender)&length=\(length)&tags=\(formattedQuery)&offset=\(offset)"
         
         Alamofire.DataRequest.userRequest(requestType: "GET", appendingUrl: appendingUrl, headers: headers, parameters: nil, success: { (apiResult) in
             guard let apiResult = apiResult as? RawApiResponse else { return }
@@ -185,6 +197,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         }) { (Error) in
             print(Error)
             self.alert(message: "Must be logged in to retrieve hair profiles")
+            self.refreshControl.endRefreshing()
         }
     }
 //Terminating probably because returns 0. Don't append if nothing

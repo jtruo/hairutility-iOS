@@ -16,8 +16,7 @@ import AWSS3
 
 class StylistHairProfilesController: UICollectionViewController, UICollectionViewDelegateFlowLayout  {
     
-    
-    let keychain = Keychain(service: "com.HairLinkCustom.HairLink")
+
     
     let cellId = "cellId"
     

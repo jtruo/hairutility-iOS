@@ -190,15 +190,10 @@ class CreateCompanyController: UIViewController, UIImagePickerControllerDelegate
         guard let phoneNumber = phoneNumberTextField.text else { return }
         
         
-        Keychain.getAuthToken { (authToken) in
-            self.authToken = authToken
-        }
-        Keychain.getPk { (pk) in
-            self.pk = pk
-        }
-        guard let authToken = authToken else { return }
-        guard let pk = pk else { return }
-        
+        let authToken = KeychainKeys.authToken
+
+
+
         let parameters = [
             "company_name": companyName,
             "address": address,
@@ -214,7 +209,7 @@ class CreateCompanyController: UIViewController, UIImagePickerControllerDelegate
 
             self.alert(message: "Created your company successfully")
         }) { (err) in
-            let string = err as? String
+            let string = err 
             self.alert(message: "", title: "Error: \(String(describing: string))")
         }
         

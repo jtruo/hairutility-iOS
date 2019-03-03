@@ -22,37 +22,28 @@ class DisplayHairProfileController: UIViewController, UIGestureRecognizerDelegat
             
             guard let hairProfile = hairProfile else { return }
             
-            let firstImageString = hairProfile.firstImageUrl
-            let secondImageString = hairProfile.secondImageUrl
-            let thirdImageString = hairProfile.thirdImageUrl
-            let fourthImageString = hairProfile.fourthImageUrl
-            let hairstyleName = hairProfile.hairstyleName
-            let profileDescription = hairProfile.profileDescription
-            let creatorName = hairProfile.creator
-            let tags = hairProfile.tags.joined(separator: ", ")
-     
-            
-            let firstImageUrl = URL(string: firstImageString)
-            let secondImageUrl = URL(string: secondImageString)
-            let thirdImageUrl = URL(string: thirdImageString)
-            let fourthImageUrl = URL(string: fourthImageString)
-        
+            let firstImageUrl = prefixAndConvertToImageS3Url(suffix: hairProfile.firstImageKey)
+            let secondImageUrl = prefixAndConvertToImageS3Url(suffix: hairProfile.secondImageKey)
+            let thirdImageUrl = prefixAndConvertToImageS3Url(suffix: hairProfile.thirdImageKey)
+            let fourthImageUrl = prefixAndConvertToImageS3Url(suffix: hairProfile.fourthImageKey)
             
             firstImageView.kf.setImage(with: firstImageUrl)
             secondImageView.kf.setImage(with: secondImageUrl)
             thirdImageView.kf.setImage(with: thirdImageUrl)
             fourthImageView.kf.setImage(with: fourthImageUrl)
             
-            profileDescriptionTextView.text = profileDescription
-            self.creatorTextView.text = creatorTextView.text + creatorName
+            profileDescriptionTextView.text = hairProfile.profileDescription
+            self.creatorTextView.text = creatorTextView.text + hairProfile.creator
+            
+            let tags = hairProfile.tags.joined(separator: ", ")
             self.tagsTextView.text = tagsTextView.text + tags
             
-            self.navigationItem.title = hairstyleName
+            self.navigationItem.title = hairProfile.hairstyleName
         }
     }
     
     
-    let keychain = Keychain(service: "com.HairLinkCustom.HairLink")
+
     
     
     lazy var firstImageView: UIImageView = {
@@ -192,8 +183,6 @@ class DisplayHairProfileController: UIViewController, UIGestureRecognizerDelegat
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.title = "Hairstyle"
-        
         let rightBarButton = UIBarButtonItem(customView: downloadProfileButton)
         self.navigationItem.rightBarButtonItem = rightBarButton
       
@@ -242,10 +231,8 @@ class DisplayHairProfileController: UIViewController, UIGestureRecognizerDelegat
     
     fileprivate func saveHairProfile() {
         print("Posting hair profile")
-        Keychain.getAuthToken { (authToken) in
-            self.authToken = authToken
-        }
-        guard let authToken = authToken else { return }
+        
+        let authToken = KeychainKeys.authToken
         
         let headers = [
             "Content-Type": "application/json",
@@ -260,10 +247,11 @@ class DisplayHairProfileController: UIViewController, UIGestureRecognizerDelegat
         let parameters: [String: String] = [
             "creator": (self.hairProfile?.creator)!,
             "hairstyle_name": hairstyleName,
-            "first_image_url": (self.hairProfile?.firstImageUrl)!,
-            "second_image_url": (self.hairProfile?.secondImageUrl)!,
-            "third_image_url": (self.hairProfile?.thirdImageUrl)!,
-            "fourth_image_url": (self.hairProfile?.fourthImageUrl)!,
+            "thumbnail_key": "thumbnail_key",
+            "first_image_key": (self.hairProfile?.firstImageKey)!,
+            "second_image_key": (self.hairProfile?.secondImageKey)!,
+            "third_image_key": (self.hairProfile?.thirdImageKey)!,
+            "fourth_image_key": (self.hairProfile?.fourthImageKey)!,
             "profile_description": descriptionText,
             
         ]

@@ -271,17 +271,10 @@ class EditCompanyController: UIViewController, UIImagePickerControllerDelegate, 
     
     fileprivate func updateCompanyProfile() {
         
+        let authToken = KeychainKeys.authToken
+        let companyPk = KeychainKeys.companyPk
         
-        Keychain.getAuthToken { (authToken) in
-            self.authToken = authToken
-        }
-        
-        Keychain.getKeychainValue(name: "companyPk") { (companyPk) in
-            self.companyPk = companyPk
-        }
-        guard let authToken = authToken else { return }
-        guard let companyPk = companyPk else { return }
- 
+    
  
         var parameters = [String: Any]()
         

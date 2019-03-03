@@ -16,7 +16,6 @@ pod 'lottie-ios', '~> 2.5.0'
 pod 'Kingfisher', '~>4.8.0'
 pod 'IQKeyboardManagerSwift', '~>6.0.4'
 pod 'Lightbox'
-pod 'Gallery'
 pod 'Disk'
 
 end

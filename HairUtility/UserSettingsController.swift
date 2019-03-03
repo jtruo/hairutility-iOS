@@ -123,7 +123,7 @@ class UserSettingsController: UIViewController, UITableViewDelegate, UITableView
             let companyController = CompanyController()
             self.navigationController?.pushViewController(companyController, animated: true)
         case 2:
-            let keychain = Keychain(service: "com.HairLinkCustom.HairLink")
+            let keychain = Keychain(service: "com.HairUtility")
             keychain["authToken"] = nil
             
             DispatchQueue.main.async {
@@ -188,28 +188,19 @@ class UserSettingsController: UIViewController, UITableViewDelegate, UITableView
         getUserInfo()
     }
     
-    var authToken: String?
-    var pk: String?
 
-    
+
     func getUserInfo() {
         
-        Keychain.getAuthToken { (authToken) in
-            self.authToken = authToken
-        }
-        Keychain.getKeychainValue(name: "pk") { (pk) in
-            self.pk = pk
-        }
-        
-        guard let authToken = authToken else { return }
-        guard let pk = pk else { return }
+        let authToken = KeychainKeys.authToken
+        let userPk = KeychainKeys.userPk
         
         let headers: [String: String] = [
             "Content-Type": "application/json",
             "Authorization": "Token \(authToken)"
         ]
         
-        let appendingUrl = "api/v1/users/\(pk)/"
+        let appendingUrl = "api/v1/users/\(userPk)/"
         
         print("The data request is \(appendingUrl)")
         Alamofire.DataRequest.userRequest(requestType: "GET", appendingUrl: appendingUrl, headers: headers, parameters: nil, success: { (user) in
@@ -232,7 +223,7 @@ class UserSettingsController: UIViewController, UITableViewDelegate, UITableView
 
         }) { (failure) in
             
-            self.alert(message: "There was an error saving the profile")
+            self.alert(message: "There was an error with retrieving your info, please log back in")
         }
     }
  

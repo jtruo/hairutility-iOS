@@ -229,23 +229,14 @@ class SecondPageController: UIViewController, UIImagePickerControllerDelegate, U
     
     }
     
-    var authToken: String?
-    var companyPk: String?
+
     var s3Url: String?
     
     fileprivate func updateCompanyProfile() {
         
         
-        Keychain.getAuthToken { (authToken) in
-            self.authToken = authToken
-        }
-        
-        Keychain.getKeychainValue(name: "companyPk") { (companyPk) in
-            self.companyPk = companyPk
-        }
-        guard let authToken = authToken else { return }
-        guard let companyPk = companyPk else { return }
-        
+        let authToken = KeychainKeys.authToken
+        let companyPk = KeychainKeys.companyPk
         
         guard let bio = companyBioTextView.text else { return }
         

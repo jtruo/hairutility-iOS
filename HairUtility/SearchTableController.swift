@@ -10,7 +10,7 @@ import UIKit
 
 
 protocol SearchTableDelegate {
-    func searchButtonTapped(tags: [String])
+    func searchButtonTapped(gender: String, length: String, tags: [String])
 }
 
 class SearchTableController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UISearchResultsUpdating, UISearchControllerDelegate {
@@ -64,21 +64,27 @@ class SearchTableController: UIViewController, UITableViewDelegate, UITableViewD
     
     
     var tags = [String]()
+    var gender = ""
+    var length = ""
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         print("Search bar clicked")
         
         switch searchBar.selectedScopeButtonIndex {
-            
-        case 1: tags.append("men")
-        default: tags.append("women")
+//
+//        case 1: tags.append("men")
+//        default: tags.append("women")
+//
+        case 1: gender = "men"
+        default: gender = "women"
+          
             
         }
         guard let searchBarText = searchBar.text else { return }
         
         tags.append(searchBarText)
         
-        delegate?.searchButtonTapped(tags: tags)
+        delegate?.searchButtonTapped(gender: gender, length: length, tags: tags)
         
         self.presentingViewController?.dismiss(animated: false, completion: nil)
     }

@@ -21,10 +21,7 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
     var isStylist: Bool?
     var imageArray: [UIImage]?
     var s3UrlArray = [String]()
-    
-    
-    let keychain = Keychain(service: "com.HairLinkCustom.HairLink")
-    
+
     
     let imagePicker = ImagePickerController()
     var config = Configuration()
@@ -35,7 +32,6 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
     
     lazy var hairstyleNameTextField: BottomBorderTextField = {
         let textField = BottomBorderTextField()
-        textField.placeholder = "Hairstyle Name"
         return textField
     }()
     
@@ -444,7 +440,9 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
     }
     
     
-    var authToken: String?
+
+    
+ 
     var isPubliclyDisplayable: Bool?
     var hairLengthTag: String?
     var genderTag: String?
@@ -452,13 +450,12 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
     var secondExtraTag: String?
     var thirdExtraTag: String?
 
-    func postHairProfile() {
+    fileprivate func postHairProfile() {
         print("Posting hair profile")
-        Keychain.getAuthToken { (authToken) in
-            self.authToken = authToken
-        }
-        guard let authToken = authToken else { return }
         
+        
+        
+        let authToken = KeychainKeys.authToken
         let headers = [
             "Content-Type": "application/json",
             "Authorization": "Token \(authToken)"

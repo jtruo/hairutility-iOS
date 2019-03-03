@@ -20,7 +20,7 @@ class FirstPageController: UIViewController, UIScrollViewDelegate, UITextFieldDe
 //    Still need to fix returning 0
     
     var delegate: FirstPageDelegate?
-    let keychain = Keychain(service: "com.HairLinkCustom.HairLink")
+
     
     
     lazy var scrollView: UIScrollView = {
@@ -213,13 +213,9 @@ class FirstPageController: UIViewController, UIScrollViewDelegate, UITextFieldDe
         guard let city = cityTextField.text else { return }
         guard let zipCode = zipCodeTextField.text else { return }
         guard let phone = phoneNumberTextField.text else { return }
-     
         
-        Keychain.getAuthToken { (authToken) in
-            self.authToken = authToken
-        }
-        guard let authToken = authToken else { return }
-        
+        let authToken = KeychainKeys.authToken
+       
         let headers = [
             "Content-Type": "application/json",
             "Authorization": "Token \(authToken)"
@@ -244,7 +240,10 @@ class FirstPageController: UIViewController, UIScrollViewDelegate, UITextFieldDe
             
             
             do {
-                try self.keychain.set(company.pk, key: "companyPk")
+                
+                let keychain = Keychain(service: "com.HairUtility")
+                
+                try keychain.set(company.pk, key: "companyPk")
                 
             } catch let error {
                 

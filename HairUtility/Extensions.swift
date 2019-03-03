@@ -105,17 +105,6 @@ extension UIApplication {
 }
 
 
-//extension UIView {
-//
-//    func constraintsAligningAllEdges(toView view2: UIView) -> [NSLayoutConstraint] {
-//
-//        return [ topAnchor.constraint(equalTo: view2.topAnchor),
-//                 bottomAnchor.constraint(equalTo: view2.bottomAnchor),
-//                 leadingAnchor.constraint(equalTo: view2.leadingAnchor),
-//                 trailingAnchor.constraint(equalTo: view2.trailingAnchor) ]
-//    }
-//}
-
 //Prevents repeated presses
 
 extension UIButton {
@@ -186,7 +175,6 @@ enum UserDefaultsKeys : String {
     
 }
 
-
 extension UserDefaults{
     
     //MARK: Check Login
@@ -204,7 +192,6 @@ extension UserDefaults{
         set(value, forKey: UserDefaultsKeys.pk.rawValue)
         //synchronize()
     }
-    
     
     //MARK: Retrieve User Data
     func getUserID() -> Int{
@@ -224,85 +211,28 @@ extension UserDefaults{
 
 extension Keychain {
     
-    static let keychain = Keychain(service: "com.HairLinkCustom.HairLink")
+    static let keychain = Keychain(service: "com.HairUtility")
     
-    static func getAuthToken(completion: @escaping (String) -> Void)  {
-        var authToken: String?
+    static func getKey(name: String) -> String {
+        
+        var result: String
         
         do {
-            authToken = try self.keychain.get("authToken")
+            result = try self.keychain.get(name) ?? ""
+            return result
         } catch let error {
             print("Error: \(error)")
-        }
-        
-        if authToken?.isEmpty ?? true {
-            print("Token is empty")
-        } else {
-            completion(authToken!)
-        }
-        
-    }
-    
-    static func getPk(completion: @escaping (String) -> Void) {
-        var pk: String?
-        
-        do {
-            pk = try self.keychain.get("pk")
-        } catch let error {
-            print("Error: \(error)")
-        }
-        
-        if pk?.isEmpty ?? true {
-            print("PK is empty")
-        } else {
-            completion(pk!)
-        }
-
-    }
-    
-    static func getKeychainValue(name: String, completion: @escaping (String) -> Void) {
-        
-        var result: String?
-        
-        do {
-            result = try self.keychain.get(name)
-        } catch let error {
-            print("Error: \(error)")
+            return "Pk is empty"
    
         }
         
-        if result?.isEmpty ?? true {
-            print("PK is empty")
-//            Return signal the error
-        } else {
-            completion(result!)
-        }
     }
     
 }
 
 
-//func randomString(length: Int) -> String {
-//    
-//    let letters : NSString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-//    let length = UInt32(letters.length)
-//    
-//    var randomString = ""
-//    
-//    for _ in 0 ..< length {
-//        let rand = arc4random_uniform(length)
-//        var nextChar = letters.character(at: Int(rand))
-//        randomString += NSString(characters: &nextChar, length: 1) as String
-//    }
-//    
-//    return randomString
-//}
-
-   /// Returns the element at the specified index if it is within bounds, otherwise nil.
-
 extension Collection {
     
- 
     subscript (safe index: Index) -> Element? {
         return indices.contains(index) ? self[index] : nil
     }
@@ -374,9 +304,6 @@ extension UIView {
 }
 
 
-// Allows for multiple characters of a string to be replaced in one line
-
-
 
 
 
@@ -414,8 +341,7 @@ func removeImage(itemName:String, fileExtension: String) {
     }}
 
 //Converts date to string
-extension Date
-{
+extension Date {
     func convertDateToString( dateFormat format  : String ) -> String
     {
         let dateFormatter = DateFormatter()
@@ -423,4 +349,31 @@ extension Date
         return dateFormatter.string(from: self)
     }
     
+}
+
+extension UICollectionViewCell {
+//    Better practice to fix the failed return value
+    func prefixAndConvertToThumbnailS3Url(suffix: String) -> URL {
+        
+        if let url = URL(string: "https://hairutility-prod.s3.amazonaws.com/thumbnails/" + suffix) {
+            return url
+        } else {
+            return URL(string: "Empty url")!
+        }
+        
+    }
+    
+    
+}
+
+extension UIViewController {
+    func prefixAndConvertToImageS3Url(suffix: String) -> URL {
+        
+        if let url = URL(string: "https://hairutility-prod.s3.amazonaws.com/images/" + suffix) {
+            return url
+        } else {
+            return URL(string: "Empty url")!
+        }
+        
+    }
 }

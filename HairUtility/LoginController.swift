@@ -16,7 +16,7 @@ import KeychainAccess
 class LoginController: UIViewController {
     
     var user: User?
-    let keychain = Keychain(service: "com.HairLinkCustom.HairLink")
+
     
     lazy var emailTextField: BottomBorderTextField = {
         let textField = BottomBorderTextField()
@@ -99,7 +99,8 @@ class LoginController: UIViewController {
             "password": password
         ]
         let headers = [
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+
         ]
         
         Alamofire.DataRequest.userRequest(requestType: "POST", appendingUrl: "api-token-auth/", headers: headers, parameters: parameters, success: { (user) in
@@ -112,16 +113,22 @@ class LoginController: UIViewController {
             let isActive = user.isActive
             let isStylist = user.isStylist
 
+            
+            print("This is the user pk \(pk)")
+            
             if isActive == true {
                 
                 do {
-                    try self.keychain.set(authToken, key: "authToken")
-                    try self.keychain.set(pk, key: "pk")
+                    let keychain = Keychain(service: "com.HairUtility")
+                    try keychain.set(authToken, key: "authToken")
+                    try keychain.set(pk, key: "userPk")
+                    
                     let defaults = UserDefaults.standard
                     defaults.set(isStylist, forKey: "isStylist")
                     defaults.set(isActive, forKey: "isActive")
-                    print("Keychain and user defaults data was set")
                     defaults.setValue(email, forKeyPath: "email")
+                    
+                    print("Keychain and user defaults data was set")
                 }
                 catch let error {
                     print(error)

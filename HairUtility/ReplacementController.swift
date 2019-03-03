@@ -200,7 +200,6 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
     }
     
 //    Retrieving hair profiles form API
-    var authToken: String?
     var totalCount: Int = 0
     var hairProfiles = [HairProfile]()
     var appendingUrl = "api/v1/hairprofiles/?user"
@@ -208,12 +207,8 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
     
     func getUserHairProfiles() {
         
-        Keychain.getAuthToken { (authToken) in
-            self.authToken = authToken
-        }
-        
-        guard let authToken = authToken else { return }
-        
+        let authToken = KeychainKeys.authToken
+
         let headers: [String: String] = [
             "Content-Type": "application/json",
             "Authorization": "Token \(authToken)"
@@ -257,7 +252,7 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
     func downloadHairProfile() {
         print("Posting hair profile")
         
-        guard let authToken = authToken else { return }
+        let authToken = KeychainKeys.authToken
         
         let headers = [
             "Content-Type": "application/json",
@@ -271,10 +266,11 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
         let parameters: [String: Any] = [
             "creator": hairProfileToSave.creator,
             "hairstyle_name": hairProfileToSave.hairstyleName,
-            "first_image_url": hairProfileToSave.firstImageUrl,
-            "second_image_url": hairProfileToSave.secondImageUrl,
-            "third_image_url": hairProfileToSave.thirdImageUrl,
-            "fourth_image_url": hairProfileToSave.fourthImageUrl,
+            "thumbnail_key": hairProfileToSave.thumbnailKey, 
+            "first_image_url": hairProfileToSave.firstImageKey,
+            "second_image_url": hairProfileToSave.secondImageKey,
+            "third_image_url": hairProfileToSave.thirdImageKey,
+            "fourth_image_url": hairProfileToSave.fourthImageKey,
             "profile_description": hairProfileToSave.profileDescription,
             "is_displayable": false,
             ]

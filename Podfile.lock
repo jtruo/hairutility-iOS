@@ -5,7 +5,6 @@ PODS:
     - AWSCore (= 2.6.22)
   - Cache (4.2.0)
   - Disk (0.3.3)
-  - Gallery (2.0.6)
   - Hue (3.0.1)
   - ImagePicker (3.0.0)
   - Imaginary (3.0.3):
@@ -23,7 +22,6 @@ DEPENDENCIES:
   - AWSCore (~> 2.6.6)
   - AWSS3 (~> 2.6.6)
   - Disk
-  - Gallery
   - ImagePicker
   - IQKeyboardManagerSwift (~> 6.0.4)
   - KeychainAccess (~> 3.1.0)
@@ -37,7 +35,6 @@ SPEC CHECKSUMS:
   AWSS3: 2b70463225a455ba26494f06346bddb74dedf73d
   Cache: f28f8dd64b632155aabf9b3906b036a659048251
   Disk: d1f55cd61f6ca20f368232d0c6e37e3c3dfcb63e
-  Gallery: 5489ae11d8010a3cc163030f6e92d618afbdf4df
   Hue: 93e852fa6211ab35922ad8c293f51c43d6c79eb2
   ImagePicker: 973953c25960fe04729a7082a56194321c6762d2
   Imaginary: 9b45836a5af881f452a86e0a1215772ae4712d00
@@ -47,6 +44,6 @@ SPEC CHECKSUMS:
   Lightbox: 2dc267df8be2285bc7724cb11cbbf4aaaf59dced
   lottie-ios: d699fdee68d7b63e721d949388b015fef1aaa4ac
 
-PODFILE CHECKSUM: 379e8187920bb5f4fcdb12b8b73cd190a266e0c9
+PODFILE CHECKSUM: 0b38c4bdedfcd85da205021c396c1a55f5908d4f
 
 COCOAPODS: 1.3.1

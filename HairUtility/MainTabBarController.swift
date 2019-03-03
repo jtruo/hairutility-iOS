@@ -59,11 +59,8 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         
         self.isStylist = UserDefaults.standard.bool(forKey: "isStylist")
         
-        Keychain.getAuthToken { (authToken) in
-            self.authToken = authToken
-        }
-        
-        if authToken?.isEmpty ?? true {
+        let authToken = KeychainKeys.authToken
+        if authToken.isEmpty == true {
             
             print("Loading Onboarding Controller")
             DispatchQueue.main.async {

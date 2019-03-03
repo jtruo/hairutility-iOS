@@ -50,25 +50,11 @@ class CompanyProfileController: UICollectionViewController, UICollectionViewDele
 
         collectionView?.refreshControl = refreshControl
         
-        self.navigationItem.title = "Please join a company"
+        self.navigationItem.title = "Company"
         
         
-        //        This is necessary so that any stylist that is added to a company can get the companyPk they were added to. The function makes an api call if no companyPk is stored in the keychain
-
-        let keychain = Keychain(service: "HairUtility.com")
-        keychain["companyPk"] = nil
-        Keychain.getKeychainValue(name: "companyPk") { (companyPk) in
-//            Return something when getting the pk fails.
-            if companyPk.isEmpty {
-                self.getCompanyPk()
-                print("Getting company pk")
-            } else {
-                self.companyPk = companyPk
-            }
-        }
+        checkIfStylistHasCompanyPK()
         
-        print("Moved to tab 4")
-        getCompanyInfo()
     }
     
     
@@ -140,18 +126,23 @@ class CompanyProfileController: UICollectionViewController, UICollectionViewDele
     
     var authToken: String?
     var company: Company?
-    var companyPk: String?
     var users = [User]()
+    
+    
+    func checkIfStylistHasCompanyPK() {
+        
+        if KeychainKeys.companyPk.isEmpty {
+            getCompanyPk()
+        } else {
+            getCompanyInfo()
+        }
+    }
     
     
 //    Gets company pk from the users profile info
     func getCompanyPk() {
         
-        Keychain.getAuthToken { (authToken) in
-            self.authToken = authToken
-        }
-
-        guard let authToken = authToken else { return }
+        let authToken = KeychainKeys.authToken
 
         let headers: [String: String] = [
             "Content-Type": "application/json",
@@ -164,13 +155,18 @@ class CompanyProfileController: UICollectionViewController, UICollectionViewDele
         Alamofire.DataRequest.userRequest(requestType: "GET", appendingUrl: appendingUrl, headers: headers, parameters: nil, success: { (user) in
             guard let user = user as? User else { return }
             
-            self.companyPk = user.companyPk
+            
+            let keyChain = Keychain(service: "com.HairUtility")
+            keyChain["companyPk"] = user.companyPk
             
             DispatchQueue.main.async {
             
                 
                 self.collectionView?.reloadData()
                 self.refreshControl.endRefreshing()
+                
+                
+                self.getCompanyInfo()
                 
             }
             
@@ -179,7 +175,10 @@ class CompanyProfileController: UICollectionViewController, UICollectionViewDele
             
         }) { (failure) in
             
-            self.alert(message: "There was an error saving the profile")
+            self.refreshControl.endRefreshing()
+            
+            self.alert(message: "There was an error with retrieving your company's info. Please make sure to make a company or be added to one.")
+            
         }
     }
     
@@ -188,16 +187,8 @@ class CompanyProfileController: UICollectionViewController, UICollectionViewDele
     
     func getCompanyInfo() {
         
-        Keychain.getAuthToken { (authToken) in
-            self.authToken = authToken
-        }
-        Keychain.getKeychainValue(name: "companyPk") { (companyPk) in
-            self.companyPk = companyPk
-        }
-        
-        guard let authToken = authToken else { return }
-        guard let companyPk = companyPk else { return }
-        print(companyPk)
+        let authToken = KeychainKeys.authToken
+        let companyPk = KeychainKeys.companyPk
         
         let headers: [String: String] = [
             "Content-Type": "application/json",
@@ -205,6 +196,9 @@ class CompanyProfileController: UICollectionViewController, UICollectionViewDele
         ]
         
         let appendingUrl = "api/v1/companies/\(companyPk)/"
+        
+        
+        print(companyPk)
         
         print("The data request is \(appendingUrl)")
         Alamofire.DataRequest.userRequest(requestType: "GET", appendingUrl: appendingUrl, headers: headers, parameters: nil, success: { (company) in
@@ -220,15 +214,19 @@ class CompanyProfileController: UICollectionViewController, UICollectionViewDele
                 
                 self.collectionView?.reloadData()
                 self.refreshControl.endRefreshing()
+                
 
             }
 
-            
             print(self.users)
+            
+            self.navigationItem.title = company.companyName
      
         }) { (failure) in
             
-            self.alert(message: "There was an error saving the profile")
+            self.refreshControl.endRefreshing()
+            
+            self.alert(message: "There was an error with retrieving your company's profile")
         }
     }
     
