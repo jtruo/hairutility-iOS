@@ -10,6 +10,7 @@ import UIKit
 import KeychainAccess
 import Alamofire
 //If no companyPk is found, go look up the company pk from user profile
+//Still need to test it 3-3-19
 class CompanyProfileController: UICollectionViewController, UICollectionViewDelegateFlowLayout, CompanyHeaderDelegate {
     
     let cellId = "cellId"

@@ -11,17 +11,13 @@ import IQKeyboardManagerSwift
 import Alamofire
 import KeychainAccess
 
-protocol FirstPageDelegate {
-    func nextButtonPressed()
-}
 
 
 class FirstPageController: UIViewController, UIScrollViewDelegate, UITextFieldDelegate {
-//    Still need to fix returning 0
-    
-    var delegate: FirstPageDelegate?
 
-    
+    var delegate: CompanyPageDelegate?
+
+//    Still need to fix returning 0
     
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -135,8 +131,6 @@ class FirstPageController: UIViewController, UIScrollViewDelegate, UITextFieldDe
         
         postCompanyInfo()
         
-     
-        
         
     }
 
@@ -241,7 +235,7 @@ class FirstPageController: UIViewController, UIScrollViewDelegate, UITextFieldDe
             
             do {
                 
-                let keychain = Keychain(service: "com.HairUtility")
+            let keychain = Keychain(service: "com.HairUtility")
                 
                 try keychain.set(company.pk, key: "companyPk")
                 

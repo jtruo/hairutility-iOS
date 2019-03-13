@@ -16,11 +16,16 @@ import Disk
 //TODO: Change UILabel "Step 1" to rounded button or rects
 // Add three other animation views.
 
+
+
 class CreateHairProfileController: UIViewController, UploadOptionsDelegate, ImagePickerDelegate, UIGestureRecognizerDelegate, UICollectionViewDelegate, UITextViewDelegate, UIPopoverPresentationControllerDelegate {
+
     
     var isStylist: Bool?
     var imageArray: [UIImage]?
     var s3UrlArray = [String]()
+    var delegate: ProfilePageDelegate?
+   
 
     
     let imagePicker = ImagePickerController()
@@ -133,9 +138,8 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
     
     @objc func hideKeyboard() {
         view.endEditing(true)
-        
     }
-    
+
     @objc func buttonTouched(button: UIButton) {
         
         imagePicker.imageLimit = 4
@@ -148,7 +152,6 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
     }
     
     lazy var dismissButton: UIButton = {
-        
         let button = UIButton(type: .system)
         button.setImage(#imageLiteral(resourceName: "download"), for: .normal)
         button.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
@@ -196,7 +199,6 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
             self.alertWithActions(message: "", title: "Are you sure you want to save?", actions: actions)
             
         
-        
         }
         
     }
@@ -230,10 +232,8 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         super.viewDidLoad()
         
         self.isStylist = UserDefaults.standard.bool(forKey: "isStylist")
-
         view.backgroundColor = .white
-
-    
+        
         view.addSubview(containerView)
         containerView.anchor(top: topLayoutGuide.bottomAnchor, left: nil, bottom: view.bottomAnchor, right: nil, paddingTop: 24, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 350, height: 0)
         containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -273,7 +273,6 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         firstAnimationView.anchor(top: firstImageView.topAnchor, left: firstImageView.leftAnchor, bottom: firstImageView.bottomAnchor, right: firstImageView.rightAnchor, paddingTop: 2, paddingLeft: 2, paddingBottom: 2, paddingRight: 2, width: 50, height: 50)
         
        
-        
         view.addSubview(dismissButton)
         view.addSubview(uploadPhotoButton)
     
@@ -282,8 +281,6 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         
         cameraButton.play(fromProgress: 0, toProgress: 0.3, withCompletion: nil)
  
-      
-
         
     }
     
@@ -296,7 +293,6 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         self.dismiss(animated: true, completion: nil)
     }
 
-    
     func wrapperDidPress(_ imagePicker: ImagePickerController, images: [UIImage]) {
         print("wrapper is working")
         print(images.count)
@@ -326,21 +322,17 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         secondImageView.image = images[1]
         thirdImageView.image = images[2]
         fourthImageView.image = images[3]
-        
         self.imageArray = images
-        
         imagePicker.dismiss(animated: true, completion: nil)
         
     }
 
-    
     func uploadImagesToS3() {
         print("Before image array")
         guard let imageArray = imageArray else { return }
         
         print("Image array was passed")
         let dispatchGroup = DispatchGroup()
-        
         
         for (index, image) in imageArray.enumerated() {
             
@@ -371,7 +363,7 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
             var completionHandler: AWSS3TransferUtilityUploadCompletionHandlerBlock?
             completionHandler = { (task, error) -> Void in
                 DispatchQueue.main.async(execute: {
-
+                    
                     dispatchGroup.leave()
                     print("Completion task: \(task)")
                     print("Completion error: \(String(describing: error))")
@@ -439,11 +431,9 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         uploadImagesToS3()
     }
     
-    
-
-    
  
-    var isPubliclyDisplayable: Bool?
+    var hairstyleName: String?
+    var isPubliclyDisplayable: Bool = false
     var hairLengthTag: String?
     var genderTag: String?
     var firstExtraTag: String?
@@ -462,21 +452,23 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         ]
         
         
-        guard let hairstyleName = hairstyleNameTextField.text else { return }
+        guard let hairstyleName = self.hairstyleName else { return }
         guard let descriptionText = profileDescriptionTextView.text else { return }
+        guard let genderTag = genderTag else { return }
+        guard let hairLengthTag = hairLengthTag else { return }
         
 
         let parameters: [String: Any] = [
             "hairstyle_name": hairstyleName,
-            "first_image_url": s3UrlArray[0],
-            "second_image_url": s3UrlArray[1],
-            "third_image_url": s3UrlArray[2],
-            "fourth_image_url": s3UrlArray[3],
+            "first_image_key": s3UrlArray[0],
+            "second_image_key": s3UrlArray[1],
+            "third_image_key": s3UrlArray[2],
+            "fourth_image_key": s3UrlArray[3],
             "profile_description": descriptionText,
-            "is_displayable": isPubliclyDisplayable ?? false,
+            "is_displayable": isPubliclyDisplayable,
+            "gender": genderTag,
+            "length": hairLengthTag,
             "tags": [
-                genderTag,
-                hairLengthTag,
                 firstExtraTag,
                 secondExtraTag,
                 thirdExtraTag
@@ -495,8 +487,6 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
     }
     
 
-//Storing the data works, now add an option for users to store online or locally. Or just make all non-stylists store locally which is probably better.
-  
     
     @objc func storeInDocumentsDirectory() {
         

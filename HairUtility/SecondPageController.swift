@@ -56,9 +56,7 @@ class SecondPageController: UIViewController, UIImagePickerControllerDelegate, U
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         
         
-        
         if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
-            
             plusPhotoButton.setImage(editedImage.withRenderingMode(.alwaysOriginal), for: .normal)
             
         } else if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {

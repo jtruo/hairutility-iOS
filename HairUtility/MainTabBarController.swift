@@ -20,6 +20,8 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         
         if index == 2 {
 
+            print(isStylist ?? "No is stylist set")
+            
             if isStylist == false {
                 
                 let stylistAction = UIAlertAction(title: "Stylist", style: .default) { (action) in
@@ -37,10 +39,12 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
                 //                Check here if stylist has a profile, if not redirect. Please set up your personal profile before creating a hair profile.
                 //                Two ways to do this. Option 1: Ping the server \?user and see if a first name, last name are returned. Option 2: NSUserdefaults HasStylistSetUpProfile: Bool. Set default = false for very first launch, and true once successfully set up. Use option 2 because we don't want to ping the server every time someone is creating a profile.
                 
-//                The problem with option 2 is that whenever someone reinstalls the app, the variabl will be reset. So in order to fix this, have the ping that the stylist checked their profile after they PATCH and when they load that view controller.
+                //                The problem with option 2 is that whenever someone reinstalls the app, the variabl will be reset. So in order to fix this, have the ping that the stylist checked their profile after they PATCH and when they load that view controller.
+                // if is first time launchnig, stylist profile set up is false
+                let createProfileNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "plus_unselected"), selectedImage: #imageLiteral(resourceName: "like_selected"), rootViewController: ProfilePageController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil))
+                self.present(createProfileNavController, animated: true, completion: nil)
                 
-                let hairProfileCreationController = CreateHairProfileController()
-                self.present(hairProfileCreationController, animated: true)
+                
             }
             
             return false
@@ -88,9 +92,8 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         
         let profilesNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "profile_unselected"), selectedImage: #imageLiteral(resourceName: "profile_selected"), rootViewController: ReplacementController(collectionViewLayout: UICollectionViewFlowLayout()))
         
-        let createProfileNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "plus_unselected"), selectedImage: #imageLiteral(resourceName: "like_selected"))
-    
-       
+        let createProfileNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "plus_unselected"), selectedImage: #imageLiteral(resourceName: "like_selected"), rootViewController: ProfilePageController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil))
+        
         let companyNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "home_unselected"), selectedImage: #imageLiteral(resourceName: "home_selected"), rootViewController: CompanyProfileController(collectionViewLayout: UICollectionViewFlowLayout()))
         
         

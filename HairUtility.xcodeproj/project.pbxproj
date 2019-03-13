@@ -59,6 +59,8 @@
 		6FA87C4F205D601A00008474 /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA87C4E205D601A00008474 /* ImageCell.swift */; };
 		6FA9E62D20DC39C000292566 /* CreateHairProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA9E62C20DC39C000292566 /* CreateHairProfileController.swift */; };
 		6FA9E62F20E006B400292566 /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA9E62E20E006B400292566 /* UserInfoCell.swift */; };
+		6FBA7CFE222C5DDF00A4E504 /* ProfilePageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBA7CFD222C5DDF00A4E504 /* ProfilePageController.swift */; };
+		6FBA7D00222C5E5C00A4E504 /* ThumbnailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBA7CFF222C5E5C00A4E504 /* ThumbnailController.swift */; };
 		6FBD9F4B221714130009144F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBD9F4A221714130009144F /* Constants.swift */; };
 		6FBDD0141F28D67500904F3E /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBDD0131F28D67500904F3E /* MainTabBarController.swift */; };
 		6FBDD0161F28D76900904F3E /* CompanyProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBDD0151F28D76900904F3E /* CompanyProfileController.swift */; };
@@ -128,6 +130,8 @@
 		6FA9E62720DC00CE00292566 /* PersonalProfilesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalProfilesController.swift; sourceTree = "<group>"; };
 		6FA9E62C20DC39C000292566 /* CreateHairProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateHairProfileController.swift; sourceTree = "<group>"; };
 		6FA9E62E20E006B400292566 /* UserInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoCell.swift; sourceTree = "<group>"; };
+		6FBA7CFD222C5DDF00A4E504 /* ProfilePageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePageController.swift; sourceTree = "<group>"; };
+		6FBA7CFF222C5E5C00A4E504 /* ThumbnailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailController.swift; sourceTree = "<group>"; };
 		6FBD9F4A221714130009144F /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		6FBDD0131F28D67500904F3E /* MainTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		6FBDD0151F28D76900904F3E /* CompanyProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompanyProfileController.swift; sourceTree = "<group>"; };
@@ -217,17 +221,18 @@
 			name = Animations;
 			sourceTree = "<group>";
 		};
-		6F46D67320D871740013E08B /* UserSettings */ = {
+		6F46D67320D871740013E08B /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				6F42C2092115F04000AA96B5 /* Company */,
+				6F8596261F3FDF5C00C8BE11 /* Camera */,
 				6F46D67120D86CA40013E08B /* UserSettingsController.swift */,
 				6FA9E62E20E006B400292566 /* UserInfoCell.swift */,
 				6F46D67A20D87CDA0013E08B /* UserSettingsCell.swift */,
 				6F42C1FE21150DA400AA96B5 /* CompanySettingsCell.swift */,
 				6F46D67C20D89D440013E08B /* StylistProfileController.swift */,
-				6F42C2092115F04000AA96B5 /* Company */,
 			);
-			name = UserSettings;
+			name = Settings;
 			sourceTree = "<group>";
 		};
 		6F5584811F263D06000EB4CE = {
@@ -252,18 +257,14 @@
 		6F55848C1F263D06000EB4CE /* HairUtility */ = {
 			isa = PBXGroup;
 			children = (
-				6F42C206211527F100AA96B5 /* ReusableViews */,
-				6F7568441F2F69F000015578 /* AddPhoto */,
-				6FA9E62920DC00D300292566 /* HairProfiles */,
-				6F46D67320D871740013E08B /* UserSettings */,
-				6F46D66A20D6CE010013E08B /* Animations */,
-				6F8596261F3FDF5C00C8BE11 /* Camera */,
 				6F58E6E31F32891D007EB3B1 /* Home */,
-				6F58E6DA1F326336007EB3B1 /* Models */,
-				6F1634401F2E668E004E619E /* Login */,
+				6FA9E62920DC00D300292566 /* HairProfiles */,
+				6F7568441F2F69F000015578 /* CreateProfile */,
 				6FBDD0181F29570700904F3E /* CompanyProfile */,
+				6F46D67320D871740013E08B /* Settings */,
+				6F1634401F2E668E004E619E /* Login */,
 				6F94E7AB1F530F49007C040A /* OnboardingScreen */,
-				6F42C1ED211320C500AA96B5 /* PageImages */,
+				6F58E6DA1F326336007EB3B1 /* Models */,
 				6F5584A01F264404000EB4CE /* Utilities */,
 				6FBDD0131F28D67500904F3E /* MainTabBarController.swift */,
 				6F5584911F263D06000EB4CE /* Main.storyboard */,
@@ -277,6 +278,9 @@
 		6F5584A01F264404000EB4CE /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				6F42C1ED211320C500AA96B5 /* PageImages */,
+				6F46D66A20D6CE010013E08B /* Animations */,
+				6F42C206211527F100AA96B5 /* ReusableViews */,
 				6F55848D1F263D06000EB4CE /* AppDelegate.swift */,
 				6F5584A11F26442C000EB4CE /* Extensions.swift */,
 				6F46D66F20D846F90013E08B /* AlamofireFunctions.swift */,
@@ -308,13 +312,15 @@
 			name = Home;
 			sourceTree = "<group>";
 		};
-		6F7568441F2F69F000015578 /* AddPhoto */ = {
+		6F7568441F2F69F000015578 /* CreateProfile */ = {
 			isa = PBXGroup;
 			children = (
+				6FBA7CFD222C5DDF00A4E504 /* ProfilePageController.swift */,
+				6FBA7CFF222C5E5C00A4E504 /* ThumbnailController.swift */,
 				6FA9E62C20DC39C000292566 /* CreateHairProfileController.swift */,
 				6F6B7F5120EC465900EDEDE5 /* UploadOptionsView.swift */,
 			);
-			name = AddPhoto;
+			name = CreateProfile;
 			sourceTree = "<group>";
 		};
 		6F8596261F3FDF5C00C8BE11 /* Camera */ = {
@@ -546,8 +552,10 @@
 				6F46D67220D86CA40013E08B /* UserSettingsController.swift in Sources */,
 				6F5584901F263D06000EB4CE /* SignUpController.swift in Sources */,
 				6F42C20B2115F48700AA96B5 /* BaseTextLabel.swift in Sources */,
+				6FBA7CFE222C5DDF00A4E504 /* ProfilePageController.swift in Sources */,
 				6F03FCF420D0894F006C15DE /* User.swift in Sources */,
 				6F46D67D20D89D440013E08B /* StylistProfileController.swift in Sources */,
+				6FBA7D00222C5E5C00A4E504 /* ThumbnailController.swift in Sources */,
 				6F03FCF220D0894B006C15DE /* HairProfile.swift in Sources */,
 				6F493B841FC74C5B005A3D3A /* PageCell.swift in Sources */,
 				6F42C1EC210FDEE000AA96B5 /* Company.swift in Sources */,
