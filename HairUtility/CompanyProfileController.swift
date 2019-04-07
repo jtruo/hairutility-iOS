@@ -132,7 +132,7 @@ class CompanyProfileController: UICollectionViewController, UICollectionViewDele
     
     func checkIfStylistHasCompanyPK() {
         
-        if KeychainKeys.companyPk.isEmpty {
+        if Keychain.getKey(name: "companyPK").isEmpty {
             getCompanyPk()
         } else {
             getCompanyInfo()
@@ -143,7 +143,7 @@ class CompanyProfileController: UICollectionViewController, UICollectionViewDele
 //    Gets company pk from the users profile info
     func getCompanyPk() {
         
-        let authToken = KeychainKeys.authToken
+        let authToken = Keychain.getKey(name: "authToken")
 
         let headers: [String: String] = [
             "Content-Type": "application/json",
@@ -188,8 +188,8 @@ class CompanyProfileController: UICollectionViewController, UICollectionViewDele
     
     func getCompanyInfo() {
         
-        let authToken = KeychainKeys.authToken
-        let companyPk = KeychainKeys.companyPk
+        let authToken = Keychain.getKey(name: "authToken")
+        let companyPk = Keychain.getKey(name: "companyPk")
         
         let headers: [String: String] = [
             "Content-Type": "application/json",

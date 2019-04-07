@@ -30,7 +30,7 @@ class StylistProfileController: UIViewController, UIImagePickerControllerDelegat
     
     let plusPhotoButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "photoButton").withRenderingMode(.alwaysOriginal), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "placeholder_image").withRenderingMode(.alwaysOriginal), for: .normal)
         button.addTarget(self, action: #selector(handlePlusPhoto), for: .touchUpInside)
         
         return button
@@ -76,7 +76,7 @@ class StylistProfileController: UIViewController, UIImagePickerControllerDelegat
     
     lazy var lastNameTextField: BottomBorderTextField = {
         let textField = BottomBorderTextField()
-        textField.placeholder = "Second Name"
+        textField.placeholder = "Last Name"
         textField.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
         return textField
     }()
@@ -96,11 +96,11 @@ class StylistProfileController: UIViewController, UIImagePickerControllerDelegat
         if isFormValid {
             
             updateButton.isEnabled = true
-            updateButton.backgroundColor = UIColor.rgb(red: 17, green: 154, blue: 237)
+            updateButton.backgroundColor = UIColor.mainCharcoal()
             
         } else {
             updateButton.isEnabled = false
-            updateButton.backgroundColor = UIColor.rgb(red: 149, green: 204, blue: 244)
+            updateButton.backgroundColor = UIColor.mainGrey()
         }
         
     }
@@ -123,7 +123,7 @@ class StylistProfileController: UIViewController, UIImagePickerControllerDelegat
     let updateButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Update", for: .normal)
-        button.backgroundColor = UIColor.rgb(red: 149, green: 204, blue: 244)
+        button.backgroundColor = UIColor.mainGrey()
         button.layer.cornerRadius = 5
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.setTitleColor(.white, for: .normal)
@@ -148,8 +148,8 @@ class StylistProfileController: UIViewController, UIImagePickerControllerDelegat
         view.backgroundColor = .white
         
         view.addSubview(plusPhotoButton)
-        
-        plusPhotoButton.anchor(top: topLayoutGuide.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 40, paddingLeft: 0, paddingBottom:0, paddingRight: 0, width: 140, height: 140)
+
+        plusPhotoButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 40, left: 0, bottom: 0, right: 0), size: .init(width: 140, height: 140))
         
         plusPhotoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
@@ -168,8 +168,7 @@ class StylistProfileController: UIViewController, UIImagePickerControllerDelegat
         
         view.addSubview(stackView)
         
-        
-        stackView.anchor(top: plusPhotoButton.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 40, paddingBottom: 0, paddingRight: 40, width: 0, height: 250)
+        stackView.anchor(top: plusPhotoButton.bottomAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: nil, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 20, left: 40, bottom: 0, right: 40), size: .init(width: 0, height: 250))
     }
     
     func uploadImageToS3() {
@@ -218,16 +217,14 @@ class StylistProfileController: UIViewController, UIImagePickerControllerDelegat
         
         let transferUtility = AWSS3TransferUtility.default()
         
-        let userDefaults = UserDefaults.standard
-        guard let email = userDefaults.string(forKey: "email") else { return }
-        let encodedEmail = email.replacingOccurrences(of: "@", with: "%40")
-        
-        let key = "images/\(encodedEmail)/\(UUID().uuidString).png"
-        let fullS3Key = "https://s3.us-east-2.amazonaws.com/hairutilityimages/\(key)"
+
+        let key = "profile-images" + UUID().uuidString
+        // Can't leak emails
+        let fullS3Key = "https://s3.us-east-2.amazonaws.com/hairutility-prod/\(key)"
         
         self.fullS3Key = fullS3Key
         print(fullS3Key)
-        transferUtility.uploadFile(snapshotImageURL, bucket: "hairutilityimages", key: key, contentType: "image/png",expression: expression,
+        transferUtility.uploadFile(snapshotImageURL, bucket: "hairutility-prod", key: key, contentType: "image/png",expression: expression,
                                    completionHandler: completionHandler).continueWith(executor: AWSExecutor.immediate(), block: {
                                     (task) -> Any? in
                                     if let error = task.error {
@@ -257,8 +254,8 @@ class StylistProfileController: UIViewController, UIImagePickerControllerDelegat
         guard let phoneNumber = phoneNumberTextField.text else { return }
         guard let fullS3Key = self.fullS3Key else { return }
 
-        let authToken = KeychainKeys.authToken
-        let userPk = KeychainKeys.userPk
+        let authToken = Keychain.getKey(name: "authToken")
+        let userPk = Keychain.getKey(name: "userPk")
 
         let parameters = [
             "first_name": firstName,

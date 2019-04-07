@@ -20,7 +20,7 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
 
     var imageArray = [UIImage]()
     var s3UrlArray = [URL]()
-    var s3StringArray = [String]()
+    var s3KeyArray = [String]()
     var changedImageArray = [Int: UIImage]()
     
     var hairProfile: HairProfile? {
@@ -56,9 +56,8 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
             self.navigationItem.title = hairstyleName
     
             s3UrlArray.append(contentsOf: [firstImageUrl, secondImageUrl, thirdImageUrl, fourthImageUrl])
-            s3StringArray.append(contentsOf: [firstImageKey, secondImageKey, thirdImageKey, fourthImageKey])
-            
-            print("This is the descritrpoignsdflkgnsdfgs: \(profileDescription)")
+            s3KeyArray.append(contentsOf: [firstImageKey, secondImageKey, thirdImageKey, fourthImageKey])
+     
         }
     }
     
@@ -68,10 +67,10 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
             let directory = "\(coreHairProfile.creationDate)"
             do {
                 let retrievedImages = try Disk.retrieve(directory, from: .documents, as: [UIImage].self)
-                firstImageView.image = retrievedImages[0]
-                secondImageView.image = retrievedImages[1]
-                thirdImageView.image = retrievedImages[2]
-                fourthImageView.image = retrievedImages[3]
+                firstImageView.image = retrievedImages[1]
+                secondImageView.image = retrievedImages[2]
+                thirdImageView.image = retrievedImages[3]
+                fourthImageView.image = retrievedImages[4]
                 profileDescriptionTextView.text = coreHairProfile.profileDescription
               
                 self.navigationItem.title = coreHairProfile.hairstyleName
@@ -97,6 +96,7 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         iv.tag = 0
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
+        iv.layer.cornerRadius = 4
         iv.isUserInteractionEnabled = true
         iv.layer.borderColor = UIColor(white: 0.8, alpha: 0.9).cgColor
         iv.layer.borderWidth = 1.0
@@ -120,6 +120,7 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         iv.tag = 1
         iv.clipsToBounds = true
         iv.isUserInteractionEnabled = true
+        iv.layer.cornerRadius = 4
         iv.layer.borderColor = UIColor(white: 0.8, alpha: 0.9).cgColor
         iv.layer.borderWidth = 1.0
         //        iv.image = #imageLiteral(resourceName: "Slice 1")
@@ -133,6 +134,7 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         iv.contentMode = .scaleAspectFill
         iv.isUserInteractionEnabled = true
         iv.clipsToBounds = true
+        iv.layer.cornerRadius = 4
         iv.layer.borderColor = UIColor(white: 0.8, alpha: 0.9).cgColor
         iv.layer.borderWidth = 1.0
         iv.tag = 2
@@ -146,6 +148,7 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         iv.contentMode = .scaleAspectFill
         iv.isUserInteractionEnabled = true
         iv.clipsToBounds = true
+        iv.layer.cornerRadius = 4
         iv.layer.borderColor = UIColor(white: 0.8, alpha: 0.9).cgColor
         iv.layer.borderWidth = 1.0
         iv.tag = 3
@@ -157,6 +160,7 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
     
     @objc func imageTapped(sender: UITapGestureRecognizer) {
 
+             print("Tap detected")
         
         guard let index = sender.view?.tag else { return }
         guard let firstImage = firstImageView.image else { return }
@@ -165,6 +169,7 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         guard let fourthImage = fourthImageView.image else { return }
         self.currentIndex = index
         
+   
 
         
         switch editButton.titleLabel?.text {
@@ -232,6 +237,7 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         tv.layer.borderWidth = 0.5
         tv.layer.borderColor = UIColor.lightGray.cgColor
         tv.font = .systemFont(ofSize: 16)
+        tv.layer.cornerRadius = 4
         tv.delegate = self
 //        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
 //        self.view.addGestureRecognizer(tapRecognizer)
@@ -261,7 +267,7 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
     let uploadPhotoButton: UIButton = {
         
         let uploadButton = UIButton(type: .system)
-        uploadButton.setImage(#imageLiteral(resourceName: "right_arrow_shadow"), for: .normal)
+        uploadButton.setImage(#imageLiteral(resourceName: "upload").withRenderingMode(.alwaysOriginal), for: .normal)
         //        uploadButton.addTarget(self, action: #selector(printSomething), for: .touchUpInside)
         return uploadButton
         
@@ -280,6 +286,7 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         print("Edit button tapped")
         editButton.preventRepeatedPresses()
         
+        // This won't run the first time, because editbutton is never tapped
         if editButton.currentTitle == "Edit" {
             editButton.setTitle("Save", for: .normal)
             self.profileDescriptionTextView.isEditable = true
@@ -298,7 +305,7 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
                     
                     self.profileDescriptionTextView.isEditable = false
                     self.tagsTextView.isEditable = false
-            
+//            TODO save the profile description
                     for (index, image) in self.changedImageArray {
                         do {
                             try Disk.save(image, to: .documents, as: "\(coreHairProfile.creationDate)/\(index).png")
@@ -372,7 +379,8 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         view.backgroundColor = .white
         
         view.addSubview(containerView)
-        containerView.anchor(top: topLayoutGuide.bottomAnchor, left: nil, bottom: bottomLayoutGuide.topAnchor, right: nil, paddingTop: 12, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 350, height: 0)
+
+        containerView.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: nil, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: nil, padding: .init(top: 12, left: 0, bottom: 0, right: 0), size: .init(width: 350, height: 0))
         containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
         
@@ -383,28 +391,29 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         containerView.addSubview(profileDescriptionTextView)
         containerView.addSubview(creatorTextView)
         containerView.addSubview(tagsTextView)
-        containerView.addSubview(firstAnimationView)
+//        containerView.addSubview(firstAnimationView)
         
         
+        firstImageView.anchor(top: containerView.topAnchor, leading: containerView.leadingAnchor, bottom: thirdImageView.topAnchor, trailing: secondImageView.leadingAnchor, padding: .init(top: 0, left: 6, bottom: 1, right: 1), size: .init(width: 168, height: 168))
         
-        firstImageView.anchor(top: containerView.topAnchor, left: containerView.leftAnchor, bottom: thirdImageView.topAnchor, right: secondImageView.leftAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 1, paddingRight: 1, width: 168, height: 168)
+        
+        secondImageView.anchor(top: containerView.topAnchor, leading: firstImageView.trailingAnchor, bottom: fourthImageView.topAnchor, trailing: containerView.trailingAnchor, padding: .init(top: 0, left: 1, bottom: 1, right: 6), size: .init(width: 168, height: 168))
         
         
-        secondImageView.anchor(top: containerView.topAnchor, left: firstImageView.rightAnchor, bottom: fourthImageView.topAnchor, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 1, paddingBottom: 1, paddingRight: 0, width: 168, height: 168)
+        thirdImageView.anchor(top: firstImageView.bottomAnchor, leading: containerView.leadingAnchor, bottom: profileDescriptionTextView.topAnchor, trailing: fourthImageView.leadingAnchor, padding: .init(top: 0, left: 6, bottom: 8, right: 1), size: .init(width: 168, height: 168))
         
-        thirdImageView.anchor(top: firstImageView.bottomAnchor, left: containerView.leftAnchor, bottom: profileDescriptionTextView.topAnchor, right: fourthImageView.leftAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 1, width: 168, height: 168)
         
-        fourthImageView.anchor(top: secondImageView.bottomAnchor, left: thirdImageView.rightAnchor, bottom: profileDescriptionTextView.topAnchor, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 1, paddingBottom: 0, paddingRight: 0, width: 168, height: 168)
+        fourthImageView.anchor(top: secondImageView.bottomAnchor, leading: thirdImageView.trailingAnchor, bottom: profileDescriptionTextView.topAnchor, trailing: containerView.trailingAnchor, padding: .init(top: 8, left: 1, bottom: 8, right: 6), size: .init(width: 168, height: 168))
         
-        profileDescriptionTextView.anchor(top: thirdImageView.bottomAnchor, left: containerView.leftAnchor, bottom: nil, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 336, height: 89)
         
-        creatorTextView.anchor(top: profileDescriptionTextView.bottomAnchor, left: containerView.leftAnchor, bottom: nil, right: containerView.rightAnchor, paddingTop: 8, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 100, height: 30)
-
+        profileDescriptionTextView.anchor(top: nil, leading: containerView.leadingAnchor, bottom: creatorTextView.topAnchor, trailing: containerView.trailingAnchor, padding: .init(top: 8, left: 0, bottom: 0, right: 0), size: .init(width: 336, height: 89))
         
-        tagsTextView.anchor(top: creatorTextView.bottomAnchor, left: containerView.leftAnchor, bottom: nil, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 150, height: 50)
+        creatorTextView.anchor(top: profileDescriptionTextView.bottomAnchor, leading: containerView.leadingAnchor, bottom: tagsTextView.topAnchor, trailing: containerView.trailingAnchor, padding: .init(top: 8, left: 0, bottom: 0, right: 0), size: .init(width: 150, height: 50))
         
-        firstImageView.addSubview(firstAnimationView)
-        firstAnimationView.anchor(top: firstImageView.topAnchor, left: firstImageView.leftAnchor, bottom: firstImageView.bottomAnchor, right: firstImageView.rightAnchor, paddingTop: 2, paddingLeft: 2, paddingBottom: 2, paddingRight: 2, width: 50, height: 50)
+        tagsTextView.anchor(top: creatorTextView.bottomAnchor, leading: containerView.leadingAnchor, bottom: containerView.bottomAnchor, trailing: containerView.trailingAnchor, size: .init(width: 150, height: 50))
+        
+//        firstImageView.addSubview(firstAnimationView)
+//        firstAnimationView.anchor(top: firstImageView.topAnchor, left: firstImageView.leftAnchor, bottom: firstImageView.bottomAnchor, right: firstImageView.rightAnchor, paddingTop: 2, paddingLeft: 2, paddingBottom: 2, paddingRight: 2, width: 50, height: 50)
     
         
     }
@@ -472,18 +481,14 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
                 print(error)
             }
             
-            let key = "images/\(UUID().uuidString).png"
-            let fullS3Key = "https://s3.us-east-2.amazonaws.com/hairutilityimages/\(key)"
-      
-            
-            print(fullS3Key)
-            print(s3UrlArray.count)
+            let key = s3KeyArray[index]
+            let fullKey = key.replacingOccurrences(of: ".png", with: ".png\(index)")
     
-            updateUserProfile(newS3Key: key)
+//            updateUserProfile(newS3Key: key)
             
             let transferUtility = AWSS3TransferUtility.default()
 
-            transferUtility.uploadFile(snapshotImageURL, bucket: "hairutilityimages", key: key, contentType: "image/png",expression: expression,
+            transferUtility.uploadFile(snapshotImageURL, bucket: "hairutility-prod", key: fullKey, contentType: "image/png",expression: expression,
                                        completionHandler: completionHandler).continueWith(executor: AWSExecutor.immediate(), block: {
                                         (task) -> Any? in
                                         if let error = task.error {
@@ -515,7 +520,7 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
     func updateUserProfile(newS3Key: String?) {
 
         
-        let authToken = KeychainKeys.authToken
+        let authToken = Keychain.getKey(name: "authToken")
         guard let profilePk = profilePk else { return }
         
 

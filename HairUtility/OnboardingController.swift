@@ -209,7 +209,7 @@ class OnboardingController: UICollectionViewController, UICollectionViewDelegate
     bottomContainerView.addSubview(pageControl)
     bottomContainerView.addSubview(signupButton)
     bottomContainerView.addSubview(loginButton)
-    bottomContainerView.addSubview(getMeStartedButton)
+
     
         // Figure out how to constrain the bottomContainerview to the description textview
         
@@ -217,17 +217,20 @@ class OnboardingController: UICollectionViewController, UICollectionViewDelegate
     bottomContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
     bottomContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     bottomContainerView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.4).isActive = true
+       
     
-    pageControl.anchor(top: bottomContainerView.topAnchor, left: bottomContainerView.leftAnchor, bottom: signupButton.topAnchor, right: bottomContainerView.rightAnchor, paddingTop: -12, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 50)
-    signupButton.anchor(top: pageControl.bottomAnchor, left: nil, bottom: loginButton.topAnchor, right: nil, paddingTop: 12, paddingLeft: 0, paddingBottom: 4, paddingRight: 0, width: 300, height: 60)
-    loginButton.anchor(top: signupButton.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 300, height: 60)
-    getMeStartedButton.anchor(top: loginButton.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 20, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 200, height: 20)
+        
+    pageControl.anchor(top: bottomContainerView.topAnchor, leading: bottomContainerView.leadingAnchor, bottom: nil, trailing: bottomContainerView.trailingAnchor, padding: .init(top: 12, left: 0, bottom: 0, right: 0), size: .init(width: 0, height: 50))
+        
+    signupButton.anchor(top: pageControl.bottomAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 12, left: 0, bottom: 4, right: 0), size: .init(width: 300, height: 60))
     
+    loginButton.anchor(top: signupButton.bottomAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 12, left: 0, bottom: 0, right: 0), size: .init(width: 300, height: 60))
+    
+
     
     signupButton.centerXAnchor.constraint(equalTo: bottomContainerView.centerXAnchor).isActive = true
     loginButton.centerXAnchor.constraint(equalTo: bottomContainerView.centerXAnchor).isActive = true
-    getMeStartedButton.centerXAnchor.constraint(equalTo: bottomContainerView.centerXAnchor).isActive = true
-        
+
 
         
     }

@@ -17,7 +17,7 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
     private let cellId = "cellId"
     private let sectionHeaderId = "sectionHeaderId"
     
-    let sections = ["Your Profiles", "Downloaded Profiles"]
+    let sections = ["Stored", "Liked/Cloud"]
     var isStylist: Bool?
     
     
@@ -31,17 +31,17 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
         getUserHairProfiles()
     }
     
-    lazy var addProfileButton: UIButton = {
+    lazy var getProfileButton: UIButton = {
         
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "save_shadow"), for: .normal)
-        button.addTarget(self, action: #selector(createProfileButtonTapped), for: .touchUpInside)
+        button.setImage(#imageLiteral(resourceName: "download").withRenderingMode(.alwaysOriginal), for: .normal)
+        button.addTarget(self, action: #selector(getHairProfileButtonTapped), for: .touchUpInside)
         return button
     }()
     
-    @objc func createProfileButtonTapped() {
+    @objc func getHairProfileButtonTapped() {
         
-        if isStylist == false {
+        if isStylist == true {
             
                 let getHairstyleView = GetHairstyleView()
                 getHairstyleView.delegate = self
@@ -49,9 +49,11 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
     
         } else {
             
-            let hairProfileCreationController = CreateHairProfileController()
+            let profilePageNavController = UINavigationController(rootViewController: ProfilePageController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil))
+            
+            
     
-            self.navigationController?.present(hairProfileCreationController, animated: true)
+            self.navigationController?.present(profilePageNavController, animated: true)
         }
         
     }
@@ -71,7 +73,7 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let rightNavBarButton = UIBarButtonItem(customView: addProfileButton)
+        let rightNavBarButton = UIBarButtonItem(customView: getProfileButton)
         self.navigationItem.rightBarButtonItem = rightNavBarButton
         
         
@@ -83,10 +85,10 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
         collectionView?.backgroundColor = .white
         collectionView?.refreshControl = self.refreshControl
         
-        collectionView?.anchor(top: topLayoutGuide.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 8, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        collectionView?.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 8, left: 0, bottom: 0, right: 0))
         
 
-        title = "Profiles"
+     
         view.backgroundColor = .white
         
         retrieveHairProfiles()
@@ -186,6 +188,7 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
     
     @objc func retrieveHairProfiles() {
         
+        print("Retrieving hair oproifles ===============")
         do {
             let retrievedProfiles = try Disk.retrieve("corehairprofiles.json", from: .documents, as: [CoreHairProfile].self)
             self.coreProfiles = retrievedProfiles
@@ -207,7 +210,7 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
     
     func getUserHairProfiles() {
         
-        let authToken = KeychainKeys.authToken
+        let authToken = Keychain.getKey(name: "authToken")
 
         let headers: [String: String] = [
             "Content-Type": "application/json",
@@ -252,7 +255,7 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
     func downloadHairProfile() {
         print("Posting hair profile")
         
-        let authToken = KeychainKeys.authToken
+        let authToken = Keychain.getKey(name: "authToken")
         
         let headers = [
             "Content-Type": "application/json",

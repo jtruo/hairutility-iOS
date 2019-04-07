@@ -9,6 +9,8 @@
 import UIKit
 import IQKeyboardManagerSwift
 import CoreData
+import AWSS3
+
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -21,6 +23,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
 
    
+        // Global colors
+        
+         UINavigationBar.appearance().tintColor = UIColor.mainCharcoal()
+        
         
         window = UIWindow()
         window?.backgroundColor = .white
@@ -34,6 +40,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         #endif
         
         IQKeyboardManager.shared.enable = true
+        
+        //Sets up credentials in order for transfer utility to be permitted to upload objects into the bucket
+        
+        let credentialsProvider = AWSCognitoCredentialsProvider(regionType:.USEast2,
+                                                            identityPoolId:"us-east-2:232ab15e-2256-4c1d-ac67-c657f33a3457")
+        
+        let configuration = AWSServiceConfiguration(region:.USEast2, credentialsProvider:credentialsProvider)
+        
+        
+        AWSServiceManager.default().defaultServiceConfiguration = configuration
         
         return true
     }

@@ -17,13 +17,14 @@ import Alamofire
 protocol ProfilePageDelegate {
     func nextButtonPressed(hairstyleName: String, image: UIImage)
     func backButtonPressed()
+   
 }
 
 
 class ProfilePageController: UIPageViewController, UIPageViewControllerDelegate, ProfilePageDelegate {
 
-
     
+    var delegate2: CreateHairProfileDelegate?
     
     var pages = [UIViewController]()
     
@@ -38,10 +39,25 @@ class ProfilePageController: UIPageViewController, UIPageViewControllerDelegate,
         return pageControl
     }()
     
+    
+    lazy var saveButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.titleLabel?.text = "Save"
+        button.setTitle("Save", for: .normal)
+        button.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc func saveButtonTapped() {
+        print("Do nothing")
+        guard let delegate2 = delegate2 else { return }
+        delegate2.uploadPhotoButtonTapped()
+    }
+    
     lazy var dismissButton: UIButton = {
         
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "download"), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "cancel").withRenderingMode(.alwaysOriginal), for: .normal)
         button.addTarget(self, action: #selector(dismissButtonTapped), for: .touchUpInside)
         return button
         
@@ -63,15 +79,16 @@ class ProfilePageController: UIPageViewController, UIPageViewControllerDelegate,
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
         self.delegate = self
         
         let firstPage = ThumbnailController()
         firstPage.delegate = self
         
         let secondPage = CreateHairProfileController()
-        secondPage.delegate = self
+        secondPage.createProfileDelegate = self
 
-        
+
         self.pages.append(firstPage)
         self.pages.append(secondPage)
         
@@ -84,33 +101,26 @@ class ProfilePageController: UIPageViewController, UIPageViewControllerDelegate,
         self.navigationItem.leftBarButtonItem = leftBarButton
         self.navigationController?.navigationBar.backgroundColor = .white
         
+        saveButton.isHidden = true
+        let rightBarButton = UIBarButtonItem(customView: saveButton)
+        self.navigationItem.rightBarButtonItem = rightBarButton
+        
+
         let stackView = UIStackView(arrangedSubviews: [pageControl])
         stackView.axis = .horizontal
         stackView.spacing = 20
         
         view.addSubview(pageControl)
         
-        pageControl.translatesAutoresizingMaskIntoConstraints = false
-        pageControl.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -5).isActive = true
-        pageControl.widthAnchor.constraint(equalTo: self.view.widthAnchor, constant: -20).isActive = true
-        pageControl.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        pageControl.anchor(top: nil, leading: nil, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: nil, padding: .init(top: 0, left: 0, bottom: 6, right: 0), size: .init(width: 20, height: 20))
         pageControl.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        
         
         returnHandler = IQKeyboardReturnKeyHandler(controller: self)
         returnHandler.lastTextFieldReturnKeyType = .default
     
     }
     
-    func nextButtonPressed() {
-        ()
-    }
-    
-    
-    var hairstyleName: String?
-    var image: UIImage?
-    
-    
+
     
     // Call sendthumbnail info in thubmnail image.... use next button presed only
     
@@ -118,23 +128,28 @@ class ProfilePageController: UIPageViewController, UIPageViewControllerDelegate,
     @objc func nextButtonPressed(hairstyleName: String, image: UIImage) {
 
         
-        self.hairstyleName = hairstyleName
-        self.image = image
-        
         let forwardPage = pages[pageControl.currentPage + 1]
         
         
+   
+        
         if let forwardPage = forwardPage as? CreateHairProfileController {
-            forwardPage.hairstyleName = self.hairstyleName
+            forwardPage.hairstyleName = hairstyleName
+            forwardPage.imageArray.insert(image, at: 0)
+            
+            
         }
         
         setViewControllers([forwardPage], direction: .forward, animated: true, completion: nil)
+        
+        saveButton.isHidden = false
         pageControl.currentPage = pageControl.currentPage + 1
         
     }
     
     @objc func backButtonPressed() {
 
+        saveButton.isHidden = true
         let backPage = pages[pageControl.currentPage - 1]
         setViewControllers([backPage], direction: .reverse, animated: true, completion: nil)
         pageControl.currentPage = pageControl.currentPage - 1

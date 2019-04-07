@@ -118,7 +118,7 @@ class FirstPageController: UIViewController, UIScrollViewDelegate, UITextFieldDe
     lazy var nextPageButton: UIButton = {
         
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "download"), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "right_arrow").withRenderingMode(.alwaysOriginal), for: .normal)
         button.isEnabled = false
         button.addTarget(self, action: #selector(nextPageButtonPressed), for: .touchUpInside)
         button.backgroundColor = UIColor.rgb(red: 149, green: 204, blue: 244)
@@ -188,10 +188,15 @@ class FirstPageController: UIViewController, UIScrollViewDelegate, UITextFieldDe
         stackView.spacing = 10
         stackView.distribution = .fillEqually
         view.addSubview(stackView)
-        stackView.anchor(top: topLayoutGuide.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 2, paddingLeft: 16, paddingBottom: 0, paddingRight: 64, width: 300, height: 400)
+        
+        // TODO Padding is bad
+
+        stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: nil, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 2, left: 16, bottom: 0, right: 64), size: .init(width: 300, height: 400))
         
         view.addSubview(nextPageButton)
-        nextPageButton.anchor(top: nil, left: nil, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 4, width: 50, height: 50)
+
+        
+        nextPageButton.anchor(top: nil, leading: nil, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 4), size: .init(width: 50, height:50))
     }
     
     
@@ -208,7 +213,7 @@ class FirstPageController: UIViewController, UIScrollViewDelegate, UITextFieldDe
         guard let zipCode = zipCodeTextField.text else { return }
         guard let phone = phoneNumberTextField.text else { return }
         
-        let authToken = KeychainKeys.authToken
+        let authToken = Keychain.getKey(name: "authToken")
        
         let headers = [
             "Content-Type": "application/json",
@@ -246,7 +251,7 @@ class FirstPageController: UIViewController, UIScrollViewDelegate, UITextFieldDe
             
         }) { (err) in
             print(err)
-            self.alert(message: "", title: "Error: \(err)")
+            self.alert(message: "", title: "\(err)")
         }
         
     }

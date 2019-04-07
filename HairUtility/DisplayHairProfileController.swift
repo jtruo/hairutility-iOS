@@ -17,11 +17,12 @@ import Lightbox
 class DisplayHairProfileController: UIViewController, UIGestureRecognizerDelegate, UICollectionViewDelegate, UITextViewDelegate {
     
     
+    
     var hairProfile: HairProfile? {
         didSet{
             
             guard let hairProfile = hairProfile else { return }
-            
+        
             let firstImageUrl = prefixAndConvertToImageS3Url(suffix: hairProfile.firstImageKey)
             let secondImageUrl = prefixAndConvertToImageS3Url(suffix: hairProfile.secondImageKey)
             let thirdImageUrl = prefixAndConvertToImageS3Url(suffix: hairProfile.thirdImageKey)
@@ -55,6 +56,7 @@ class DisplayHairProfileController: UIViewController, UIGestureRecognizerDelegat
         iv.layer.borderWidth = 1.0
         //        iv.image = #imageLiteral(resourceName: "Slice 1")
         iv.tag = 0
+        iv.layer.cornerRadius = 4
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
         iv.addGestureRecognizer(tapGestureRecognizer)
         
@@ -74,6 +76,7 @@ class DisplayHairProfileController: UIViewController, UIGestureRecognizerDelegat
         iv.isUserInteractionEnabled = true
         iv.layer.borderColor = UIColor(white: 0.8, alpha: 0.9).cgColor
         iv.layer.borderWidth = 1.0
+        iv.layer.cornerRadius = 4
         iv.tag = 1
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
         iv.addGestureRecognizer(tapGestureRecognizer)
@@ -88,6 +91,7 @@ class DisplayHairProfileController: UIViewController, UIGestureRecognizerDelegat
         iv.layer.borderColor = UIColor(white: 0.8, alpha: 0.9).cgColor
         iv.layer.borderWidth = 1.0
         iv.tag = 2
+        iv.layer.cornerRadius = 4
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
         iv.addGestureRecognizer(tapGestureRecognizer)
         return iv
@@ -101,6 +105,7 @@ class DisplayHairProfileController: UIViewController, UIGestureRecognizerDelegat
         iv.layer.borderColor = UIColor(white: 0.8, alpha: 0.9).cgColor
         iv.layer.borderWidth = 1.0
         iv.tag = 3
+        iv.layer.cornerRadius = 4
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
         iv.addGestureRecognizer(tapGestureRecognizer)
         return iv
@@ -109,12 +114,12 @@ class DisplayHairProfileController: UIViewController, UIGestureRecognizerDelegat
     lazy var profileDescriptionTextView: UITextView = {
         let tv = UITextView()
         tv.isEditable = false
-        tv.text = "Add any descriptions"
         tv.textColor = UIColor.lightGray
         tv.layer.borderWidth = 0.5
         tv.layer.borderColor = UIColor.lightGray.cgColor
         tv.font = .systemFont(ofSize: 16)
         tv.delegate = self
+        tv.layer.cornerRadius = 4
         return tv
     }()
     
@@ -139,7 +144,7 @@ class DisplayHairProfileController: UIViewController, UIGestureRecognizerDelegat
     lazy var downloadProfileButton: UIButton = {
         
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "right_arrow_shadow"), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "like_unselected").withRenderingMode(.alwaysOriginal), for: .normal)
         button.addTarget(self, action: #selector(downloadButtonTapped), for: .touchUpInside)
         return button
         
@@ -190,7 +195,9 @@ class DisplayHairProfileController: UIViewController, UIGestureRecognizerDelegat
         view.backgroundColor = .white
         
         view.addSubview(containerView)
-        containerView.anchor(top: topLayoutGuide.bottomAnchor, left: nil, bottom: bottomLayoutGuide.topAnchor, right: nil, paddingTop: 12, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 350, height: 0)
+
+        containerView.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: nil, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: nil, padding: .init(top: 12, left: 0, bottom: 0, right: 0), size: .init(width: 350, height: 0))
+        
         containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
         
@@ -205,25 +212,29 @@ class DisplayHairProfileController: UIViewController, UIGestureRecognizerDelegat
         
         
         
-        firstImageView.anchor(top: containerView.topAnchor, left: containerView.leftAnchor, bottom: thirdImageView.topAnchor, right: secondImageView.leftAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 1, paddingRight: 1, width: 168, height: 168)
-        
-        secondImageView.anchor(top: containerView.topAnchor, left: firstImageView.rightAnchor, bottom: fourthImageView.topAnchor, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 1, paddingBottom: 1, paddingRight: 0, width: 168, height: 168)
-        
-        thirdImageView.anchor(top: firstImageView.bottomAnchor, left: containerView.leftAnchor, bottom: profileDescriptionTextView.topAnchor, right: fourthImageView.leftAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 1, width: 168, height: 168)
-        
-        fourthImageView.anchor(top: secondImageView.bottomAnchor, left: thirdImageView.rightAnchor, bottom: profileDescriptionTextView.topAnchor, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 1, paddingBottom: 0, paddingRight: 0, width: 168, height: 168)
-        
-        profileDescriptionTextView.anchor(top: thirdImageView.bottomAnchor, left: containerView.leftAnchor, bottom: nil, right: containerView.rightAnchor, paddingTop: 8, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 336, height: 120)
-        
-        creatorTextView.anchor(top: profileDescriptionTextView.bottomAnchor, left: containerView.leftAnchor, bottom: nil, right: containerView.rightAnchor, paddingTop: 8, paddingLeft: 0, paddingBottom: 0, paddingRight: 8, width: 150, height: 50)
-        
-        tagsTextView.anchor(top: creatorTextView.bottomAnchor, left: containerView.leftAnchor, bottom: nil, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 150, height: 50)
-        
-        firstImageView.addSubview(firstAnimationView)
-        firstAnimationView.anchor(top: firstImageView.topAnchor, left: firstImageView.leftAnchor, bottom: firstImageView.bottomAnchor, right: firstImageView.rightAnchor, paddingTop: 2, paddingLeft: 2, paddingBottom: 2, paddingRight: 2, width: 50, height: 50)
+        firstImageView.anchor(top: containerView.topAnchor, leading: containerView.leadingAnchor, bottom: thirdImageView.topAnchor, trailing: secondImageView.leadingAnchor, padding: .init(top: 16, left: 6, bottom: 1, right: 1), size: .init(width: 168, height: 168))
         
         
-    
+        secondImageView.anchor(top: containerView.topAnchor, leading: firstImageView.trailingAnchor, bottom: fourthImageView.topAnchor, trailing: containerView.trailingAnchor, padding: .init(top: 16, left: 1, bottom: 1, right: 6), size: .init(width: 168, height: 168))
+        
+        
+        thirdImageView.anchor(top: firstImageView.bottomAnchor, leading: containerView.leadingAnchor, bottom: profileDescriptionTextView.topAnchor, trailing: fourthImageView.leadingAnchor, padding: .init(top: 0, left: 6, bottom: 16, right: 1), size: .init(width: 168, height: 168))
+        
+        
+        fourthImageView.anchor(top: secondImageView.bottomAnchor, leading: thirdImageView.trailingAnchor, bottom: profileDescriptionTextView.topAnchor, trailing: containerView.trailingAnchor, padding: .init(top: 0, left: 1, bottom: 16, right: 6), size: .init(width: 168, height: 168))
+        
+        
+        profileDescriptionTextView.anchor(top: nil, leading: containerView.leadingAnchor, bottom: creatorTextView.topAnchor, trailing: containerView.trailingAnchor, padding: .init(top: 8, left: 7, bottom: 0, right: 7), size: .init(width: 336, height: 89))
+        
+        creatorTextView.anchor(top: profileDescriptionTextView.bottomAnchor, leading: containerView.leadingAnchor, bottom: tagsTextView.topAnchor, trailing: containerView.trailingAnchor, padding: .init(top: 8, left: 0, bottom: 0, right: 0), size: .init(width: 150, height: 50))
+        
+        tagsTextView.anchor(top: creatorTextView.bottomAnchor, leading: containerView.leadingAnchor, bottom: containerView.bottomAnchor, trailing: containerView.trailingAnchor, size: .init(width: 150, height: 50))
+        
+//        firstImageView.addSubview(firstAnimationView)
+//        firstAnimationView.anchor(top: firstImageView.topAnchor, left: firstImageView.leftAnchor, bottom: firstImageView.bottomAnchor, right: firstImageView.rightAnchor, paddingTop: 2, paddingLeft: 2, paddingBottom: 2, paddingRight: 2, width: 50, height: 50)
+//
+//
+//
     }
     
     
@@ -232,7 +243,7 @@ class DisplayHairProfileController: UIViewController, UIGestureRecognizerDelegat
     fileprivate func saveHairProfile() {
         print("Posting hair profile")
         
-        let authToken = KeychainKeys.authToken
+        let authToken = Keychain.getKey(name: "authToken")
         
         let headers = [
             "Content-Type": "application/json",
@@ -244,15 +255,16 @@ class DisplayHairProfileController: UIViewController, UIGestureRecognizerDelegat
         guard let descriptionText = profileDescriptionTextView.text else { return }
         guard let hairstyleName = self.navigationItem.title else { return }
         
-        let parameters: [String: String] = [
+        let parameters: [String: Any] = [
             "creator": (self.hairProfile?.creator)!,
             "hairstyle_name": hairstyleName,
-            "thumbnail_key": "thumbnail_key",
+            "thumbnail_key": (self.hairProfile?.thumbnailKey)!,
             "first_image_key": (self.hairProfile?.firstImageKey)!,
             "second_image_key": (self.hairProfile?.secondImageKey)!,
             "third_image_key": (self.hairProfile?.thirdImageKey)!,
             "fourth_image_key": (self.hairProfile?.fourthImageKey)!,
             "profile_description": descriptionText,
+            "tags": (self.hairProfile?.tags)!
             
         ]
         
@@ -260,9 +272,12 @@ class DisplayHairProfileController: UIViewController, UIGestureRecognizerDelegat
   
             print("finished")
             self.alert(message: "Successfully saved profile to your account")
+            self.downloadProfileButton.setImage(#imageLiteral(resourceName: "like_selected"), for: .normal)
+            //TODO change hearts color
+            //TODO don't enable client to download same profile
         }) { (err) in
             print(err)
-            self.alert(message: "Must be logged in to upload")
+            self.alert(message: "There was an error saving the profile")
         }
     }
     

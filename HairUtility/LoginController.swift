@@ -39,10 +39,10 @@ class LoginController: UIViewController {
         
         if isFormValid {
             loginButton.isEnabled = true
-            loginButton.backgroundColor = UIColor.rgb(red: 17, green: 154, blue: 237)
+            loginButton.backgroundColor = UIColor.mainCharcoal()
         } else {
             loginButton.isEnabled = false
-            loginButton.backgroundColor = UIColor.rgb(red: 149, green: 204, blue: 244)
+            loginButton.backgroundColor = UIColor.mainGrey()
         }
     }
     
@@ -50,7 +50,7 @@ class LoginController: UIViewController {
     let loginButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Login", for: .normal)
-        button.backgroundColor = UIColor.rgb(red: 149, green: 204, blue: 244)
+        button.backgroundColor = UIColor.mainGrey()
         button.layer.cornerRadius = 5
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.setTitleColor(.white, for: .normal)
@@ -82,10 +82,11 @@ class LoginController: UIViewController {
     fileprivate func setupInputFields() {
         let stackView = UIStackView(arrangedSubviews: [emailTextField, passwordTextField, loginButton])
         stackView.axis = .vertical
-        stackView.spacing = 10
+        stackView.spacing = 20
         stackView.distribution = .fillEqually
         view.addSubview(stackView)
-        stackView.anchor(top: topLayoutGuide.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 40, paddingLeft: 40, paddingBottom: 0, paddingRight: 40, width: 0, height: 140)
+
+        stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: nil, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 40, left: 40, bottom: 0, right: 40), size: .init(width: 0, height: 150))
     }
     
     

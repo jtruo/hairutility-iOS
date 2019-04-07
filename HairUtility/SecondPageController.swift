@@ -39,7 +39,7 @@ class SecondPageController: UIViewController, UIImagePickerControllerDelegate, U
     
     let plusPhotoButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "photoButton").withRenderingMode(.alwaysOriginal), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "placeholder_image").withRenderingMode(.alwaysOriginal), for: .normal)
         button.addTarget(self, action: #selector(handlePlusPhoto), for: .touchUpInside)
         return button
         
@@ -110,7 +110,7 @@ class SecondPageController: UIViewController, UIImagePickerControllerDelegate, U
     lazy var addInfoButton: UIButton = {
         
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "download"), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "download").withRenderingMode(.alwaysOriginal), for: .normal)
         button.addTarget(self, action: #selector(addInfoButtonPressed), for: .touchUpInside)
         return button
         
@@ -141,14 +141,16 @@ class SecondPageController: UIViewController, UIImagePickerControllerDelegate, U
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
         view.addSubview(stackView)
-        stackView.anchor(top: topLayoutGuide.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 12, paddingLeft: 16, paddingBottom: 0, paddingRight: 0, width: 300, height: 500)
+
+        stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 12, left: 16, bottom: 0, right: 0), size: .init(width: 300, height: 500))
 //        plusPhotoButton.anchor(top: topLayoutGuide.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 4, paddingLeft: 0, paddingBottom: 00, paddingRight: 0, width: 256, height: 144)
 //
 //        view.addSubview(firstAnimationView)
-//        firstAnimationView.anchor(top: nil, left: nil, bottom: <#T##NSLayoutYAxisAnchor?#>, right: <#T##NSLayoutXAxisAnchor?#>, paddingTop: <#T##CGFloat#>, paddingLeft: <#T##CGFloat#>, paddingBottom: <#T##CGFloat#>, paddingRight: <#T##CGFloat#>, width: <#T##CGFloat#>, height: <#T##CGFloat#>)
+
         
         view.addSubview(addInfoButton)
-        addInfoButton.anchor(top: nil, left: nil, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 4, paddingRight: 4, width: 50, height: 50)
+        
+        addInfoButton.anchor(top: nil, leading: nil, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 4, right: 4), size: .init(width: 50, height: 50))
 //
 //
     }
@@ -233,8 +235,8 @@ class SecondPageController: UIViewController, UIImagePickerControllerDelegate, U
     fileprivate func updateCompanyProfile() {
         
         
-        let authToken = KeychainKeys.authToken
-        let companyPk = KeychainKeys.companyPk
+        let authToken = Keychain.getKey(name: "authToken")
+        let companyPk = Keychain.getKey(name: "companyPk")
         
         guard let bio = companyBioTextView.text else { return }
         

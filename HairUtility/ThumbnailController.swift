@@ -11,15 +11,53 @@ import UIKit
 import IQKeyboardManagerSwift
 import Alamofire
 import KeychainAccess
+import ImagePicker
 
 
-class ThumbnailController: UIViewController, UIScrollViewDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
+class ThumbnailController: UIViewController, UIScrollViewDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ImagePickerDelegate {
     
+    
+    
+    
+    // MARK: ImagePicker Library
+    
+    
+    let imagePicker = ImagePickerController()
+    var config = Configuration()
+    public var imageAssets: [UIImage] {
+        return AssetManager.resolveAssets(imagePicker.stack.assets)
+        
+    }
+    
+    
+    func wrapperDidPress(_ imagePicker: ImagePickerController, images: [UIImage]) {
+        print("wrapper is working")
+
+    }
+    
+    func doneButtonDidPress(_ imagePicker: ImagePickerController, images: [UIImage]) {
+    
+        thumbnailImageView.image = images[0]
+        imagePicker.dismiss(animated: true, completion: nil)
+    }
+    
+    func cancelButtonDidPress(_ imagePicker: ImagePickerController) {
+        print("cancel is working")
+        dismiss(animated: true, completion: nil)
+    }
+    
+
+
     //    Still need to fix returning 0
     
-    var delegate: ProfilePageDelegate?
     
+
+  
+    
+    // MARK: Views
+    
+      var delegate: ProfilePageDelegate?
     
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -31,15 +69,14 @@ class ThumbnailController: UIViewController, UIScrollViewDelegate, UITextFieldDe
         return scrollView
     }()
     
-    let companyLabel: BaseTextLabel = {
+    let hairstyleNameLabel: BaseTextLabel = {
         let label = BaseTextLabel()
-        label.text = "Company Name"
+        label.text = "Hairstyle Name"
         return label
     }()
     
-    lazy var companyNameTextField: BottomBorderTextField = {
+    lazy var hairstyleNameTextField: BottomBorderTextField = {
         let textField = BottomBorderTextField()
-        textField.placeholder = "Hair Salon- Fort Wayne"
         textField.autocapitalizationType = .sentences
         textField.delegate = self
         textField.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
@@ -47,59 +84,63 @@ class ThumbnailController: UIViewController, UIScrollViewDelegate, UITextFieldDe
     }()
     
     
-    let plusPhotoButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "photoButton").withRenderingMode(.alwaysOriginal), for: .normal)
-        button.addTarget(self, action: #selector(handlePlusPhoto), for: .touchUpInside)
-        return button
-        
+    let thumbnailLabel: BaseTextLabel = {
+        let label = BaseTextLabel()
+        label.textAlignment = .center
+        label.text = "Thumbnail Image"
+        return label
     }()
     
-    @objc func handlePlusPhoto() {
-        let imagePickerController = UIImagePickerController()
-        present(imagePickerController, animated: true, completion: nil)
-        imagePickerController.delegate = self
-        imagePickerController.allowsEditing = true
+
+    lazy var thumbnailImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFill
+        iv.backgroundColor = UIColor(white: 0, alpha: 0.03)
+        iv.isUserInteractionEnabled = true
+        iv.layer.cornerRadius = 4
+        iv.clipsToBounds = true
+        iv.layer.borderColor = UIColor(white: 0.8, alpha: 0.9).cgColor
+        iv.layer.borderWidth = 1.0
+        return iv
+    }()
+    
+    @objc func imageTapped(button: UIButton) {
         
+        imagePicker.imageLimit = 1
+        imagePicker.delegate = self
+        config.doneButtonTitle = "Finish"
+        config.noImagesTitle = "Sorry! There are no images here!"
+        config.recordLocation = false
+        
+        present(imagePicker, animated: true, completion: nil)
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        
-        
-        if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
-            plusPhotoButton.setImage(editedImage.withRenderingMode(.alwaysOriginal), for: .normal)
-            
-        } else if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
-            plusPhotoButton.setImage(originalImage.withRenderingMode(.alwaysOriginal), for: .normal)
-        }
-        
-        
-        plusPhotoButton.layer.masksToBounds = true
-        plusPhotoButton.layer.borderColor = UIColor.black.cgColor
-        plusPhotoButton.layer.borderWidth = 1
-        
-        dismiss(animated: true, completion: nil)
-    }
-    
+ 
     
     lazy var nextPageButton: UIButton = {
         
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "download"), for: .normal)
-        button.isEnabled = false
+        button.setImage(#imageLiteral(resourceName: "right_arrow").withRenderingMode(.alwaysOriginal), for: .normal)
+        button.isEnabled = true
+        button.tintColor = .clear
         button.addTarget(self, action: #selector(nextPageButtonPressed), for: .touchUpInside)
-        button.backgroundColor = UIColor.rgb(red: 149, green: 204, blue: 244)
+   
         return button
         
     }()
     
     @objc func nextPageButtonPressed() {
-        print("nextpage button pressed")
-        // guard to check if image and hairstyule name are passed
+   
+        if let image = thumbnailImageView.image, let hairstyleName = hairstyleNameTextField.text, !hairstyleName.isEmpty  {
+    
+                delegate?.nextButtonPressed(hairstyleName: hairstyleName, image: image)
+            
+        } else {
+            self.alert(message: "Please complete the two steps to continue")
+        }
         
-        guard let image = plusPhotoButton.imageView?.image else { return }
-        guard let hairstyleName = companyNameTextField.text else { return }
-        delegate?.nextButtonPressed(hairstyleName: hairstyleName, image: image)
+
+    
         
         
     }
@@ -107,13 +148,10 @@ class ThumbnailController: UIViewController, UIScrollViewDelegate, UITextFieldDe
     @objc func handleTextInputChange() {
         
         
-        guard companyNameTextField.text != nil else {
+        guard hairstyleNameTextField.text != nil else {
             return
             
         }
-        
-        nextPageButton.backgroundColor = UIColor.rgb(red: 17, green: 154, blue: 237)
-        nextPageButton.isEnabled = true
         
     }
     
@@ -126,11 +164,13 @@ class ThumbnailController: UIViewController, UIScrollViewDelegate, UITextFieldDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
-        
+
         view.backgroundColor = .white
         
         setupInputFields()
+        
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(button:)))
+        thumbnailImageView.addGestureRecognizer(gestureRecognizer)
     
     }
     
@@ -146,17 +186,36 @@ class ThumbnailController: UIViewController, UIScrollViewDelegate, UITextFieldDe
         //        let mainScreenHeight = UIScreen.main.bounds.size.height
         //
         
-        let stackView = UIStackView(arrangedSubviews: [companyLabel])
+        let stackView = UIStackView(arrangedSubviews: [hairstyleNameLabel, hairstyleNameTextField])
         
         
         stackView.axis = .vertical
         stackView.spacing = 10
         stackView.distribution = .fillEqually
         view.addSubview(stackView)
-        stackView.anchor(top: topLayoutGuide.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 2, paddingLeft: 16, paddingBottom: 0, paddingRight: 64, width: 300, height: 400)
+        stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+    
+        stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 32, left: 0, bottom: 0, right: 0), size: .init(width: 250, height: 50))
+        
+
+        
+        
+        view.addSubview(thumbnailLabel)
+        view.addSubview(thumbnailImageView)
+    
+        thumbnailLabel.anchor(top: stackView.bottomAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 64, left: 0, bottom: 0, right: 0),  size: .init(width: 168, height: 25))
+ 
+        thumbnailImageView.anchor(top: thumbnailLabel.bottomAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 32, left: 0, bottom: 0, right: 0),  size: .init(width: 168, height: 168))
+     
+        thumbnailImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+    
+        
+        thumbnailLabel.centerXAnchor.constraint(equalTo: thumbnailImageView.centerXAnchor).isActive = true
+        
         
         view.addSubview(nextPageButton)
-        nextPageButton.anchor(top: nil, left: nil, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 4, width: 50, height: 50)
+        
+        nextPageButton.anchor(top: nil, leading: nil, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 4), size: .init(width: 50, height: 50))
     }
     
     

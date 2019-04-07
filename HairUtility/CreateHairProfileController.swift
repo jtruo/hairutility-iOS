@@ -13,18 +13,24 @@ import Alamofire
 import KeychainAccess
 import Lottie
 import Disk
-//TODO: Change UILabel "Step 1" to rounded button or rects
-// Add three other animation views.
 
 
 
-class CreateHairProfileController: UIViewController, UploadOptionsDelegate, ImagePickerDelegate, UIGestureRecognizerDelegate, UICollectionViewDelegate, UITextViewDelegate, UIPopoverPresentationControllerDelegate {
+protocol CreateHairProfileDelegate {
+    func uploadPhotoButtonTapped()
+}
+
+//Use federated identities custom authentication with token.
+/// TODO PROFILEPAGECONTROLLER, RIGHT BAR BUTTON, ISHIDDEN, DELEGATE
+
+class CreateHairProfileController: UIViewController, UploadOptionsDelegate, ImagePickerDelegate, CreateHairProfileDelegate, UIGestureRecognizerDelegate, UICollectionViewDelegate, UITextViewDelegate, UIPopoverPresentationControllerDelegate , UINavigationBarDelegate {
+
 
     
     var isStylist: Bool?
-    var imageArray: [UIImage]?
+    var imageArray: [UIImage] = [UIImage]()
     var s3UrlArray = [String]()
-    var delegate: ProfilePageDelegate?
+    var createProfileDelegate: ProfilePageDelegate?
    
 
     
@@ -35,16 +41,11 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         
     }
     
-    lazy var hairstyleNameTextField: BottomBorderTextField = {
-        let textField = BottomBorderTextField()
-        return textField
-    }()
-    
+
     lazy var firstImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
         iv.backgroundColor = UIColor(white: 0, alpha: 0.03)
-        iv.clipsToBounds = true
         iv.isUserInteractionEnabled = true
         iv.layer.cornerRadius = 4
         iv.clipsToBounds = true
@@ -53,18 +54,12 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         return iv
     }()
     
-    lazy var firstAnimationView: LOTAnimationView = {
-        let animationView = LOTAnimationView(name:"blueprogress")
-        return animationView
-    }()
-    
     lazy var secondImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
         iv.isUserInteractionEnabled = true
         iv.layer.cornerRadius = 4
-        iv.clipsToBounds = true
         iv.backgroundColor = UIColor(white: 0, alpha: 0.03)
         iv.layer.borderColor = UIColor(white: 0.8, alpha: 0.9).cgColor
         iv.layer.borderWidth = 1.0
@@ -101,14 +96,14 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         lotAnimationView.contentMode = UIViewContentMode.scaleAspectFill
         lotAnimationView.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
         lotAnimationView.layer.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
-        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(buttonTouched(button:)))
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(button:)))
         lotAnimationView.addGestureRecognizer(gestureRecognizer)
         return lotAnimationView
     }()
     
     lazy var profileDescriptionTextView: UITextView = {
         let tv = UITextView()
-        tv.text = "Add any descriptions"
+        tv.text = "Add any specific info needed to make the cut such as: #2 clippers, layered, beachy, trim the crown 7 inches"
         tv.textColor = UIColor.lightGray
         tv.layer.borderWidth = 0.5
         tv.layer.borderColor = UIColor.lightGray.cgColor
@@ -140,7 +135,7 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         view.endEditing(true)
     }
 
-    @objc func buttonTouched(button: UIButton) {
+    @objc func imageTapped(button: UIButton) {
         
         imagePicker.imageLimit = 4
         imagePicker.delegate = self
@@ -151,35 +146,39 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         present(imagePicker, animated: true, completion: nil)
     }
     
-    lazy var dismissButton: UIButton = {
+    lazy var backButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "download"), for: .normal)
-        button.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+        button.setImage(#imageLiteral(resourceName: "left_arrow").withRenderingMode(.alwaysOriginal), for: .normal)
+        button.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
         return button
         
     }()
     
-    @objc func cancelButtonTapped() {
-        self.dismiss(animated: true, completion: nil)
+    @objc func backButtonPressed() {
+        createProfileDelegate?.backButtonPressed()
   
     }
+    
+
     
     lazy var uploadPhotoButton: UIButton = {
         
         let uploadButton = UIButton(type: .system)
-        uploadButton.setImage(#imageLiteral(resourceName: "right_arrow_shadow"), for: .normal)
+        uploadButton.setImage(#imageLiteral(resourceName: "upload").withRenderingMode(.alwaysOriginal), for: .normal)
         uploadButton.addTarget(self, action: #selector(uploadPhotoButtonTapped), for: .touchUpInside)
 
         return uploadButton
         
     }()
     
+    // when going back and forth the image array goes to 6
     @objc func uploadPhotoButtonTapped() {
         
-        hairstyleNameTextField.hasError = true
+        print(imageArray.count)
         
-        guard imageArray?.count == 4, hairstyleNameTextField.text != nil, profileDescriptionTextView.text != nil else {
-            self.alert(message: "", title: "Please complete all three steps to save the hairstyle")
+        guard imageArray.count == 5, profileDescriptionTextView.text != nil else {
+            
+            self.alert(message: "", title: "Please complete all four steps to save the hairstyle")
             return
         }
         
@@ -215,12 +214,6 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         return label
     }()
     
-    let thirdStepLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Step 3:"
-        return label
-    }()
-    
     lazy var containerView: UIView = {
         let containerView = UIView()
         containerView.backgroundColor = .white
@@ -234,14 +227,27 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         self.isStylist = UserDefaults.standard.bool(forKey: "isStylist")
         view.backgroundColor = .white
         
-        view.addSubview(containerView)
-        containerView.anchor(top: topLayoutGuide.bottomAnchor, left: nil, bottom: view.bottomAnchor, right: nil, paddingTop: 24, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 350, height: 0)
-        containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
-        containerView.addSubview(firstStepLabel)
-        containerView.addSubview(secondStepLabel)
-        containerView.addSubview(thirdStepLabel)
-        containerView.addSubview(hairstyleNameTextField)
+        if let parent = self.parent as? ProfilePageController {
+            parent.delegate2 = self
+        }
+        
+        
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(button:)))
+        firstImageView.addGestureRecognizer(gestureRecognizer)
+        secondImageView.addGestureRecognizer(gestureRecognizer)
+        thirdImageView.addGestureRecognizer(gestureRecognizer)
+        fourthImageView.addGestureRecognizer(gestureRecognizer)
+        
+        
+        view.addSubview(containerView)
+
+    
+        
+        containerView.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: nil, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: nil, padding: .init(top: 12, left: 0, bottom: 0, right: 0), size: .init(width: 350, height: 0))
+        containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+
+        
         containerView.addSubview(firstImageView)
         containerView.addSubview(secondImageView)
         containerView.addSubview(thirdImageView)
@@ -249,45 +255,42 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         containerView.addSubview(cameraButton)
         containerView.addSubview(profileDescriptionTextView)
         
-        firstStepLabel.anchor(top: containerView.topAnchor, left: containerView.leftAnchor, bottom: nil, right: hairstyleNameTextField.leftAnchor, paddingTop: 2, paddingLeft: 2, paddingBottom: 0, paddingRight: 2, width: 80, height: 40)
         
-        hairstyleNameTextField.anchor(top: containerView.topAnchor, left: firstStepLabel.rightAnchor, bottom: nil, right: containerView.rightAnchor, paddingTop: 2, paddingLeft: 0, paddingBottom: 0, paddingRight: 24, width: 100, height: 30)
-        
-        firstImageView.anchor(top: hairstyleNameTextField.bottomAnchor, left: containerView.leftAnchor, bottom: thirdImageView.topAnchor, right: secondImageView.leftAnchor, paddingTop: 8, paddingLeft: 24, paddingBottom: 1, paddingRight: 2, width: 150, height: 150)
-    
-        secondImageView.anchor(top: hairstyleNameTextField.bottomAnchor, left: firstImageView.rightAnchor, bottom: fourthImageView.topAnchor, right: containerView.rightAnchor, paddingTop: 8, paddingLeft: 0, paddingBottom: 1, paddingRight: 24, width: 150, height: 150)
-        
-        thirdImageView.anchor(top: firstImageView.bottomAnchor, left: containerView.leftAnchor, bottom: nil, right: fourthImageView.leftAnchor, paddingTop: 0, paddingLeft: 24, paddingBottom: 0, paddingRight: 2, width: 150, height: 150)
-        
-        fourthImageView.anchor(top: secondImageView.bottomAnchor, left: thirdImageView.rightAnchor, bottom: nil, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 1, paddingBottom: 0, paddingRight: 24, width: 150, height: 150)
-        
-        secondStepLabel.anchor(top: thirdImageView.bottomAnchor, left: containerView.leftAnchor, bottom: nil, right: cameraButton.leftAnchor, paddingTop: 8, paddingLeft: 2, paddingBottom: 0, paddingRight: 0, width: 80, height: 40)
+        firstImageView.anchor(top: containerView.topAnchor, leading: containerView.leadingAnchor, bottom: thirdImageView.topAnchor, trailing: secondImageView.leadingAnchor, padding: .init(top: 16, left: 24, bottom: 1, right: 1), size: .init(width: 150, height: 150))
         
         
-        thirdStepLabel.anchor(top: secondStepLabel.bottomAnchor, left: containerView.leftAnchor, bottom: nil, right: nil, paddingTop: 12, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 80, height: 40)
+        secondImageView.anchor(top: containerView.topAnchor, leading: firstImageView.trailingAnchor, bottom: fourthImageView.topAnchor, trailing: containerView.trailingAnchor, padding: .init(top: 16, left: 1, bottom: 1, right: 24), size: .init(width: 150, height: 150))
         
-        profileDescriptionTextView.anchor(top: thirdStepLabel.bottomAnchor, left: containerView.leftAnchor, bottom: nil, right: containerView.rightAnchor, paddingTop: 8, paddingLeft: 25, paddingBottom: 0, paddingRight: 25, width: 0, height: 100)
         
-        firstImageView.addSubview(firstAnimationView)
+        thirdImageView.anchor(top: firstImageView.bottomAnchor, leading: containerView.leadingAnchor, bottom: profileDescriptionTextView.topAnchor, trailing: fourthImageView.leadingAnchor, padding: .init(top: 1, left: 24, bottom: 16, right: 1), size: .init(width: 150, height: 150))
         
-        firstAnimationView.anchor(top: firstImageView.topAnchor, left: firstImageView.leftAnchor, bottom: firstImageView.bottomAnchor, right: firstImageView.rightAnchor, paddingTop: 2, paddingLeft: 2, paddingBottom: 2, paddingRight: 2, width: 50, height: 50)
+
         
-       
-        view.addSubview(dismissButton)
+        fourthImageView.anchor(top: secondImageView.bottomAnchor, leading: thirdImageView.trailingAnchor, bottom: profileDescriptionTextView.topAnchor, trailing: containerView.trailingAnchor, padding: .init(top: 1, left: 1, bottom: 16, right: 24), size: .init(width: 150, height: 150))
+        
+        
+        profileDescriptionTextView.anchor(top: nil, leading: containerView.leadingAnchor, bottom: nil, trailing: containerView.trailingAnchor, padding: .init(top: 12, left: 25, bottom: 0, right: 25), size: .init(width: 150, height: 150))
+        
+        
+        view.addSubview(backButton)
         view.addSubview(uploadPhotoButton)
     
-        dismissButton.anchor(top: nil, left: nil, bottom: view.bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 50, height: 50)
-        uploadPhotoButton.anchor(top: nil, left: nil, bottom: view.bottomAnchor, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 50, height: 50)
+
         
-        cameraButton.play(fromProgress: 0, toProgress: 0.3, withCompletion: nil)
- 
+        backButton.anchor(top: nil, leading: nil, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: nil, size: .init(width: 50, height: 50))
+        
+
+        
+        
+//        cameraButton.play(fromProgress: 0, toProgress: 0.3, withCompletion: nil)
+//
         
     }
     
 //    Remove before production
-    @objc func playAnimation() {
-        firstAnimationView.play(fromProgress: 0, toProgress: 1, withCompletion: nil)
-    }
+//    @objc func playAnimation() {
+//        firstAnimationView.play(fromProgress: 0, toProgress: 1, withCompletion: nil)
+//    }
     
     func leaveButtonTouched() {
         self.dismiss(animated: true, completion: nil)
@@ -322,19 +325,26 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         secondImageView.image = images[1]
         thirdImageView.image = images[2]
         fourthImageView.image = images[3]
-        self.imageArray = images
+
+        for (index, image) in images.enumerated() {
+            imageArray.insert(image, at: index + 1)
+        }
+        
+    
         imagePicker.dismiss(animated: true, completion: nil)
         
     }
 
     func uploadImagesToS3() {
-        print("Before image array")
-        guard let imageArray = imageArray else { return }
-        
-        print("Image array was passed")
+
         let dispatchGroup = DispatchGroup()
         
+        let uuidKey = UUID().uuidString
+        var finishedKey = ""
+        s3UrlArray.removeAll()
+        
         for (index, image) in imageArray.enumerated() {
+            
             
             dispatchGroup.enter()
             
@@ -344,18 +354,16 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
             expression.progressBlock = {(task, progress) in
                 DispatchQueue.main.async(execute: {
 
-                    let progressFloat = CGFloat(progress.fractionCompleted)
+//                    let progressFloat = CGFloat(progress.fractionCompleted)
                     
-                    print(progressFloat)
-                    
-                    if index == 0 {
-                        
-                        self.firstAnimationView.play(toProgress: progressFloat, withCompletion: { (finished) in
-                            print(finished)
-                            print("Animation is finished")
-                            
-                        })
-                    }
+//                    if index == 0 {
+//
+//                        self.firstAnimationView.play(toProgress: progressFloat, withCompletion: { (finished) in
+//                            print(finished)
+//                            print("Animation is finished")
+//
+//                        })
+//                    }
         
                 })
             }
@@ -364,9 +372,15 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
             completionHandler = { (task, error) -> Void in
                 DispatchQueue.main.async(execute: {
                     
-                    dispatchGroup.leave()
-                    print("Completion task: \(task)")
+
+                    
+                    
+          
                     print("Completion error: \(String(describing: error))")
+                 
+                    
+                    dispatchGroup.leave()
+
                   
                 })
             }
@@ -375,28 +389,41 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
                 print("There was an error with snapshot image url")
                 return
             }
+        
+            
             do {
-                try UIImageJPEGRepresentation(image, 1)?.write(to: snapshotImageURL)
+                
+                if index == 0 {
+                    try UIImageJPEGRepresentation(image, 0.4)?.write(to: snapshotImageURL)
+                } else {
+                    try UIImageJPEGRepresentation(image, 1)?.write(to: snapshotImageURL)
+                }
+
             } catch let error {
                 print(error)
             }
             
+            //Thumbnails are prefixed in the /thumbnail folder
+            if index == 0 {
+                finishedKey =  "thumbnails/" + uuidKey + ".png"
+                s3UrlArray.append(uuidKey + ".png")
+            } else {
+                finishedKey = "images/" + uuidKey + "-\(index).png"
+                s3UrlArray.append(uuidKey + "-\(index).png")
+            }
+
+            
             let transferUtility = AWSS3TransferUtility.default()
             
-            let userDefaults = UserDefaults.standard
-            guard let email = userDefaults.string(forKey: "email") else { return }
-            let encodedEmail = email.replacingOccurrences(of: "@", with: "%40")
-
-            let key = "images/\(encodedEmail)/\(UUID().uuidString).png"
-            let fullS3Key = "https://s3.us-east-2.amazonaws.com/hairutilityimages/\(key)"
-            
-            s3UrlArray.append(fullS3Key)
-            print(s3UrlArray.count)
-            transferUtility.uploadFile(snapshotImageURL, bucket: "hairutilityimages", key: key, contentType: "image/png",expression: expression,
+         
+            transferUtility.uploadFile(snapshotImageURL, bucket: "hairutility-prod", key: finishedKey, contentType: "image/png", expression: expression,
                                        completionHandler: completionHandler).continueWith(executor: AWSExecutor.immediate(), block: {
                                         (task) -> Any? in
                                         if let error = task.error {
                                             print("Error: \(error.localizedDescription)")
+                                            
+
+                                            
                                         }
 
                                         if let _ = task.result {
@@ -409,7 +436,7 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         
         
         dispatchGroup.notify(queue: DispatchQueue.global(qos: .background)) {
-            print("All \(imageArray.count) network requests completed")
+            print("All \(self.imageArray.count) network requests processed")
             self.postHairProfile()
         }
     }
@@ -445,7 +472,7 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         
         
         
-        let authToken = KeychainKeys.authToken
+        let authToken = Keychain.getKey(name: "authToken")
         let headers = [
             "Content-Type": "application/json",
             "Authorization": "Token \(authToken)"
@@ -460,10 +487,11 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
 
         let parameters: [String: Any] = [
             "hairstyle_name": hairstyleName,
-            "first_image_key": s3UrlArray[0],
-            "second_image_key": s3UrlArray[1],
-            "third_image_key": s3UrlArray[2],
-            "fourth_image_key": s3UrlArray[3],
+            "thumbnail_key": s3UrlArray[0],
+            "first_image_key": s3UrlArray[1],
+            "second_image_key": s3UrlArray[2],
+            "third_image_key": s3UrlArray[3],
+            "fourth_image_key": s3UrlArray[4],
             "profile_description": descriptionText,
             "is_displayable": isPubliclyDisplayable,
             "gender": genderTag,
@@ -490,11 +518,10 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
     
     @objc func storeInDocumentsDirectory() {
         
-        
-        //        Store images in folder with the date and time, and then store date and time. Retrieve images with the date with the received hair profile
-        guard let hairstyleName = hairstyleNameTextField.text else { return }
+        // Are thumbnails even necessary?
+        // Need to start imagearray + 1
+        guard let hairstyleName = hairstyleName else { return }
         guard let profileDescription = profileDescriptionTextView.text else { return }
-        guard let imageArray = imageArray else { return }
         
         let date = Date()
         let creationDate = date.convertDateToString(dateFormat: "yyyy-MM-dd HH:mm:ss")

@@ -27,7 +27,8 @@ class UserSettingsCell: UITableViewCell {
     
     func setupViews() {
         self.addSubview(cellTitleLabel)
-        cellTitleLabel.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor, right: contentView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 200, height: 50)
+        cellTitleLabel.anchor(top: contentView.topAnchor, leading: contentView.leadingAnchor, bottom: contentView.bottomAnchor, trailing: contentView.trailingAnchor, padding: .init(top: 0, left: 8, bottom: 0, right: 0), size: .init(width: 200, height: 50))
+   
     }
     
    

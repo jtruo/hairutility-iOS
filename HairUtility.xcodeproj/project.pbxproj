@@ -61,7 +61,6 @@
 		6FA9E62F20E006B400292566 /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA9E62E20E006B400292566 /* UserInfoCell.swift */; };
 		6FBA7CFE222C5DDF00A4E504 /* ProfilePageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBA7CFD222C5DDF00A4E504 /* ProfilePageController.swift */; };
 		6FBA7D00222C5E5C00A4E504 /* ThumbnailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBA7CFF222C5E5C00A4E504 /* ThumbnailController.swift */; };
-		6FBD9F4B221714130009144F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBD9F4A221714130009144F /* Constants.swift */; };
 		6FBDD0141F28D67500904F3E /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBDD0131F28D67500904F3E /* MainTabBarController.swift */; };
 		6FBDD0161F28D76900904F3E /* CompanyProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBDD0151F28D76900904F3E /* CompanyProfileController.swift */; };
 		6FBDD01A1F29572200904F3E /* CompanyHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBDD0191F29572200904F3E /* CompanyHeader.swift */; };
@@ -127,12 +126,10 @@
 		6F8596271F3FDF6E00C8BE11 /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		6F8596291F3FDFBB00C8BE11 /* PreviewPhotoContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewPhotoContainerView.swift; sourceTree = "<group>"; };
 		6FA87C4E205D601A00008474 /* ImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
-		6FA9E62720DC00CE00292566 /* PersonalProfilesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalProfilesController.swift; sourceTree = "<group>"; };
 		6FA9E62C20DC39C000292566 /* CreateHairProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateHairProfileController.swift; sourceTree = "<group>"; };
 		6FA9E62E20E006B400292566 /* UserInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoCell.swift; sourceTree = "<group>"; };
 		6FBA7CFD222C5DDF00A4E504 /* ProfilePageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePageController.swift; sourceTree = "<group>"; };
 		6FBA7CFF222C5E5C00A4E504 /* ThumbnailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailController.swift; sourceTree = "<group>"; };
-		6FBD9F4A221714130009144F /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		6FBDD0131F28D67500904F3E /* MainTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		6FBDD0151F28D76900904F3E /* CompanyProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompanyProfileController.swift; sourceTree = "<group>"; };
 		6FBDD0191F29572200904F3E /* CompanyHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompanyHeader.swift; sourceTree = "<group>"; };
@@ -210,7 +207,6 @@
 			isa = PBXGroup;
 			children = (
 				6FD4423B211B40830005D1F2 /* check_mark.json */,
-				6FA9E62720DC00CE00292566 /* PersonalProfilesController.swift */,
 				6F6137B920F034F0009A0E60 /* big_camera.json */,
 				6F6B7F5520ED1E2100EDEDE5 /* animation-w600-h600.json */,
 				6F6B7F4F20E7C84A00EDEDE5 /* camera_black.json */,
@@ -285,7 +281,6 @@
 				6F5584A11F26442C000EB4CE /* Extensions.swift */,
 				6F46D66F20D846F90013E08B /* AlamofireFunctions.swift */,
 				6F6B7F5320EC575200EDEDE5 /* Modal.swift */,
-				6FBD9F4A221714130009144F /* Constants.swift */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -411,7 +406,7 @@
 				TargetAttributes = {
 					6F5584891F263D06000EB4CE = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = X7P98V4CLA;
+						DevelopmentTeam = L89K3JJ52D;
 						LastSwiftMigration = 0910;
 						ProvisioningStyle = Automatic;
 					};
@@ -568,7 +563,6 @@
 				6F11335520E5939200DE1D06 /* DisplayHairProfileController.swift in Sources */,
 				6FBDD0141F28D67500904F3E /* MainTabBarController.swift in Sources */,
 				6FBDD01A1F29572200904F3E /* CompanyHeader.swift in Sources */,
-				6FBD9F4B221714130009144F /* Constants.swift in Sources */,
 				6F782CB121342BB400359DE2 /* EditCompanyProfileController.swift in Sources */,
 				6F6137C220FA5032009A0E60 /* SearchTableController.swift in Sources */,
 				6F782CAD213350CF00359DE2 /* AddStylistView.swift in Sources */,
@@ -731,8 +725,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = X7P98V4CLA;
+				DEVELOPMENT_TEAM = L89K3JJ52D;
 				INFOPLIST_FILE = HairUtility/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = HairUtility.com;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -749,8 +744,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = X7P98V4CLA;
+				DEVELOPMENT_TEAM = L89K3JJ52D;
 				INFOPLIST_FILE = HairUtility/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = HairUtility.com;
 				PRODUCT_NAME = "$(TARGET_NAME)";

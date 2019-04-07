@@ -28,8 +28,9 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
                     tabBarController.selectedIndex = 1
                 }
                 let clientAction = UIAlertAction(title: "Client", style: .default) { (action) in
-                    let hairProfileCreationController = CreateHairProfileController()
-                    self.present(hairProfileCreationController, animated: true)
+                    let createProfileNavController = self.templateNavController(unselectedImage: #imageLiteral(resourceName: "plus_circle_unselected"), selectedImage: #imageLiteral(resourceName: "plus_circle"), rootViewController: ProfilePageController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil))
+                    self.present(createProfileNavController, animated: true, completion: nil)
+                    
                 }
                 let actions = [stylistAction, clientAction]
                 self.alertWithActions(message: "", title: "Whose phone is being used to take photos?", actions: actions)
@@ -41,7 +42,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
                 
                 //                The problem with option 2 is that whenever someone reinstalls the app, the variabl will be reset. So in order to fix this, have the ping that the stylist checked their profile after they PATCH and when they load that view controller.
                 // if is first time launchnig, stylist profile set up is false
-                let createProfileNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "plus_unselected"), selectedImage: #imageLiteral(resourceName: "like_selected"), rootViewController: ProfilePageController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil))
+                let createProfileNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "plus_circle_unselected"), selectedImage: #imageLiteral(resourceName: "plus_circle"), rootViewController: ProfilePageController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil))
                 self.present(createProfileNavController, animated: true, completion: nil)
                 
                 
@@ -63,7 +64,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         
         self.isStylist = UserDefaults.standard.bool(forKey: "isStylist")
         
-        let authToken = KeychainKeys.authToken
+        let authToken = Keychain.getKey(name: "authToken")
         if authToken.isEmpty == true {
             
             print("Loading Onboarding Controller")
@@ -88,23 +89,31 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
     func setupViewControllers() {
       
         
-        let homeNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "search_unselected"), selectedImage: #imageLiteral(resourceName: "search_selected"), rootViewController: HomeController(collectionViewLayout: UICollectionViewFlowLayout()))
+        let homeNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "search_unselected"), selectedImage: #imageLiteral(resourceName: "search"), rootViewController: HomeController(collectionViewLayout: UICollectionViewFlowLayout()))
         
-        let profilesNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "profile_unselected"), selectedImage: #imageLiteral(resourceName: "profile_selected"), rootViewController: ReplacementController(collectionViewLayout: UICollectionViewFlowLayout()))
+            homeNavController.tabBarItem.title = "Search"
         
-        let createProfileNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "plus_unselected"), selectedImage: #imageLiteral(resourceName: "like_selected"), rootViewController: ProfilePageController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil))
+        let profilesNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "profile_unselected"), selectedImage: #imageLiteral(resourceName: "profile"), rootViewController: ReplacementController(collectionViewLayout: UICollectionViewFlowLayout()))
         
-        let companyNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "home_unselected"), selectedImage: #imageLiteral(resourceName: "home_selected"), rootViewController: CompanyProfileController(collectionViewLayout: UICollectionViewFlowLayout()))
+          profilesNavController.tabBarItem.title = "Profiles"
         
+        let createProfileNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "plus_circle_unselected"), selectedImage: #imageLiteral(resourceName: "plus_circle"), rootViewController: ProfilePageController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil))
         
-        let settingsNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "gear"), selectedImage: #imageLiteral(resourceName: "profile_unselected"), rootViewController: UserSettingsController())
+        createProfileNavController.tabBarItem.title = "Create"
+        
+//        let companyNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "home_unselected"), selectedImage: #imageLiteral(resourceName: "home_selected"), rootViewController: CompanyProfileController(collectionViewLayout: UICollectionViewFlowLayout()))
+//
+//
+        let settingsNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "settings_unselected"), selectedImage: #imageLiteral(resourceName: "settings"), rootViewController: UserSettingsController())
 
+          settingsNavController.tabBarItem.title = "Settings"
+        
         tabBar.tintColor = .black
-    
+
         viewControllers = [homeNavController,
                            profilesNavController,
                            createProfileNavController,
-                           companyNavController,
+//                           companyNavController,
                            settingsNavController]
         
         //modify tab bar item insets

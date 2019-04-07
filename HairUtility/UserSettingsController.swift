@@ -26,7 +26,6 @@ class UserSettingsController: UIViewController, UITableViewDelegate, UITableView
         didSet {
             guard let user = user else { return }
             
-//            Reloads user info cell when data is updated
             guard let profileImageString = user.profileImageUrl else { return }
             guard let profileImageUrl = URL(string: profileImageString) else { return }
             self.profileImageUrl = profileImageUrl
@@ -47,21 +46,23 @@ class UserSettingsController: UIViewController, UITableViewDelegate, UITableView
 
 
         tv.register(UserSettingsCell.self, forCellReuseIdentifier: self.cellId)
-        tv.register(UserInfoCell.self, forCellReuseIdentifier: self.infoCellId)
-        tv.register(CompanySettingsCell.self, forCellReuseIdentifier: self.companyCellId)
+//        tv.register(UserInfoCell.self, forCellReuseIdentifier: self.infoCellId)
+        
+        //TODO RE-implement company settings
+//        tv.register(CompanySettingsCell.self, forCellReuseIdentifier: self.companyCellId)
         return tv
     }()
     
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-        return 4
+        return 2
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         if indexPath.row == 0 {
-            return 150
+            return 50
             
         }
         
@@ -71,41 +72,43 @@ class UserSettingsController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         switch indexPath.row {
-        case 0:
-            let cell = tableView.dequeueReusableCell(withIdentifier: infoCellId, for: indexPath) as? UserInfoCell
-//             Wait for users info to load. If it fails, then put Try refreshing
-            if let user = self.user {
-                
-        
-                cell?.firstAndLastNameLabel.text = user.firstName
-                cell?.phoneNumberLabel.text = user.phoneNumber
-                cell?.profileImageView.kf.setImage(with: profileImageUrl)
-                
-                DispatchQueue.main.async {
-                    
-                    self.tableView.reloadData()
-                    self.refreshControl.endRefreshing()
-                    
-                }
-                
-            }
+//            let cell = tableView.dequeueReusableCell(withIdentifier: infoCellId, for: indexPath) as? UserInfoCell
             
-            return cell!
-        
-        
+// TOREIMPLEMENT
+//             Wait for users info to load. If it fails, then put Try refreshing
+//            if let user = self.user {
+//
+//
+//                cell?.firstAndLastNameLabel.text = user.firstName
+//                cell?.phoneNumberLabel.text = user.phoneNumber
+//                cell?.profileImageView.kf.setImage(with: profileImageUrl)
+//
+//                DispatchQueue.main.async {
+//
+//                    self.tableView.reloadData()
+//                    self.refreshControl.endRefreshing()
+//
+//                }
+//
+//            }
+            
+
+// TODO re-implement company
+//        case 1:
+//            let cell = tableView.dequeueReusableCell(withIdentifier: companyCellId, for: indexPath) as? CompanySettingsCell
+//            return cell!
+//
+            
         case 1:
-            let cell = tableView.dequeueReusableCell(withIdentifier: companyCellId, for: indexPath) as? CompanySettingsCell
-            return cell!
-        
-        case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? UserSettingsCell
             cell?.cellTitleLabel.text = "Log out"
             return cell!
             
         default:
             let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? UserSettingsCell
-            cell?.cellTitleLabel.text = "App Settings"
+            cell?.cellTitleLabel.text = "Profile"
             return cell!
+            
             
         }
     }
@@ -119,10 +122,12 @@ class UserSettingsController: UIViewController, UITableViewDelegate, UITableView
             stylistProfileController.user = self.user
             
             self.navigationController?.pushViewController(stylistProfileController, animated: true)
+//        case 1:
+            
+            //TODO re-implement compant conrtoller
+//            let companyController = CompanyController()
+//            self.navigationController?.pushViewController(companyController, animated: true)
         case 1:
-            let companyController = CompanyController()
-            self.navigationController?.pushViewController(companyController, animated: true)
-        case 2:
             let keychain = Keychain(service: "com.HairUtility")
             keychain["authToken"] = nil
             
@@ -162,7 +167,6 @@ class UserSettingsController: UIViewController, UITableViewDelegate, UITableView
         tableView.delegate = self
         tableView.dataSource = self
         tableView.refreshControl = self.refreshControl
-        title = "Settings"
         view.backgroundColor = .white
         view.addSubview(tableView)
         setupAutoLayout()
@@ -171,10 +175,8 @@ class UserSettingsController: UIViewController, UITableViewDelegate, UITableView
     
     func setupAutoLayout() {
 
-        tableView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        tableView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        tableView.fillSuperview()
+//        tableView.fillSuperview()
     }
     
     
@@ -192,8 +194,8 @@ class UserSettingsController: UIViewController, UITableViewDelegate, UITableView
 
     func getUserInfo() {
         
-        let authToken = KeychainKeys.authToken
-        let userPk = KeychainKeys.userPk
+        let authToken = Keychain.getKey(name: "authToken")
+        let userPk = Keychain.getKey(name: "userPk")
         
         let headers: [String: String] = [
             "Content-Type": "application/json",

@@ -63,9 +63,9 @@ class ImageCell: UICollectionViewCell {
         addSubview(hairstyleNameLabel)
         addSubview(hairstyleImageView)
         
-        hairstyleNameLabel.anchor(top: topAnchor, left: leftAnchor, bottom: hairstyleImageView.topAnchor, right: rightAnchor, paddingTop: 2, paddingLeft: 2, paddingBottom: 2, paddingRight: 2, width: 0, height: 0)
+        hairstyleNameLabel.anchor(top: topAnchor, leading: leadingAnchor, bottom: nil, trailing: trailingAnchor, padding: .init(top: 2, left: 2, bottom: 0, right: 2))
         
-        hairstyleImageView.anchor(top: hairstyleNameLabel.bottomAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 2, paddingBottom: 0, paddingRight: 2, width: 0, height: 0)
+        hairstyleImageView.anchor(top: hairstyleNameLabel.bottomAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor, padding: .init(top: 0, left: 2, bottom: 0, right: 2))
         
         
     }

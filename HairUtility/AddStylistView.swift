@@ -50,7 +50,7 @@ class AddStylistView: UIView, Modal {
     lazy var getButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Add", for: .normal)
-        button.backgroundColor = UIColor.mainBlue()
+        button.backgroundColor = UIColor.mainCharcoal()
         button.layer.cornerRadius = 4
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.setTitleColor(.white, for: .normal)
@@ -132,7 +132,7 @@ class AddStylistView: UIView, Modal {
         
         
         //        let personalProfilesController = PersonalProfilesController()
-        let appendingUrl = "api/v1/companies/"
+ 
         
         delegate?.addButtonTapped(email: email)
         
