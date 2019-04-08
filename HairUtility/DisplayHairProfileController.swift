@@ -271,9 +271,9 @@ class DisplayHairProfileController: UIViewController, UIGestureRecognizerDelegat
         Alamofire.DataRequest.userRequest(requestType: "POST", appendingUrl: "api/v1/hairprofiles/", headers: headers, parameters: parameters, success: { (hairProfiles) in
   
             print("finished")
-            self.alert(message: "Successfully saved profile to your account")
+            self.alert(message: "Successfully saved profile to your account!")
             self.downloadProfileButton.setImage(#imageLiteral(resourceName: "like_selected"), for: .normal)
-            //TODO change hearts color
+    
             //TODO don't enable client to download same profile
         }) { (err) in
             print(err)

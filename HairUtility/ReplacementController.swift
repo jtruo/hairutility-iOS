@@ -282,10 +282,10 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
         Alamofire.DataRequest.userRequest(requestType: "POST", appendingUrl: "api/v1/hairprofiles/", headers: headers, parameters: parameters, success: { (hairProfiles) in
             
             print("finished")
-            self.alert(message: "Successfully saved profiles to your account")
+            self.alert(message: "Successfully saved the profile to your account!")
         }) { (err) in
             print(err)
-            self.alert(message: "There was an error with saving the profile")
+            self.alert(message: "There was an error with saving the profile.")
         }
     }
     

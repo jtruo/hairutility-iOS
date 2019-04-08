@@ -278,7 +278,13 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         button.titleLabel?.text = "Edit"
         button.setTitle("Edit", for: .normal)
         button.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
+        button.titleLabel?.adjustsFontSizeToFitWidth = true 
         return button
+    }()
+    
+    lazy var rightBarButton: UIBarButtonItem = {
+        let b = UIBarButtonItem(customView: editButton)
+        return b
     }()
     
     @objc func editButtonTapped() {
@@ -288,6 +294,7 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         
         // This won't run the first time, because editbutton is never tapped
         if editButton.currentTitle == "Edit" {
+//            editButton.setTitle("Save", for: .normal)
             editButton.setTitle("Save", for: .normal)
             self.profileDescriptionTextView.isEditable = true
             self.tagsTextView.isEditable = true
@@ -301,11 +308,11 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
                     
                 }
                 let yesAction = UIAlertAction(title: "Yes", style: .default) { (action) in
-                    self.editButton.setTitle("Edit", for: .normal)
+                    self.editButton.setTitle("Edit ", for: .normal)
                     
                     self.profileDescriptionTextView.isEditable = false
                     self.tagsTextView.isEditable = false
-//            TODO save the profile description
+                    
                     for (index, image) in self.changedImageArray {
                         do {
                             try Disk.save(image, to: .documents, as: "\(coreHairProfile.creationDate)/\(index).png")
@@ -372,7 +379,6 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         super.viewDidLoad()
         
        
-        let rightBarButton = UIBarButtonItem(customView: editButton)
         self.navigationItem.rightBarButtonItem = rightBarButton
         
         

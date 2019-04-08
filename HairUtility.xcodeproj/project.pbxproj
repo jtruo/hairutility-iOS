@@ -75,6 +75,7 @@
 /* Begin PBXFileReference section */
 		22786D829153E0BFD83AC301 /* Pods-HairUtility.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HairUtility.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HairUtility/Pods-HairUtility.debug.xcconfig"; sourceTree = "<group>"; };
 		450E37C5ADE8E58F73840749 /* Pods-HairUtility.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HairUtility.release.xcconfig"; path = "Pods/Target Support Files/Pods-HairUtility/Pods-HairUtility.release.xcconfig"; sourceTree = "<group>"; };
+		6F0116E4225A8657004AAADD /* HairUtility.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HairUtility.entitlements; sourceTree = "<group>"; };
 		6F03FCF120D0894B006C15DE /* HairProfile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HairProfile.swift; sourceTree = "<group>"; };
 		6F03FCF320D0894F006C15DE /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		6F11335420E5939200DE1D06 /* DisplayHairProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayHairProfileController.swift; sourceTree = "<group>"; };
@@ -253,6 +254,7 @@
 		6F55848C1F263D06000EB4CE /* HairUtility */ = {
 			isa = PBXGroup;
 			children = (
+				6F0116E4225A8657004AAADD /* HairUtility.entitlements */,
 				6F58E6E31F32891D007EB3B1 /* Home */,
 				6FA9E62920DC00D300292566 /* HairProfiles */,
 				6F7568441F2F69F000015578 /* CreateProfile */,
@@ -409,6 +411,17 @@
 						DevelopmentTeam = L89K3JJ52D;
 						LastSwiftMigration = 0910;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 0;
+							};
+							com.apple.DataProtection = {
+								enabled = 0;
+							};
+							com.apple.Keychain = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
@@ -725,12 +738,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = L89K3JJ52D;
 				INFOPLIST_FILE = HairUtility/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = HairUtility.com;
+				PRODUCT_BUNDLE_IDENTIFIER = com.HairUtility;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
@@ -744,12 +760,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = L89K3JJ52D;
 				INFOPLIST_FILE = HairUtility/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = HairUtility.com;
+				PRODUCT_BUNDLE_IDENTIFIER = com.HairUtility;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;

@@ -42,7 +42,7 @@ class UserSettingsController: UIViewController, UITableViewDelegate, UITableView
 
         let tv = UITableView(frame: .zero, style: .plain)
         tv.translatesAutoresizingMaskIntoConstraints = false
-        tv.backgroundColor = .lightGray
+        tv.backgroundColor = .clear
 
 
         tv.register(UserSettingsCell.self, forCellReuseIdentifier: self.cellId)
@@ -225,7 +225,10 @@ class UserSettingsController: UIViewController, UITableViewDelegate, UITableView
 
         }) { (failure) in
             
-            self.alert(message: "There was an error with retrieving your info, please log back in")
+        
+            
+            
+            self.alert(message: "Your account has not been set up yet. Please log out and log back in. ")
         }
     }
  

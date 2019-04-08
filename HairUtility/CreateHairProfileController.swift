@@ -300,6 +300,7 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         print("wrapper is working")
         print(images.count)
         
+        
     }
     
     func cancelButtonDidPress(_ imagePicker: ImagePickerController) {
@@ -314,7 +315,7 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         print(imageAssets)
         
         let imageCount = images.count
-        
+        //
         guard imageCount == 4 else {
             let actions = [UIAlertAction(title: "Ok", style: UIAlertActionStyle.cancel, handler: nil)]
             view.alertUIView(message: "Please select four images", title: "", actions: actions)
@@ -507,7 +508,8 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         Alamofire.DataRequest.userRequest(requestType: "POST", appendingUrl: "api/v1/hairprofiles/", headers: headers, parameters: parameters, success: { (hairProfiles) in
 
             print("finished")
-            self.alert(message: "Successfully saved profiles to your account")
+            self.alert(message: "Successfully saved the profile to your account. You may now close the windows.")
+            self.navigationController?.popViewController(animated: true)
         }) { (err) in
             print(err)
             self.alert(message: "There was an error with saving the profile")
@@ -539,9 +541,10 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         do {
             try Disk.append(coreHairProfile, to: "corehairprofiles.json", in: .documents)
             let okAction = UIAlertAction(title: "Ok", style: .default) { (alert) in
-                self.dismiss(animated: true, completion: nil)
+       
+                self.parent?.dismiss(animated: true, completion: nil)
             }
-            self.alertWithActions(message: "", title: "The hair profile was stored successfully!", actions: [okAction])
+            self.alertWithActions(message: "", title: "The hair profile was stored successfully! Please close the window", actions: [okAction])
         } catch let err {
             print("Could not append to hair profiles \(err)")
         }

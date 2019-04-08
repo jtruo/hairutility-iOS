@@ -26,6 +26,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
                 
                 let stylistAction = UIAlertAction(title: "Stylist", style: .default) { (action) in
                     tabBarController.selectedIndex = 1
+                    self.alert(message: "Click the icon on the upper right corner to get a profile from your stylist", title: "")
                 }
                 let clientAction = UIAlertAction(title: "Client", style: .default) { (action) in
                     let createProfileNavController = self.templateNavController(unselectedImage: #imageLiteral(resourceName: "plus_circle_unselected"), selectedImage: #imageLiteral(resourceName: "plus_circle"), rootViewController: ProfilePageController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil))
@@ -107,6 +108,8 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         let settingsNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "settings_unselected"), selectedImage: #imageLiteral(resourceName: "settings"), rootViewController: UserSettingsController())
 
           settingsNavController.tabBarItem.title = "Settings"
+        
+        
         
         tabBar.tintColor = .black
 

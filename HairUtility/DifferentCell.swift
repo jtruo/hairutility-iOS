@@ -48,7 +48,7 @@ class DifferentCell: UICollectionViewCell {
         addSubview(hairstyleNameLabel)
         addSubview(hairstyleImageView)
         
-        hairstyleNameLabel.anchor(top: topAnchor, leading: leadingAnchor, bottom: hairstyleImageView.topAnchor, trailing: trailingAnchor, padding: .init(top: 2, left: 2, bottom: 2, right: 2))
+        hairstyleNameLabel.anchor(top: topAnchor, leading: leadingAnchor, bottom: hairstyleImageView.topAnchor, trailing: trailingAnchor, padding: .init(top: 2, left: 8, bottom: 2, right: 2))
         
         
 

@@ -21,16 +21,23 @@ class StylistProfileController: UIViewController, UIImagePickerControllerDelegat
             
             firstNameTextField.text = user.firstName
             lastNameTextField.text = user.lastName
+            phoneNumberTextField.text = user.phoneNumber
             guard let profileImageString = user.profileImageUrl else { return }
             guard let profileImageUrl = URL(string: profileImageString) else { return }
+            
+
+            plusPhotoButton.layer.masksToBounds = true
+            plusPhotoButton.clipsToBounds = true
+            plusPhotoButton.layer.borderColor = UIColor.black.cgColor
+            plusPhotoButton.layer.borderWidth = 1
             
             plusPhotoButton.kf.setImage(with: profileImageUrl, for: .normal)
         }
     }
     
     let plusPhotoButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "placeholder_image").withRenderingMode(.alwaysOriginal), for: .normal)
+        let button = UIButton(type: .custom)
+        button.setImage(#imageLiteral(resourceName: "placeholder_oval").withRenderingMode(.alwaysOriginal), for: .normal)
         button.addTarget(self, action: #selector(handlePlusPhoto), for: .touchUpInside)
         
         return button
@@ -58,7 +65,7 @@ class StylistProfileController: UIViewController, UIImagePickerControllerDelegat
             plusPhotoButton.setImage(originalImage.withRenderingMode(.alwaysOriginal), for: .normal)
         }
         
-        plusPhotoButton.layer.cornerRadius = plusPhotoButton.frame.width/2
+        
         plusPhotoButton.layer.masksToBounds = true
         plusPhotoButton.layer.borderColor = UIColor.black.cgColor
         plusPhotoButton.layer.borderWidth = 1
@@ -135,21 +142,30 @@ class StylistProfileController: UIViewController, UIImagePickerControllerDelegat
     }()
     
     @objc func handleSignUp() {
-      
-        updateUserProfile()
         
+      
+        if plusPhotoButton.isEqual(UIImage(named: "placeholder_oval")) {
+            updateUserProfile()
+        } else {
+            uploadImageToS3()
+        }
+        
+    }
+    
+    override func viewDidLayoutSubviews() {
+        plusPhotoButton.layer.cornerRadius = plusPhotoButton.frame.width/2
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.title = "Profile"
+        self.navigationItem.title = "Update Profile"
         
         view.backgroundColor = .white
         
         view.addSubview(plusPhotoButton)
 
-        plusPhotoButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 40, left: 0, bottom: 0, right: 0), size: .init(width: 140, height: 140))
+        plusPhotoButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 40, left: 0, bottom: 0, right: 0), size: .init(width: 150, height: 150))
         
         plusPhotoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
@@ -218,7 +234,7 @@ class StylistProfileController: UIViewController, UIImagePickerControllerDelegat
         let transferUtility = AWSS3TransferUtility.default()
         
 
-        let key = "profile-images" + UUID().uuidString
+        let key = "profile-images/" + UUID().uuidString + ".png"
         // Can't leak emails
         let fullS3Key = "https://s3.us-east-2.amazonaws.com/hairutility-prod/\(key)"
         
@@ -229,6 +245,8 @@ class StylistProfileController: UIViewController, UIImagePickerControllerDelegat
                                     (task) -> Any? in
                                     if let error = task.error {
                                         print("Error: \(error.localizedDescription)")
+                                        
+                                        self.alert(message: "", title: "There was an error storing your profile image")
                                     }
                                     
                                     if let _ = task.result {
@@ -249,21 +267,31 @@ class StylistProfileController: UIViewController, UIImagePickerControllerDelegat
     
     fileprivate func updateUserProfile() {
         
-        guard let firstName = firstNameTextField.text else { return }
-        guard let lastName = lastNameTextField.text else { return }
-        guard let phoneNumber = phoneNumberTextField.text else { return }
-        guard let fullS3Key = self.fullS3Key else { return }
+       var parameters = [String: Any]()
+        
+        if let firstName = firstNameTextField.text {
+            parameters["first_name"] = firstName
+        }
+        if let lastName = lastNameTextField.text {
+            parameters["last_name"] = lastName
+        }
+        if let phoneNumber = phoneNumberTextField.text {
+            parameters["phone_number"] = phoneNumber
+        }
+        
 
+        
+        
+        
+        if let fullS3Key = self.fullS3Key {
+            parameters["profile_image_url"] = fullS3Key
+        }
+ 
         let authToken = Keychain.getKey(name: "authToken")
         let userPk = Keychain.getKey(name: "userPk")
 
-        let parameters = [
-            "first_name": firstName,
-            "last_name": lastName,
-            "phone_number": phoneNumber,
-            "profile_image_url": fullS3Key
-        ]
-//        Need to require stylists to input all their info their first time and then use the if lets to specify parameters
+
+//        Need to require stylists to input all their info their first time
         let headers = [
             "Content-Type": "application/json",
             "Authorization": "Token \(authToken)"
