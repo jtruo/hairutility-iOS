@@ -35,6 +35,7 @@ class ProfilePageController: UIPageViewController, UIPageViewControllerDelegate,
         pageControl.pageIndicatorTintColor = UIColor.lightGray
         pageControl.numberOfPages = self.pages.count
         pageControl.isUserInteractionEnabled = false
+
         
         return pageControl
     }()

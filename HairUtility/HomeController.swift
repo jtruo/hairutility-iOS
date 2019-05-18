@@ -226,7 +226,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
 
         }) { (Error) in
             print(Error)
-            self.alert(message: "Must be logged in to retrieve hair profiles")
+            self.alert(message: "There was an error retrieving hair profiles")
             self.refreshControl.endRefreshing()
         }
     }

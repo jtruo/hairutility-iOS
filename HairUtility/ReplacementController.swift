@@ -29,6 +29,7 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
     
     @objc func refreshCompanyData(_ sender: Any) {
         getUserHairProfiles()
+        retrieveHairProfiles()
     }
     
     lazy var getProfileButton: UIButton = {

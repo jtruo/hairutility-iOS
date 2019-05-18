@@ -145,7 +145,11 @@ class LoginController: UIViewController {
             }
             
         }) { (err) in
+          
             print(err)
+            self.alert(message: "", title: "Could not log in")
+            
+            
         }
         
     }

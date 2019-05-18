@@ -375,6 +375,13 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         
     }()
     
+    lazy var bottomContainerView: UIView = {
+        let containerView = UIView()
+        containerView.backgroundColor = .white
+        return containerView
+        
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -384,42 +391,76 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         
         view.backgroundColor = .white
         
+//        view.addSubview(containerView)
+//
+//        containerView.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: nil, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: nil, padding: .init(top: 12, left: 0, bottom: 0, right: 0), size: .init(width: 350, height: 0))
+//        containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+//        
+//        
+//        containerView.addSubview(firstImageView)
+//        containerView.addSubview(secondImageView)
+//        containerView.addSubview(thirdImageView)
+//        containerView.addSubview(fourthImageView)
+//        containerView.addSubview(profileDescriptionTextView)
+//        containerView.addSubview(creatorTextView)
+//        containerView.addSubview(tagsTextView)
+////        containerView.addSubview(firstAnimationView)
+//        
+//        
+//        firstImageView.anchor(top: containerView.topAnchor, leading: containerView.leadingAnchor, bottom: thirdImageView.topAnchor, trailing: secondImageView.leadingAnchor, padding: .init(top: 0, left: 6, bottom: 1, right: 1), size: .init(width: 168, height: 168))
+//        
+//        
+//        secondImageView.anchor(top: containerView.topAnchor, leading: firstImageView.trailingAnchor, bottom: fourthImageView.topAnchor, trailing: containerView.trailingAnchor, padding: .init(top: 0, left: 1, bottom: 1, right: 6), size: .init(width: 168, height: 168))
+//        
+//        
+//        thirdImageView.anchor(top: firstImageView.bottomAnchor, leading: containerView.leadingAnchor, bottom: profileDescriptionTextView.topAnchor, trailing: fourthImageView.leadingAnchor, padding: .init(top: 0, left: 6, bottom: 8, right: 1), size: .init(width: 168, height: 168))
+//        
+//        
+//        fourthImageView.anchor(top: secondImageView.bottomAnchor, leading: thirdImageView.trailingAnchor, bottom: profileDescriptionTextView.topAnchor, trailing: containerView.trailingAnchor, padding: .init(top: 8, left: 1, bottom: 8, right: 6), size: .init(width: 168, height: 168))
+//        
+//        
+//        
+//        profileDescriptionTextView.anchor(top: thirdImageView.bottomAnchor, leading: containerView.leadingAnchor, bottom: creatorTextView.topAnchor, trailing: containerView.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0), size: .init(width: 336, height: 89))
+//        
+//        creatorTextView.anchor(top: profileDescriptionTextView.bottomAnchor, leading: containerView.leadingAnchor, bottom: tagsTextView.topAnchor, trailing: containerView.trailingAnchor, padding: .init(top: 8, left: 0, bottom: 0, right: 0), size: .init(width: 150, height: 50))
+//        
+//        tagsTextView.anchor(top: creatorTextView.bottomAnchor, leading: containerView.leadingAnchor, bottom: containerView.bottomAnchor, trailing: containerView.trailingAnchor, size: .init(width: 150, height: 50))
+        
+        
         view.addSubview(containerView)
-
-        containerView.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: nil, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: nil, padding: .init(top: 12, left: 0, bottom: 0, right: 0), size: .init(width: 350, height: 0))
+        containerView.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 12, left: 0, bottom: 0, right: 0), size: .init(width: 350, height: 322))
         containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        
-        
         containerView.addSubview(firstImageView)
         containerView.addSubview(secondImageView)
         containerView.addSubview(thirdImageView)
         containerView.addSubview(fourthImageView)
-        containerView.addSubview(profileDescriptionTextView)
-        containerView.addSubview(creatorTextView)
-        containerView.addSubview(tagsTextView)
-//        containerView.addSubview(firstAnimationView)
+      
         
+        firstImageView.anchor(top: containerView.topAnchor, leading: containerView.leadingAnchor, bottom: thirdImageView.topAnchor, trailing: secondImageView.leadingAnchor, padding: .init(top: 0, left: 14, bottom: 1, right: 1), size: .init(width: 160, height: 160))
+        secondImageView.anchor(top: containerView.topAnchor, leading: firstImageView.trailingAnchor, bottom: fourthImageView.topAnchor, trailing: containerView.trailingAnchor, padding: .init(top: 0, left: 1, bottom: 1, right: 14), size: .init(width: 160, height: 160))
+        thirdImageView.anchor(top: firstImageView.bottomAnchor, leading: containerView.leadingAnchor, bottom: nil, trailing: fourthImageView.leadingAnchor, padding: .init(top: 1, left: 14, bottom: 0, right: 1), size: .init(width: 160, height: 160))
+        fourthImageView.anchor(top: secondImageView.bottomAnchor, leading: thirdImageView.trailingAnchor, bottom: nil, trailing: containerView.trailingAnchor, padding: .init(top: 1, left: 1, bottom: 0, right: 14), size: .init(width: 160, height: 160))
         
-        firstImageView.anchor(top: containerView.topAnchor, leading: containerView.leadingAnchor, bottom: thirdImageView.topAnchor, trailing: secondImageView.leadingAnchor, padding: .init(top: 0, left: 6, bottom: 1, right: 1), size: .init(width: 168, height: 168))
+        //bottom
         
+        view.addSubview(bottomContainerView)
+        bottomContainerView.anchor(top: containerView.bottomAnchor, leading: nil, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: nil, padding: .init(top: 8, left: 0, bottom: 0, right: 0), size: .init(width: 320, height: 0))
+        bottomContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        bottomContainerView.addSubview(profileDescriptionTextView)
+        bottomContainerView.addSubview(creatorTextView)
+        bottomContainerView.addSubview(tagsTextView)
         
-        secondImageView.anchor(top: containerView.topAnchor, leading: firstImageView.trailingAnchor, bottom: fourthImageView.topAnchor, trailing: containerView.trailingAnchor, padding: .init(top: 0, left: 1, bottom: 1, right: 6), size: .init(width: 168, height: 168))
+        profileDescriptionTextView.anchor(top: bottomContainerView.topAnchor, leading: bottomContainerView.leadingAnchor, bottom: creatorTextView.topAnchor, trailing: bottomContainerView.trailingAnchor, padding: .init(top: 8, left: 0, bottom: 0, right: 0), size: .init(width: 0, height: 100))
         
+        creatorTextView.anchor(top: profileDescriptionTextView.bottomAnchor, leading: bottomContainerView.leadingAnchor, bottom: tagsTextView.topAnchor, trailing: bottomContainerView.trailingAnchor, padding: .init(top: 8, left: 0, bottom: 0, right: 0), size: .init(width: 0, height: 50))
         
-        thirdImageView.anchor(top: firstImageView.bottomAnchor, leading: containerView.leadingAnchor, bottom: profileDescriptionTextView.topAnchor, trailing: fourthImageView.leadingAnchor, padding: .init(top: 0, left: 6, bottom: 8, right: 1), size: .init(width: 168, height: 168))
+        tagsTextView.anchor(top: creatorTextView.bottomAnchor, leading: bottomContainerView.leadingAnchor, bottom: nil, trailing: bottomContainerView.trailingAnchor, size: .init(width: 0, height: 50))
         
-        
-        fourthImageView.anchor(top: secondImageView.bottomAnchor, leading: thirdImageView.trailingAnchor, bottom: profileDescriptionTextView.topAnchor, trailing: containerView.trailingAnchor, padding: .init(top: 8, left: 1, bottom: 8, right: 6), size: .init(width: 168, height: 168))
-        
-        
-        profileDescriptionTextView.anchor(top: nil, leading: containerView.leadingAnchor, bottom: creatorTextView.topAnchor, trailing: containerView.trailingAnchor, padding: .init(top: 8, left: 0, bottom: 0, right: 0), size: .init(width: 336, height: 89))
-        
-        creatorTextView.anchor(top: profileDescriptionTextView.bottomAnchor, leading: containerView.leadingAnchor, bottom: tagsTextView.topAnchor, trailing: containerView.trailingAnchor, padding: .init(top: 8, left: 0, bottom: 0, right: 0), size: .init(width: 150, height: 50))
-        
-        tagsTextView.anchor(top: creatorTextView.bottomAnchor, leading: containerView.leadingAnchor, bottom: containerView.bottomAnchor, trailing: containerView.trailingAnchor, size: .init(width: 150, height: 50))
         
 //        firstImageView.addSubview(firstAnimationView)
 //        firstAnimationView.anchor(top: firstImageView.topAnchor, left: firstImageView.leftAnchor, bottom: firstImageView.bottomAnchor, right: firstImageView.rightAnchor, paddingTop: 2, paddingLeft: 2, paddingBottom: 2, paddingRight: 2, width: 50, height: 50)
+        
+        print("Hieght is: \(containerView.frame.size.height)")
     
         
     }
@@ -566,3 +607,5 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
     }
     
 }
+
+// Protocol orientired prgoramming, make the uitextview/protocols at the bottom

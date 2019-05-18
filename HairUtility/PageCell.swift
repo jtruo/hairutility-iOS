@@ -17,7 +17,7 @@ class PageCell: UICollectionViewCell {
             guard let unwrappedPage = page else { return }
     
             guard let fullPath = Bundle.main.path(forResource: unwrappedPage.imagePath, ofType: "jpg") else { return }
-            bearImageView.image = UIImage(contentsOfFile: fullPath)
+            pageImageView.image = UIImage(contentsOfFile: fullPath)
             
             let attributedText = NSMutableAttributedString(string: unwrappedPage.headerText, attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 18)])
             
@@ -31,7 +31,7 @@ class PageCell: UICollectionViewCell {
     
     
     
-    lazy var bearImageView: UIImageView = {
+    lazy var pageImageView: UIImageView = {
         let image = UIImage(contentsOfFile: "page1")
         let imageView = UIImageView(image: image)
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -71,10 +71,10 @@ class PageCell: UICollectionViewCell {
         topImageContainerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         topImageContainerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         
-        topImageContainerView.addSubview(bearImageView)
-        bearImageView.centerXAnchor.constraint(equalTo: topImageContainerView.centerXAnchor).isActive = true
-        bearImageView.centerYAnchor.constraint(equalTo: topImageContainerView.centerYAnchor).isActive = true
-        bearImageView.heightAnchor.constraint(equalTo: topImageContainerView.heightAnchor).isActive = true
+        topImageContainerView.addSubview(pageImageView)
+        pageImageView.centerXAnchor.constraint(equalTo: topImageContainerView.centerXAnchor).isActive = true
+        pageImageView.centerYAnchor.constraint(equalTo: topImageContainerView.centerYAnchor).isActive = true
+        pageImageView.heightAnchor.constraint(equalTo: topImageContainerView.heightAnchor).isActive = true
         
         topImageContainerView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.4).isActive = true
         

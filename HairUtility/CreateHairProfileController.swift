@@ -546,7 +546,7 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
             }
             self.alertWithActions(message: "", title: "The hair profile was stored successfully! Please close the window", actions: [okAction])
         } catch let err {
-            print("Could not append to hair profiles \(err)")
+            print("Could not save to hair profiles \(err)")
         }
        
     }
