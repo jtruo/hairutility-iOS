@@ -20,7 +20,7 @@ class ImageCell: UICollectionViewCell {
             let thumbnailUrl = prefixAndConvertToThumbnailS3Url(suffix: hairProfile.thumbnailKey)
             
             hairstyleImageView.kf.setImage(with: thumbnailUrl)
-            hairstyleNameLabel.text = hairProfile.hairstyleName
+            
 
             
         }
@@ -43,15 +43,17 @@ class ImageCell: UICollectionViewCell {
         }
     }
     
-    lazy var hairstyleNameLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Loading"
-        return label
+    lazy var hairstyleNameLabel: BaseTextLabel = {
+        let l = BaseTextLabel()
+        l.text = "Loading"
+        return l
     }()
 
     lazy var hairstyleImageView: UIImageView = {
         let iv = UIImageView()
-        iv.contentMode = .scaleAspectFit
+        iv.contentMode = .scaleAspectFill
+        iv.layer.masksToBounds = true
+        iv.layer.cornerRadius = 4
         
         return iv
     }()
@@ -60,12 +62,10 @@ class ImageCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        addSubview(hairstyleNameLabel)
+    
         addSubview(hairstyleImageView)
         
-        hairstyleNameLabel.anchor(top: topAnchor, leading: leadingAnchor, bottom: nil, trailing: trailingAnchor, padding: .init(top: 2, left: 2, bottom: 0, right: 2))
-        
-        hairstyleImageView.anchor(top: hairstyleNameLabel.bottomAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor, padding: .init(top: 0, left: 2, bottom: 0, right: 2))
+        hairstyleImageView.anchor(top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0))
         
         
     }

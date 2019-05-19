@@ -23,36 +23,56 @@ class DifferentCell: UICollectionViewCell {
 
             hairstyleImageView.kf.setImage(with: thumbnailUrl)
             hairstyleNameLabel.text = hairProfile.hairstyleName
+            tagsLabel.text = "Tags: \(hairProfile.tags.joined(separator: ", "))"
+          
             
         }
     }
-    
-    lazy var hairstyleNameLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Loading"
-        return label
-    }()
+
     
     lazy var hairstyleImageView: UIImageView = {
         let iv = UIImageView()
-        iv.contentMode = .scaleAspectFit
+        iv.contentMode = .scaleAspectFill
+        iv.layer.masksToBounds = true
+        iv.layer.cornerRadius = 4
 
-        
         return iv
     }()
     
+    lazy var hairstyleNameLabel: BaseTextLabel = {
+        let l = BaseTextLabel()
+        l.font = UIFont.boldSystemFont(ofSize: 16)
+        return l
+    }()
+    
+    lazy var tagsLabel: BaseTextLabel = {
+        let l = BaseTextLabel()
+        l.font = UIFont.boldSystemFont(ofSize: 12   )
+        return l
+    }()
+    
+    
+
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        addSubview(hairstyleNameLabel)
-        addSubview(hairstyleImageView)
+
         
-        hairstyleNameLabel.anchor(top: topAnchor, leading: leadingAnchor, bottom: hairstyleImageView.topAnchor, trailing: trailingAnchor, padding: .init(top: 2, left: 8, bottom: 2, right: 2))
+        let stackView = UIStackView(arrangedSubviews: [hairstyleImageView, hairstyleNameLabel, tagsLabel])
+        stackView.distribution = .fillProportionally
+        stackView.axis = .vertical
+        
+        addSubview(stackView)
         
         
 
-        hairstyleImageView.anchor(top: hairstyleNameLabel.bottomAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor, padding: .init(top: 0, left: 2, bottom: 0, right: 2))
+        stackView.anchor(top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor, padding: .init(top: 0, left: 2, bottom: 0, right: 2))
+        
+        hairstyleImageView.heightAnchor.constraint(equalTo: stackView.heightAnchor, multiplier: 3 / 4).isActive = true
+        hairstyleNameLabel.heightAnchor.constraint(equalTo: stackView.heightAnchor, multiplier: 1 / 8).isActive = true
+        tagsLabel.heightAnchor.constraint(equalTo: stackView.heightAnchor, multiplier: 1 / 8).isActive = true
+        
         
     }
     

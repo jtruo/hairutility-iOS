@@ -178,7 +178,7 @@ class CompanyProfileController: UICollectionViewController, UICollectionViewDele
             
             self.refreshControl.endRefreshing()
             
-            self.alert(message: "There was an error with retrieving your company's info. Please make sure to make a company or be added to one.")
+            self.alert(message: "", title: "There was an error with retrieving your company's info. Please make sure to make a company or be added to one.")
             
         }
     }
@@ -227,7 +227,7 @@ class CompanyProfileController: UICollectionViewController, UICollectionViewDele
             
             self.refreshControl.endRefreshing()
             
-            self.alert(message: "There was an error with retrieving your company's profile")
+            self.alert(message: "", title: "There was an error with retrieving your company's profile")
         }
     }
     

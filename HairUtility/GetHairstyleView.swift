@@ -79,7 +79,7 @@ class GetHairstyleView: UIView, Modal {
     
     lazy var getButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Save", for: .normal)
+        button.setTitle("Get", for: .normal)
         button.backgroundColor = UIColor.mainCharcoal()
         button.layer.cornerRadius = 4
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)

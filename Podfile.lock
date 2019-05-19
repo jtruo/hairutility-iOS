@@ -15,7 +15,6 @@ PODS:
   - Lightbox (2.1.2):
     - Hue (~> 3.0)
     - Imaginary (~> 3.0)
-  - lottie-ios (2.5.0)
 
 DEPENDENCIES:
   - Alamofire (~> 4.6)
@@ -27,7 +26,6 @@ DEPENDENCIES:
   - KeychainAccess (~> 3.1.0)
   - Kingfisher (~> 4.8.0)
   - Lightbox
-  - lottie-ios (~> 2.5.0)
 
 SPEC CHECKSUMS:
   Alamofire: f41a599bd63041760b26d393ec1069d9d7b917f4
@@ -42,8 +40,7 @@ SPEC CHECKSUMS:
   KeychainAccess: 94c5540b32eabf7bc32bfb976a268e8ea05fd6da
   Kingfisher: 976d828df2b24834c6a3f2fc4d82cdbd26552be1
   Lightbox: 2dc267df8be2285bc7724cb11cbbf4aaaf59dced
-  lottie-ios: d699fdee68d7b63e721d949388b015fef1aaa4ac
 
-PODFILE CHECKSUM: 0b38c4bdedfcd85da205021c396c1a55f5908d4f
+PODFILE CHECKSUM: 46ed793ac8c726739da9d81db0543974f34f2601
 
 COCOAPODS: 1.3.1

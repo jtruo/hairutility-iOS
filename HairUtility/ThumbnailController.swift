@@ -136,7 +136,7 @@ class ThumbnailController: UIViewController, UIScrollViewDelegate, UITextFieldDe
                 delegate?.nextButtonPressed(hairstyleName: hairstyleName, image: image)
             
         } else {
-            self.alert(message: "Please complete the two steps to continue")
+            self.alert(message: "", title: "Please complete the two steps to continue")
         }
         
 
@@ -164,7 +164,11 @@ class ThumbnailController: UIViewController, UIScrollViewDelegate, UITextFieldDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.isTranslucent = true
+        
+        
         view.backgroundColor = .white
         
         setupInputFields()

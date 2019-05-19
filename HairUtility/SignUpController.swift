@@ -168,7 +168,7 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
                     
                     let keychain = Keychain(service: "com.HairUtility")
                     try keychain.set(authToken, key: "authToken")
-                    try keychain.set(pk, key: "pk")
+                    try keychain.set(pk, key: "userPk")
                     let defaults = UserDefaults.standard
                     defaults.set(isStylist, forKey: "isStylist")
                     defaults.set(isActive, forKey: "isActive")

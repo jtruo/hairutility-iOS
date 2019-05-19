@@ -11,7 +11,6 @@ import ImagePicker
 import AWSS3
 import Alamofire
 import KeychainAccess
-import Lottie
 import Disk
 
 
@@ -20,7 +19,7 @@ protocol CreateHairProfileDelegate {
     func uploadPhotoButtonTapped()
 }
 
-//Use federated identities custom authentication with token.
+
 /// TODO PROFILEPAGECONTROLLER, RIGHT BAR BUTTON, ISHIDDEN, DELEGATE
 
 class CreateHairProfileController: UIViewController, UploadOptionsDelegate, ImagePickerDelegate, CreateHairProfileDelegate, UIGestureRecognizerDelegate, UICollectionViewDelegate, UITextViewDelegate, UIPopoverPresentationControllerDelegate , UINavigationBarDelegate {
@@ -51,7 +50,10 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         iv.clipsToBounds = true
         iv.layer.borderColor = UIColor(white: 0.8, alpha: 0.9).cgColor
         iv.layer.borderWidth = 1.0
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(button:)))
+        iv.addGestureRecognizer(gestureRecognizer)
         return iv
+        
     }()
     
     lazy var secondImageView: UIImageView = {
@@ -63,7 +65,10 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         iv.backgroundColor = UIColor(white: 0, alpha: 0.03)
         iv.layer.borderColor = UIColor(white: 0.8, alpha: 0.9).cgColor
         iv.layer.borderWidth = 1.0
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(button:)))
+        iv.addGestureRecognizer(gestureRecognizer)
         return iv
+
     }()
     
     lazy var thirdImageView: UIImageView = {
@@ -75,6 +80,8 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         iv.backgroundColor = UIColor(white: 0, alpha: 0.03)
         iv.layer.borderColor = UIColor(white: 0.8, alpha: 0.9).cgColor
         iv.layer.borderWidth = 1.0
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(button:)))
+        iv.addGestureRecognizer(gestureRecognizer)
         return iv
     }()
     
@@ -87,19 +94,21 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         iv.backgroundColor = UIColor(white: 0, alpha: 0.03)
         iv.layer.borderColor = UIColor(white: 0.8, alpha: 0.9).cgColor
         iv.layer.borderWidth = 1.0
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(button:)))
+        iv.addGestureRecognizer(gestureRecognizer)
         return iv
     }()
     
-    lazy var cameraButton: LOTAnimationView = {
-        let lotAnimationView = LOTAnimationView(name: "big_camera")
-        lotAnimationView.isUserInteractionEnabled = true
-        lotAnimationView.contentMode = UIViewContentMode.scaleAspectFill
-        lotAnimationView.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
-        lotAnimationView.layer.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
-        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(button:)))
-        lotAnimationView.addGestureRecognizer(gestureRecognizer)
-        return lotAnimationView
-    }()
+//    lazy var cameraButton: LOTAnimationView = {
+//        let lotAnimationView = LOTAnimationView(name: "big_camera")
+//        lotAnimationView.isUserInteractionEnabled = true
+//        lotAnimationView.contentMode = UIViewContentMode.scaleAspectFill
+//        lotAnimationView.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
+//        lotAnimationView.layer.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
+//        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(button:)))
+//        lotAnimationView.addGestureRecognizer(gestureRecognizer)
+//        return lotAnimationView
+//    }()
     
     lazy var profileDescriptionTextView: UITextView = {
         let tv = UITextView()
@@ -252,7 +261,6 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         containerView.addSubview(secondImageView)
         containerView.addSubview(thirdImageView)
         containerView.addSubview(fourthImageView)
-        containerView.addSubview(cameraButton)
         containerView.addSubview(profileDescriptionTextView)
         
         
@@ -505,14 +513,18 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         ]
         
         print(parameters)
-        Alamofire.DataRequest.userRequest(requestType: "POST", appendingUrl: "api/v1/hairprofiles/", headers: headers, parameters: parameters, success: { (hairProfiles) in
-
-            print("finished")
-            self.alert(message: "Successfully saved the profile to your account. You may now close the windows.")
-            self.navigationController?.popViewController(animated: true)
+        Alamofire.DataRequest.userRequest(requestType: "POST", appendingUrl: "api/v1/hairprofiles/", headers: headers, parameters: parameters, success: { (hairProfile) in
+            
+            
+            guard let hairProfile = hairProfile as? HairProfile else {return }
+            let accessCode = hairProfile.accessCode
+        
+      
+            self.alert(message: "", title: "Successfully saved the profile to your account. Please give this access code to your client: \(accessCode)")
+//            self.navigationController?.popViewController(animated: true)
         }) { (err) in
             print(err)
-            self.alert(message: "There was an error with saving the profile")
+            self.alert(message: "", title: "There was an error with saving the profile")
         }
     }
     

@@ -26,6 +26,7 @@ struct HairProfile: Decodable {
     let thirdImageKey: String
     let fourthImageKey: String
     let profileDescription: String
+    let accessCode: String
     let tags: [String]
 
 }

@@ -207,7 +207,7 @@ class CreateCompanyController: UIViewController, UIImagePickerControllerDelegate
         
         Alamofire.DataRequest.userRequest(requestType: "POST", appendingUrl: "api/v1/companies/", headers: headers, parameters: parameters, success: { (user) in
 
-            self.alert(message: "Created your company successfully")
+            self.alert(message: "", title: "Created your company successfully")
         }) { (err) in
             let string = err 
             self.alert(message: "", title: "Error: \(String(describing: string))")

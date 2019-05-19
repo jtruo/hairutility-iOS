@@ -9,7 +9,6 @@ import UIKit
 import Alamofire
 import KeychainAccess
 import AWSS3
-import Lottie
 import Kingfisher
 
 class StylistProfileController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -153,7 +152,7 @@ class StylistProfileController: UIViewController, UIImagePickerControllerDelegat
     }
     
     override func viewDidLayoutSubviews() {
-        plusPhotoButton.layer.cornerRadius = plusPhotoButton.frame.width/2
+        plusPhotoButton.layer.cornerRadius = plusPhotoButton.frame.width / 2
     }
     
     override func viewDidLoad() {
@@ -303,7 +302,7 @@ class StylistProfileController: UIViewController, UIImagePickerControllerDelegat
             self.firstNameTextField.text = user.firstName
             self.lastNameTextField.text = user.lastName
             self.phoneNumberTextField.text = user.phoneNumber
-            self.alert(message: "Updated your profile successfully")
+            self.alert(message: "", title: "Updated your profile successfully")
         }) { (err) in
             print(err)
        

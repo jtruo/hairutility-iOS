@@ -12,7 +12,6 @@ import KeychainAccess
 import AWSS3
 import Kingfisher
 import Alamofire
-import Lottie
 import Lightbox
 import Disk
 
@@ -107,12 +106,6 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         
     }()
     
-    
-    lazy var firstAnimationView: LOTAnimationView = {
-        let animationView = LOTAnimationView(name:"blueprogress")
-        //        animationView.setValue(UIColor.purple, forKeyPath: "Ellipse Path 1.Fill.Color")
-        return animationView
-    }()
     
     lazy var secondImageView: UIImageView = {
         let iv = UIImageView()
@@ -239,25 +232,9 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         tv.font = .systemFont(ofSize: 16)
         tv.layer.cornerRadius = 4
         tv.delegate = self
-//        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
-//        self.view.addGestureRecognizer(tapRecognizer)
-        
         return tv
     }()
-    
-//    func textViewDidBeginEditing(_ textView: UITextView) {
-//        if textView.textColor == UIColor.lightGray {
-//            textView.text = nil
-//            textView.textColor = UIColor.black
-//        }
-//    }
-//    
-//    func textViewDidEndEditing(_ textView: UITextView) {
-//        if textView.text.isEmpty {
-//            textView.text = "Add any descriptions"
-//            textView.textColor = UIColor.lightGray
-//        }
-//    }
+
     
     @objc func hideKeyboard() {
         view.endEditing(true)
@@ -366,7 +343,16 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         textView.textColor = UIColor.lightGray
         return textView
     }()
-    
+
+// For enabling tags to be edited but not the Tags label. Have to prevent sender from being profileDescriptionTextView using tags or other methods
+//    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+//        if range.location <= 6 {
+//            return false
+//        } else {
+//            return true
+//        }
+//
+//    }
     
     lazy var containerView: UIView = {
         let containerView = UIView()
@@ -390,43 +376,7 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         
         
         view.backgroundColor = .white
-        
-//        view.addSubview(containerView)
-//
-//        containerView.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: nil, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: nil, padding: .init(top: 12, left: 0, bottom: 0, right: 0), size: .init(width: 350, height: 0))
-//        containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-//        
-//        
-//        containerView.addSubview(firstImageView)
-//        containerView.addSubview(secondImageView)
-//        containerView.addSubview(thirdImageView)
-//        containerView.addSubview(fourthImageView)
-//        containerView.addSubview(profileDescriptionTextView)
-//        containerView.addSubview(creatorTextView)
-//        containerView.addSubview(tagsTextView)
-////        containerView.addSubview(firstAnimationView)
-//        
-//        
-//        firstImageView.anchor(top: containerView.topAnchor, leading: containerView.leadingAnchor, bottom: thirdImageView.topAnchor, trailing: secondImageView.leadingAnchor, padding: .init(top: 0, left: 6, bottom: 1, right: 1), size: .init(width: 168, height: 168))
-//        
-//        
-//        secondImageView.anchor(top: containerView.topAnchor, leading: firstImageView.trailingAnchor, bottom: fourthImageView.topAnchor, trailing: containerView.trailingAnchor, padding: .init(top: 0, left: 1, bottom: 1, right: 6), size: .init(width: 168, height: 168))
-//        
-//        
-//        thirdImageView.anchor(top: firstImageView.bottomAnchor, leading: containerView.leadingAnchor, bottom: profileDescriptionTextView.topAnchor, trailing: fourthImageView.leadingAnchor, padding: .init(top: 0, left: 6, bottom: 8, right: 1), size: .init(width: 168, height: 168))
-//        
-//        
-//        fourthImageView.anchor(top: secondImageView.bottomAnchor, leading: thirdImageView.trailingAnchor, bottom: profileDescriptionTextView.topAnchor, trailing: containerView.trailingAnchor, padding: .init(top: 8, left: 1, bottom: 8, right: 6), size: .init(width: 168, height: 168))
-//        
-//        
-//        
-//        profileDescriptionTextView.anchor(top: thirdImageView.bottomAnchor, leading: containerView.leadingAnchor, bottom: creatorTextView.topAnchor, trailing: containerView.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0), size: .init(width: 336, height: 89))
-//        
-//        creatorTextView.anchor(top: profileDescriptionTextView.bottomAnchor, leading: containerView.leadingAnchor, bottom: tagsTextView.topAnchor, trailing: containerView.trailingAnchor, padding: .init(top: 8, left: 0, bottom: 0, right: 0), size: .init(width: 150, height: 50))
-//        
-//        tagsTextView.anchor(top: creatorTextView.bottomAnchor, leading: containerView.leadingAnchor, bottom: containerView.bottomAnchor, trailing: containerView.trailingAnchor, size: .init(width: 150, height: 50))
-        
-        
+
         view.addSubview(containerView)
         containerView.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 12, left: 0, bottom: 0, right: 0), size: .init(width: 350, height: 322))
         containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -456,12 +406,6 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         
         tagsTextView.anchor(top: creatorTextView.bottomAnchor, leading: bottomContainerView.leadingAnchor, bottom: nil, trailing: bottomContainerView.trailingAnchor, size: .init(width: 0, height: 50))
         
-        
-//        firstImageView.addSubview(firstAnimationView)
-//        firstAnimationView.anchor(top: firstImageView.topAnchor, left: firstImageView.leftAnchor, bottom: firstImageView.bottomAnchor, right: firstImageView.rightAnchor, paddingTop: 2, paddingLeft: 2, paddingBottom: 2, paddingRight: 2, width: 50, height: 50)
-        
-        print("Hieght is: \(containerView.frame.size.height)")
-    
         
     }
     
@@ -497,11 +441,7 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
                     
                     if index == 0 {
                         
-                        self.firstAnimationView.play(toProgress: progressFloat, withCompletion: { (finished) in
-                            print(finished)
-                            print("Animation is finished")
-                            
-                        })
+  
                     }
                     
                 })
@@ -599,7 +539,7 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
 
         Alamofire.DataRequest.userRequest(requestType: "PATCH", appendingUrl: "api/v1/hairprofiles/\(profilePk)/", headers: headers, parameters: parameters, success: { (hairProfile) in
 
-            self.alert(message: "Updated the profile successfully")
+            self.alert(message: "", title: "Updated the profile successfully")
         }) { (err) in
             print(err)
         }

@@ -63,6 +63,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         collectionView?.register(DifferentCell.self, forCellWithReuseIdentifier: cellId)
         collectionView?.backgroundColor = .white
         collectionView?.refreshControl = self.refreshControl
+        collectionView?.showsVerticalScrollIndicator = true
         
         
         view.addSubview(onboardingLabel)
@@ -80,9 +81,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
             
         }
         
-
-        self.navigationItem.title = "Hair Profiles"
-        collectionView?.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 8, left: 0, bottom: 0, right: 0))
+        collectionView?.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 8, left: 4, bottom: 0, right: 4))
      
     }
     
@@ -161,8 +160,10 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 //        return CGSize(width: view.frame.width, height: 300)
-        let width = (view.frame.width - 2) / 3
-        return CGSize(width: width, height: width)
+        // width is going to be UImainscreen.bounds.view.frame.widtrh ;on the cell
+        let width = (view.frame.width - 10) / 3
+        print("Width: o;ifdajn;f \(width)")
+        return CGSize(width: width, height: width + (width / 3))
     }
     
     
@@ -207,7 +208,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
             self.totalCount = apiResult.results.count
             
             if self.totalCount == 0 {
-                self.alert(message: "No hair profiles were found :(")
+                self.alert(message: "", title: "No hair profiles were found :(")
             } else {
                 self.onboardingLabel.isHidden = true
             }
@@ -220,13 +221,14 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
                     self.hairProfiles.append(hairprofile)
                 })
                 
+                self.collectionView?.showsVerticalScrollIndicator = false
                 self.collectionView?.reloadData()
                 self.refreshControl.endRefreshing()
             }
 
         }) { (Error) in
             print(Error)
-            self.alert(message: "There was an error retrieving hair profiles")
+            self.alert(message: "", title: "There was an error retrieving hair profiles")
             self.refreshControl.endRefreshing()
         }
     }

@@ -17,7 +17,7 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
     private let cellId = "cellId"
     private let sectionHeaderId = "sectionHeaderId"
     
-    let sections = ["Stored", "Liked/Cloud"]
+    let sections = ["Stored on phone", "Liked/Cloud"]
     var isStylist: Bool?
     
     
@@ -78,6 +78,7 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
         self.navigationItem.rightBarButtonItem = rightNavBarButton
         
         
+        self.navigationItem.title = "Hair Profiles"
 
         self.isStylist = UserDefaults.standard.bool(forKey: "isStylist")
         
@@ -86,7 +87,7 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
         collectionView?.backgroundColor = .white
         collectionView?.refreshControl = self.refreshControl
         
-        collectionView?.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 8, left: 0, bottom: 0, right: 0))
+        collectionView?.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 8, left: 4, bottom: 0, right: 4))
         
 
      
@@ -131,16 +132,16 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 1
+        return 4
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 1
+        return 4
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         //        return CGSize(width: view.frame.width, height: 300)
-        let width = (view.frame.width - 1) / 2
+        let width = (view.frame.width - 12) / 2
         return CGSize(width: width, height: width)
     }
     
@@ -248,7 +249,7 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
             
         }) { (Error) in
             print(Error)
-            self.alert(message: "There was an error retrieving the profiles")
+            self.alert(message: "", title: "There was an error retrieving the profiles")
         }
     }
     
@@ -283,10 +284,10 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
         Alamofire.DataRequest.userRequest(requestType: "POST", appendingUrl: "api/v1/hairprofiles/", headers: headers, parameters: parameters, success: { (hairProfiles) in
             
             print("finished")
-            self.alert(message: "Successfully saved the profile to your account!")
+            self.alert(message: "", title: "Successfully saved the profile to your account!")
         }) { (err) in
             print(err)
-            self.alert(message: "There was an error with saving the profile.")
+            self.alert(message: "", title: "There was an error with saving the profile.")
         }
     }
     

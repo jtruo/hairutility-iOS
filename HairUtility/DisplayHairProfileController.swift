@@ -11,7 +11,6 @@ import AVFoundation
 import AWSS3
 import Alamofire
 import KeychainAccess
-import Lottie
 import Lightbox
 
 class DisplayHairProfileController: UIViewController, UIGestureRecognizerDelegate, UICollectionViewDelegate, UITextViewDelegate {
@@ -63,11 +62,7 @@ class DisplayHairProfileController: UIViewController, UIGestureRecognizerDelegat
         return iv
     }()
     
-    lazy var firstAnimationView: LOTAnimationView = {
-        let animationView = LOTAnimationView(name:"blueprogress")
-        //        animationView.setValue(UIColor.purple, forKeyPath: "Ellipse Path 1.Fill.Color")
-        return animationView
-    }()
+
     
     lazy var secondImageView: UIImageView = {
         let iv = UIImageView()
@@ -114,9 +109,9 @@ class DisplayHairProfileController: UIViewController, UIGestureRecognizerDelegat
     lazy var profileDescriptionTextView: UITextView = {
         let tv = UITextView()
         tv.isEditable = false
-        tv.textColor = UIColor.lightGray
+        tv.textColor = UIColor.gray
         tv.layer.borderWidth = 0.5
-        tv.layer.borderColor = UIColor.lightGray.cgColor
+        tv.layer.borderColor = UIColor.gray.cgColor
         tv.font = .systemFont(ofSize: 16)
         tv.delegate = self
         tv.layer.cornerRadius = 4
@@ -265,13 +260,13 @@ class DisplayHairProfileController: UIViewController, UIGestureRecognizerDelegat
         Alamofire.DataRequest.userRequest(requestType: "POST", appendingUrl: "api/v1/hairprofiles/", headers: headers, parameters: parameters, success: { (hairProfiles) in
   
             print("finished")
-            self.alert(message: "Successfully saved profile to your account!")
+            self.alert(message: "", title: "Successfully saved profile to your account!")
             self.downloadProfileButton.setImage(#imageLiteral(resourceName: "like_selected"), for: .normal)
     
             //TODO don't enable client to download same profile
         }) { (err) in
             print(err)
-            self.alert(message: "There was an error saving the profile")
+            self.alert(message: "", title: "There was an error saving the profile")
         }
     }
     

@@ -26,7 +26,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
                 
                 let stylistAction = UIAlertAction(title: "Stylist", style: .default) { (action) in
                     tabBarController.selectedIndex = 1
-                    self.alert(message: "Click the icon on the upper right corner to get a profile from your stylist", title: "")
+                    self.alert(message: "", title: "Click the icon on the upper right corner to get a profile from your stylist")
                 }
                 let clientAction = UIAlertAction(title: "Client", style: .default) { (action) in
                     let createProfileNavController = self.templateNavController(unselectedImage: #imageLiteral(resourceName: "plus_circle_unselected"), selectedImage: #imageLiteral(resourceName: "plus_circle"), rootViewController: ProfilePageController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil))
@@ -92,7 +92,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         
         let homeNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "search_unselected"), selectedImage: #imageLiteral(resourceName: "search"), rootViewController: HomeController(collectionViewLayout: UICollectionViewFlowLayout()))
         
-            homeNavController.tabBarItem.title = "Search"
+            homeNavController.tabBarItem.title = "Find"
         
         let profilesNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "profile_unselected"), selectedImage: #imageLiteral(resourceName: "profile"), rootViewController: ReplacementController(collectionViewLayout: UICollectionViewFlowLayout()))
         

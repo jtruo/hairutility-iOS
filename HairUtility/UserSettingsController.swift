@@ -56,7 +56,7 @@ class UserSettingsController: UIViewController, UITableViewDelegate, UITableView
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-        return 2
+        return 3
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -101,6 +101,11 @@ class UserSettingsController: UIViewController, UITableViewDelegate, UITableView
             
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? UserSettingsCell
+            cell?.cellTitleLabel.text = "Contact"
+            return cell!
+            
+        case 2:
+            let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as? UserSettingsCell
             cell?.cellTitleLabel.text = "Log out"
             return cell!
             
@@ -128,8 +133,14 @@ class UserSettingsController: UIViewController, UITableViewDelegate, UITableView
 //            let companyController = CompanyController()
 //            self.navigationController?.pushViewController(companyController, animated: true)
         case 1:
+            let contactController = ContactController()
+            self.navigationController?.pushViewController(contactController, animated: true)
+            
+        
+        case 2:
             let keychain = Keychain(service: "com.HairUtility")
             keychain["authToken"] = nil
+            keychain["userPk"] = nil
             
             DispatchQueue.main.async {
                 
@@ -149,21 +160,24 @@ class UserSettingsController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        if self.refreshControl.isRefreshing {
-            self.refreshControl.endRefreshing()
-            tableView.setContentOffset(CGPoint(x: 0, y: tableView.contentOffset.y-self.refreshControl.frame.size.height), animated: true)
-            self.refreshControl.beginRefreshing()
-        }
-    }
-    
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//        
+//        if self.refreshControl.isRefreshing {
+//            self.refreshControl.endRefreshing()
+//            tableView.setContentOffset(CGPoint(x: 0, y: tableView.contentOffset.y-self.refreshControl.frame.size.height), animated: true)
+//            self.refreshControl.beginRefreshing()
+//        } else {
+//            self.refreshControl.endRefreshing()
+//        }
+//    }
+//    
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationController?.title = "Settings"
         tableView.delegate = self
         tableView.dataSource = self
         tableView.refreshControl = self.refreshControl
@@ -171,6 +185,7 @@ class UserSettingsController: UIViewController, UITableViewDelegate, UITableView
         view.addSubview(tableView)
         setupAutoLayout()
         getUserInfo()
+        
     }
     
     func setupAutoLayout() {
@@ -193,9 +208,17 @@ class UserSettingsController: UIViewController, UITableViewDelegate, UITableView
 
 
     func getUserInfo() {
+   
         
         let authToken = Keychain.getKey(name: "authToken")
         let userPk = Keychain.getKey(name: "userPk")
+        
+        print("""
+            ==========================
+             authToken: \(authToken)
+             userPk: \(userPk)
+            ==========================
+            """)
         
         let headers: [String: String] = [
             "Content-Type": "application/json",
@@ -212,6 +235,7 @@ class UserSettingsController: UIViewController, UITableViewDelegate, UITableView
      
             
             
+            
             if firstName.isEmpty {
                 print("Please set up your profile")
             }
@@ -224,11 +248,10 @@ class UserSettingsController: UIViewController, UITableViewDelegate, UITableView
             }
 
         }) { (failure) in
-            
         
             
             
-            self.alert(message: "Your account has not been set up yet. Please log out and log back in. ")
+            self.alert(message: "", title: "There was an error retrieving your account info")
         }
     }
  

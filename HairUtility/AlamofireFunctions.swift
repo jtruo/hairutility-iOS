@@ -67,8 +67,14 @@ extension DataRequest {
                     switch appendingUrl {
                         
                     case "api/v1/hairprofiles/":
-                        success(nil)
-                        print("Successfully saved profile")
+                        
+                        do {
+                            debugPrint(response)
+                            let hairProfile = try decoder.decode(HairProfile.self, from: data)
+                            success(hairProfile)
+                        } catch let error {
+                            print("Error converting hairprofile json: \(error)")
+                        }
                         
                     case let str where str.contains("/hairprofiles/?"):
                         

@@ -10,7 +10,6 @@ import UIKit
 import Alamofire
 import KeychainAccess
 import AWSS3
-import Lottie
 
 //Optional add a banner image or bio. When pressing next send the data to server to create company, get the company pk and send a patch of banner image and bio
 //Also when users click the next save a variable that tells whether the u
@@ -146,11 +145,6 @@ class EditCompanyController: UIViewController, UIImagePickerControllerDelegate, 
         dismiss(animated: true, completion: nil)
     }
     
-    lazy var firstAnimationView: LOTAnimationView = {
-        let animationView = LOTAnimationView(name:"check_mark")
-        //        animationView.setValue(UIColor.purple, forKeyPath: "Ellipse Path 1.Fill.Color")
-        return animationView
-    }()
     
     @objc func hideKeyboard() {
         view.endEditing(true)
@@ -208,13 +202,7 @@ class EditCompanyController: UIViewController, UIImagePickerControllerDelegate, 
                 
                 print(progressFloat)
                 
-                
-                self.firstAnimationView.play(toProgress: progressFloat, withCompletion: { (finished) in
-                    print(finished)
-                    print("Animation is finished")
-                    
-                    
-                })
+ 
             })
         }
         
@@ -305,7 +293,7 @@ class EditCompanyController: UIViewController, UIImagePickerControllerDelegate, 
             guard let company = company as? Company else { return }
             print(company)
             
-            self.alert(message: "Updated the company profile successfully")
+            self.alert(message: "", title: "Updated the company profile successfully")
             self.dismiss(animated: true, completion: nil)
         }) { (err) in
             print(err)
