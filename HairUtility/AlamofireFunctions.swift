@@ -21,6 +21,7 @@ extension DataRequest {
     
 //    Public or private var that changes where the bucket/folder is stored
     static let baseUrl = "https://www.hairutility.com/"
+//    static let baseUrl = "http://0.0.0.0:8000/"
 //    Remove inout auth after beat
     static func userRequest(requestType: String, appendingUrl: String, headers: [String: String]?, parameters: [String: Any]?, success:@escaping (Any?) -> Void, failure:@escaping (String) -> Void){
         
@@ -120,8 +121,10 @@ extension DataRequest {
                             print("Error converting json: \(error)")
                         }
                         
+                        
                     default:
                         debugPrint(response)
+                        success(response)
                         print("There is no object that is returned from the url")
                         break
                         

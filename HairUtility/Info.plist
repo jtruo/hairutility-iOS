@@ -19,7 +19,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0.2</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>3</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>
@@ -50,10 +50,12 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>The app requires access your camera to take photos</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>The app requires access to your photos to store them</string>
 	<key>NSLocationUsageDescription</key>
 	<string>We may need your location to find stylists near you</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We may need your location to locate stylists</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>The app requires access to your photos to store them</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

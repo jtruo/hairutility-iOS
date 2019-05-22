@@ -22,6 +22,9 @@ class DifferentCell: UICollectionViewCell {
             
 
             hairstyleImageView.kf.setImage(with: thumbnailUrl)
+            
+            
+            print(thumbnailUrl)
             hairstyleNameLabel.text = hairProfile.hairstyleName
             tagsLabel.text = "Tags: \(hairProfile.tags.joined(separator: ", "))"
           
@@ -47,7 +50,7 @@ class DifferentCell: UICollectionViewCell {
     
     lazy var tagsLabel: BaseTextLabel = {
         let l = BaseTextLabel()
-        l.font = UIFont.boldSystemFont(ofSize: 12   )
+        l.font = UIFont.boldSystemFont(ofSize: 12)
         return l
     }()
     

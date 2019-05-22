@@ -192,10 +192,11 @@ class ReplacementController: UICollectionViewController, UICollectionViewDelegat
         
         print("Retrieving hair oproifles ===============")
         do {
-            let retrievedProfiles = try Disk.retrieve("corehairprofiles.json", from: .documents, as: [CoreHairProfile].self)
+            let retrievedProfiles = try Disk.retrieve("CoreHairProfiles", from: .documents, as: [CoreHairProfile].self)
             self.coreProfiles = retrievedProfiles
-            
-//        What if we stored the thumbnail image in a separate file on the top of the model, and then append the thumnail images to cell array. Have to figure out how to add the local cells onto the array of cells. 
+            // TODO  no permissions error
+            // Use FileManager or retrieve all from the .json file, remove the one, and re-append everything.
+
             print("These are the messages \(retrievedProfiles)")
         } catch let err {
             print(err)

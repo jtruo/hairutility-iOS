@@ -73,9 +73,9 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
                 profileDescriptionTextView.text = coreHairProfile.profileDescription
               
                 self.navigationItem.title = coreHairProfile.hairstyleName
+       
                 
-                //                Do we need to retrieve all images?
-                // DOes this even work? Maybe add images array optionallly
+                
             } catch let err {
                 print("Error retrieving core hair profile: \(err)")
             }
@@ -89,6 +89,8 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
     }
     
+    // REFACTOR : Separate views and their actions to the bottom.
+    // MARK: Views
     
     lazy var firstImageView: UIImageView = {
         let iv = UIImageView()
@@ -235,6 +237,17 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         return tv
     }()
 
+    lazy var deleteButton: UIButton = {
+        let b = UIButton(type: .system)
+        b.isHidden = true
+        b.setTitle("Delete", for: .normal)
+        b.tintColor = UIColor.rgb(red: 188, green: 75, blue: 81)
+        b.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+        b.addTarget(self, action: #selector(deleteProfile), for: .touchUpInside)
+        return b
+    }()
+    
+
     
     @objc func hideKeyboard() {
         view.endEditing(true)
@@ -274,8 +287,9 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
 //            editButton.setTitle("Save", for: .normal)
             editButton.setTitle("Save", for: .normal)
             self.profileDescriptionTextView.isEditable = true
-            self.tagsTextView.isEditable = true
+//            self.tagsTextView.isEditable = true
             self.profileDescriptionTextView.isUserInteractionEnabled = true
+            self.deleteButton.isHidden = false
             
         } else {
             
@@ -288,7 +302,8 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
                     self.editButton.setTitle("Edit ", for: .normal)
                     
                     self.profileDescriptionTextView.isEditable = false
-                    self.tagsTextView.isEditable = false
+                    self.deleteButton.isHidden = true
+//                    self.tagsTextView.isEditable = false
                     
                     for (index, image) in self.changedImageArray {
                         do {
@@ -312,8 +327,9 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
                 let yesAction = UIAlertAction(title: "Yes", style: .default) { (action) in
                     self.editButton.setTitle("Edit", for: .normal)
                     
+                    self.deleteButton.isHidden = true
                     self.profileDescriptionTextView.isEditable = false
-                    self.tagsTextView.isEditable = false
+//                    self.tagsTextView.isEditable = false
                     self.uploadImagesToS3()
                 }
                 let actions = [noAction, yesAction]
@@ -399,12 +415,16 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         bottomContainerView.addSubview(profileDescriptionTextView)
         bottomContainerView.addSubview(creatorTextView)
         bottomContainerView.addSubview(tagsTextView)
+        bottomContainerView.addSubview(deleteButton)
         
         profileDescriptionTextView.anchor(top: bottomContainerView.topAnchor, leading: bottomContainerView.leadingAnchor, bottom: creatorTextView.topAnchor, trailing: bottomContainerView.trailingAnchor, padding: .init(top: 8, left: 0, bottom: 0, right: 0), size: .init(width: 0, height: 100))
         
-        creatorTextView.anchor(top: profileDescriptionTextView.bottomAnchor, leading: bottomContainerView.leadingAnchor, bottom: tagsTextView.topAnchor, trailing: bottomContainerView.trailingAnchor, padding: .init(top: 8, left: 0, bottom: 0, right: 0), size: .init(width: 0, height: 50))
+        creatorTextView.anchor(top: profileDescriptionTextView.bottomAnchor, leading: bottomContainerView.leadingAnchor, bottom: nil, trailing: bottomContainerView.trailingAnchor, padding: .init(top: 12, left: 0, bottom: 0, right: 0), size: .init(width: 0, height: 44))
+  
+        tagsTextView.anchor(top: creatorTextView.bottomAnchor, leading: bottomContainerView.leadingAnchor, bottom: nil, trailing: deleteButton.leadingAnchor, padding: .init(top: 6, left: 0, bottom: 0, right: 0), size: .init(width: 0, height: 44))
         
-        tagsTextView.anchor(top: creatorTextView.bottomAnchor, leading: bottomContainerView.leadingAnchor, bottom: nil, trailing: bottomContainerView.trailingAnchor, size: .init(width: 0, height: 50))
+        deleteButton.anchor(top: creatorTextView.bottomAnchor, leading: tagsTextView.trailingAnchor, bottom: nil, trailing: bottomContainerView.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 4), size: .init(width: 44, height: 44 ))
+
         
         
     }
@@ -546,6 +566,73 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         
     }
     
-}
+    
+    
+    @objc func deleteProfile() {
+        
+        if let coreHairProfile = self.coreHairProfile {
+            
+            let noAction = UIAlertAction(title: "No", style: .cancel) { (action) in
+                
+            }
+            let yesAction = UIAlertAction(title: "Yes", style: .default) { (action) in
+                
+                do {
+                    
+                    
+                    // removes imageArray
+                    try Disk.remove(coreHairProfile.creationDate, from: .documents)
+                    try Disk.remove("CoreHairProfiles/\(coreHairProfile.pk).json", from: .documents)
+                
+                    self.alert(message: "", title: "Deleted the profile successfully")
+                    
+                    
+                } catch let err {
+                    self.alert(message: "", title: "Failed to delete the profile")
+                    
+                    print(err)
+                    
+                }
 
-// Protocol orientired prgoramming, make the uitextview/protocols at the bottom
+            }
+            let actions = [noAction, yesAction]
+            self.alertWithActions(message: "", title: "Are you sure you want to delete? This will delete the hair profile information from your account", actions: actions)
+            
+
+        } else if let hairProfile = self.hairProfile {
+            
+            print(hairProfile)
+            
+            let authToken = Keychain.getKey(name: "authToken")
+            guard let profilePk = profilePk else { return }
+            
+            let headers = [
+                "Content-Type": "application/json",
+                "Authorization": "Token \(authToken)"
+            ]
+            
+            let noAction = UIAlertAction(title: "No", style: .cancel) { (action) in
+                
+            }
+            let yesAction = UIAlertAction(title: "Yes", style: .default) { (action) in
+                
+                
+                Alamofire.DataRequest.userRequest(requestType: "DELETE", appendingUrl: "api/v1/hairprofiles/\(profilePk)/", headers: headers, parameters: nil, success: { (result) in
+                    
+                    self.alert(message: "", title: "Deleted the profile successfully")
+                }) { (err) in
+                    self.alert(message: "", title: "Failed to delete the profile")
+                }
+            }
+            let actions = [noAction, yesAction]
+            self.alertWithActions(message: "", title: "Are you sure you want to delete? This will delete the hair profile information from your account", actions: actions)
+        
+            
+        } else {
+             self.alert(message: "", title: "An error occurred, this message should not appear")
+        }
+        
+
+    }
+    
+}

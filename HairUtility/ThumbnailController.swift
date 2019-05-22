@@ -22,14 +22,8 @@ class ThumbnailController: UIViewController, UIScrollViewDelegate, UITextFieldDe
     
     // MARK: ImagePicker Library
     
-    
-    let imagePicker = ImagePickerController()
-    var config = Configuration()
-    public var imageAssets: [UIImage] {
-        return AssetManager.resolveAssets(imagePicker.stack.assets)
-        
-    }
-    
+
+
     
     func wrapperDidPress(_ imagePicker: ImagePickerController, images: [UIImage]) {
         print("wrapper is working")
@@ -106,11 +100,15 @@ class ThumbnailController: UIViewController, UIScrollViewDelegate, UITextFieldDe
     
     @objc func imageTapped(button: UIButton) {
         
-        imagePicker.imageLimit = 1
-        imagePicker.delegate = self
-        config.doneButtonTitle = "Finish"
+        var config = Configuration()
+        
+        config.doneButtonTitle = "Done"
         config.noImagesTitle = "Sorry! There are no images here!"
         config.recordLocation = false
+        
+        let imagePicker = ImagePickerController(configuration: config)
+        imagePicker.imageLimit = 1
+        imagePicker.delegate = self
         
         present(imagePicker, animated: true, completion: nil)
     }

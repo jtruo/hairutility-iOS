@@ -33,6 +33,7 @@ struct HairProfile: Decodable {
 
 struct CoreHairProfile: Codable {
 
+    let pk: String
     let hairstyleName: String
     let profileDescription: String
     let creationDate: String

@@ -32,15 +32,6 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
     var createProfileDelegate: ProfilePageDelegate?
    
 
-    
-    let imagePicker = ImagePickerController()
-    var config = Configuration()
-    public var imageAssets: [UIImage] {
-        return AssetManager.resolveAssets(imagePicker.stack.assets)
-        
-    }
-    
-
     lazy var firstImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
@@ -146,11 +137,14 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
 
     @objc func imageTapped(button: UIButton) {
         
-        imagePicker.imageLimit = 4
-        imagePicker.delegate = self
-        config.doneButtonTitle = "Finish"
+        var config = Configuration()
+        config.doneButtonTitle = "Done"
         config.noImagesTitle = "Sorry! There are no images here!"
         config.recordLocation = false
+        
+        let imagePicker = ImagePickerController(configuration: config)
+        imagePicker.imageLimit = 4
+        imagePicker.delegate = self
         
         present(imagePicker, animated: true, completion: nil)
     }
@@ -168,8 +162,6 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
   
     }
     
-
-    
     lazy var uploadPhotoButton: UIButton = {
         
         let uploadButton = UIButton(type: .system)
@@ -180,7 +172,7 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         
     }()
     
-    // when going back and forth the image array goes to 6
+ 
     @objc func uploadPhotoButtonTapped() {
         
         print(imageArray.count)
@@ -317,16 +309,20 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         
     }
     
+    // TODO iCloud Picking is not working
+    
     func doneButtonDidPress(_ imagePicker: ImagePickerController, images: [UIImage]) {
         
-        print("Done button pressed")
-        print(imageAssets)
+    
         
         let imageCount = images.count
         //
         guard imageCount == 4 else {
+            
+            // iCloud bug
+            print("The count \(imageCount)")
             let actions = [UIAlertAction(title: "Ok", style: UIAlertActionStyle.cancel, handler: nil)]
-            view.alertUIView(message: "Please select four images", title: "", actions: actions)
+            view.alertUIView(message: "", title: "Please select four images", actions: actions)
             return
         }
         
@@ -547,11 +543,15 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
         } catch let err {
             print("Could not save images \(err)")
         }
+        
+        let pk = UUID().uuidString
 
-        let coreHairProfile = CoreHairProfile(hairstyleName: hairstyleName , profileDescription: profileDescription, creationDate: creationDate)
+        let coreHairProfile = CoreHairProfile(pk: pk, hairstyleName: hairstyleName , profileDescription: profileDescription, creationDate: creationDate)
         
         do {
-            try Disk.append(coreHairProfile, to: "corehairprofiles.json", in: .documents)
+//            try Disk.append(coreHairProfile, to: "corehairprofiles.json", in: .documents)
+            
+            try Disk.save(coreHairProfile, to: .documents, as: "CoreHairProfiles/\(pk).json")
             let okAction = UIAlertAction(title: "Ok", style: .default) { (alert) in
        
                 self.parent?.dismiss(animated: true, completion: nil)
@@ -568,9 +568,9 @@ class CreateHairProfileController: UIViewController, UploadOptionsDelegate, Imag
     @objc func retrieveHairProfiles() {
         
         do {
-            let retrievedMessages = try Disk.retrieve("corehairprofiles.json", from: .documents, as: [CoreHairProfile].self)
+            let retrievedProfiles = try Disk.retrieve("CoreHairProfiles", from: .documents, as: [CoreHairProfile].self)
             
-            print("These are the messages \(retrievedMessages)")
+            print("These are the messages \(retrievedProfiles)")
         } catch let err {
             print(err)
         }

@@ -72,9 +72,13 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
             isStylistButton.isSelected = false
             isStylist = false
             
+            print(isStylist)
+            
         } else {
             isStylistButton.isSelected = true
             isStylist = true
+            
+            print(isStylist)
         }
         
     }
