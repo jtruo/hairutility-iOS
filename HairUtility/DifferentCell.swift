@@ -13,43 +13,68 @@ import UIKit
 import Kingfisher
 
 class DifferentCell: UICollectionViewCell {
-    
+
     
     var hairProfile: HairProfile? {
         didSet {
-            guard let firstImageString = hairProfile?.firstImageUrl else { return }
-            guard let hairstyleName = hairProfile?.hairstyleName else { return }
-            let firstImageUrl = URL(string: firstImageString)
-            hairstyleImageView.kf.setImage(with: firstImageUrl)
-            hairstyleNameLabel.text = hairstyleName
+            guard let hairProfile = hairProfile  else { return }
+            let thumbnailUrl = prefixAndConvertToThumbnailS3Url(suffix: hairProfile.thumbnailKey)
+            
+
+            hairstyleImageView.kf.setImage(with: thumbnailUrl)
+            
+            
+            print(thumbnailUrl)
+            hairstyleNameLabel.text = hairProfile.hairstyleName
+            tagsLabel.text = "Tags: \(hairProfile.tags.joined(separator: ", "))"
+          
             
         }
     }
-    
-    lazy var hairstyleNameLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Loading"
-        return label
-    }()
+
     
     lazy var hairstyleImageView: UIImageView = {
         let iv = UIImageView()
-        iv.contentMode = .scaleAspectFit
+        iv.contentMode = .scaleAspectFill
+        iv.layer.masksToBounds = true
+        iv.layer.cornerRadius = 4
 
-        
         return iv
     }()
     
+    lazy var hairstyleNameLabel: BaseTextLabel = {
+        let l = BaseTextLabel()
+        l.font = UIFont.boldSystemFont(ofSize: 16)
+        return l
+    }()
+    
+    lazy var tagsLabel: BaseTextLabel = {
+        let l = BaseTextLabel()
+        l.font = UIFont.boldSystemFont(ofSize: 12)
+        return l
+    }()
+    
+    
+
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        addSubview(hairstyleNameLabel)
-        addSubview(hairstyleImageView)
+
         
-        hairstyleNameLabel.anchor(top: topAnchor, left: leftAnchor, bottom: hairstyleImageView.topAnchor, right: rightAnchor, paddingTop: 2, paddingLeft: 2, paddingBottom: 2, paddingRight: 2, width: 0, height: 0)
+        let stackView = UIStackView(arrangedSubviews: [hairstyleImageView, hairstyleNameLabel, tagsLabel])
+        stackView.distribution = .fillProportionally
+        stackView.axis = .vertical
         
-        hairstyleImageView.anchor(top: hairstyleNameLabel.bottomAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 2, paddingBottom: 0, paddingRight: 2, width: 0, height: 0)
+        addSubview(stackView)
+        
+        
+
+        stackView.anchor(top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor, padding: .init(top: 0, left: 2, bottom: 0, right: 2))
+        
+        hairstyleImageView.heightAnchor.constraint(equalTo: stackView.heightAnchor, multiplier: 3 / 4).isActive = true
+        hairstyleNameLabel.heightAnchor.constraint(equalTo: stackView.heightAnchor, multiplier: 1 / 8).isActive = true
+        tagsLabel.heightAnchor.constraint(equalTo: stackView.heightAnchor, multiplier: 1 / 8).isActive = true
         
         
     }

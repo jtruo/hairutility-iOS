@@ -22,7 +22,7 @@ class GetHairstyleView: UIView, Modal {
     
     lazy var titleLabel: UILabel = {
         let titleLabel = UILabel()
-        titleLabel.text = "Get a hairstyle from your stylist"
+        titleLabel.text = "Get a hairstyle from a stylist"
         titleLabel.font = UIFont.boldSystemFont(ofSize: 18)
         titleLabel.textAlignment = .center
         return titleLabel
@@ -55,7 +55,7 @@ class GetHairstyleView: UIView, Modal {
     
     lazy var accessCodeLabel: UILabel = {
         let label = UILabel()
-        label.text = "Enter the access code your stylist received after saving the hairstyle"
+        label.text = "Enter the access code the stylist received after saving the hairstyle"
         label.font = UIFont.systemFont(ofSize: 14)
         label.textAlignment = .center
         label.numberOfLines = 2
@@ -79,8 +79,8 @@ class GetHairstyleView: UIView, Modal {
     
     lazy var getButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Download", for: .normal)
-        button.backgroundColor = UIColor.mainBlue()
+        button.setTitle("Get", for: .normal)
+        button.backgroundColor = UIColor.mainCharcoal()
         button.layer.cornerRadius = 4
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.setTitleColor(.white, for: .normal)

@@ -12,10 +12,15 @@ import IQKeyboardManagerSwift
 import KeychainAccess
 import Alamofire
 
+protocol CompanyPageDelegate {
+    func nextButtonPressed()
+    func backButtonPressed()
+}
 
-class CompanyPageController: UIPageViewController, UIPageViewControllerDelegate, FirstPageDelegate {
 
-    
+class CompanyPageController: UIPageViewController, UIPageViewControllerDelegate, CompanyPageDelegate {
+
+
     
     var pages = [UIViewController]()
     
@@ -33,7 +38,7 @@ class CompanyPageController: UIPageViewController, UIPageViewControllerDelegate,
     lazy var dismissButton: UIButton = {
         
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "download"), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "cancel").withRenderingMode(.alwaysOriginal), for: .normal)
         button.addTarget(self, action: #selector(dismissButtonTapped), for: .touchUpInside)
         return button
         
@@ -60,6 +65,7 @@ class CompanyPageController: UIPageViewController, UIPageViewControllerDelegate,
         let firstPage = FirstPageController()
         firstPage.delegate = self
         let secondPage = SecondPageController()
+        
         self.pages.append(firstPage)
         self.pages.append(secondPage)
         
@@ -78,12 +84,17 @@ class CompanyPageController: UIPageViewController, UIPageViewControllerDelegate,
         
         view.addSubview(pageControl)
         
-        pageControl.translatesAutoresizingMaskIntoConstraints = false
-        pageControl.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -5).isActive = true
-        pageControl.widthAnchor.constraint(equalTo: self.view.widthAnchor, constant: -20).isActive = true
-        pageControl.heightAnchor.constraint(equalToConstant: 20).isActive = true
+//        pageControl.translatesAutoresizingMaskIntoConstraints = false
+//        pageControl.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -5).isActive = true
+//        pageControl.widthAnchor.constraint(equalTo: self.view.widthAnchor, constant: -20).isActive = true
+//        pageControl.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        
+        pageControl.anchor(top: nil, leading: nil, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: nil, padding: .init(top: 0, left: 0, bottom: 6, right: 0), size: .init(width: 20, height: 20))
         pageControl.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         
+    
+
         
         returnHandler = IQKeyboardReturnKeyHandler(controller: self)
         returnHandler.lastTextFieldReturnKeyType = .default
@@ -93,12 +104,20 @@ class CompanyPageController: UIPageViewController, UIPageViewControllerDelegate,
     }
     
     @objc func nextButtonPressed() {
-        print("Something")
-        setViewControllers([pages[1]], direction: .forward, animated: true, completion: nil)
-        pageControl.currentPage = 1
+        
+        let forwardPage = pages[pageControl.currentPage + 1]
+        setViewControllers([forwardPage], direction: .forward, animated: true, completion: nil)
+        pageControl.currentPage = pageControl.currentPage + 1
         
     }
     
+    @objc func backButtonPressed() {
+        
+        let backPage = pages[pageControl.currentPage - 1]
+        setViewControllers([backPage], direction: .reverse, animated: true, completion: nil)
+        pageControl.currentPage = pageControl.currentPage - 1
+        
+    }
 
     
     required init?(coder: NSCoder) {

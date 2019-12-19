@@ -17,7 +17,7 @@ class CompanySettingsCell: UITableViewCell {
     
     lazy var companyLabel: UILabel = {
         let label = UILabel()
-        label.text = "Company Settings"
+        label.text = "Company"
         label.font = UIFont.boldSystemFont(ofSize: 14)
         return label
     }()
@@ -33,7 +33,8 @@ class CompanySettingsCell: UITableViewCell {
     func setupViews() {
         
         self.addSubview(companyLabel)
-        companyLabel.anchor(top: contentView.topAnchor, left: contentView.leftAnchor, bottom: contentView.bottomAnchor, right: contentView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 200, height: 50)
+        
+        companyLabel.anchor(top: contentView.topAnchor, leading: contentView.leadingAnchor, bottom: contentView.bottomAnchor, trailing: contentView.trailingAnchor, size: .init(width: 200, height: 50))
         
     }
     

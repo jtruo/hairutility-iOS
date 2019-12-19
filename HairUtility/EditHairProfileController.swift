@@ -12,14 +12,14 @@ import KeychainAccess
 import AWSS3
 import Kingfisher
 import Alamofire
-import Lottie
 import Lightbox
+import Disk
 
 class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, UICollectionViewDelegate, UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     var imageArray = [UIImage]()
     var s3UrlArray = [URL]()
-    var s3StringArray = [String]()
+    var s3KeyArray = [String]()
     var changedImageArray = [Int: UIImage]()
     
     var hairProfile: HairProfile? {
@@ -27,20 +27,21 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
             
             guard let hairProfile = hairProfile else { return }
             
-            let firstImageString = hairProfile.firstImageUrl
-            let secondImageString = hairProfile.secondImageUrl
-            let thirdImageString = hairProfile.thirdImageUrl
-            let fourthImageString = hairProfile.fourthImageUrl
+            let firstImageKey = hairProfile.firstImageKey
+            let secondImageKey = hairProfile.secondImageKey
+            let thirdImageKey = hairProfile.thirdImageKey
+            let fourthImageKey = hairProfile.fourthImageKey
             let hairstyleName = hairProfile.hairstyleName
             let profileDescription = hairProfile.profileDescription
             let creatorName = hairProfile.creator
             let tags = hairProfile.tags.joined(separator: ", ")
   
             
-            guard let firstImageUrl = URL(string: firstImageString) else { return }
-            guard let secondImageUrl = URL(string: secondImageString) else { return }
-            guard let thirdImageUrl = URL(string: thirdImageString) else { return }
-            guard let fourthImageUrl = URL(string: fourthImageString) else { return }
+            let firstImageUrl = prefixAndConvertToImageS3Url(suffix: firstImageKey)
+            let secondImageUrl = prefixAndConvertToImageS3Url(suffix: secondImageKey)
+            let thirdImageUrl = prefixAndConvertToImageS3Url(suffix: thirdImageKey)
+            let fourthImageUrl = prefixAndConvertToImageS3Url(suffix: fourthImageKey)
+            
         
             firstImageView.kf.setImage(with: firstImageUrl)
             secondImageView.kf.setImage(with: secondImageUrl)
@@ -54,27 +55,49 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
             self.navigationItem.title = hairstyleName
     
             s3UrlArray.append(contentsOf: [firstImageUrl, secondImageUrl, thirdImageUrl, fourthImageUrl])
-            s3StringArray.append(contentsOf: [firstImageString, secondImageString, thirdImageString, fourthImageString])
+            s3KeyArray.append(contentsOf: [firstImageKey, secondImageKey, thirdImageKey, fourthImageKey])
+     
+        }
+    }
+    
+    var coreHairProfile: CoreHairProfile? {
+        didSet {
+            guard let coreHairProfile = coreHairProfile else { return }
+            let directory = "\(coreHairProfile.creationDate)"
+            do {
+                let retrievedImages = try Disk.retrieve(directory, from: .documents, as: [UIImage].self)
+                firstImageView.image = retrievedImages[1]
+                secondImageView.image = retrievedImages[2]
+                thirdImageView.image = retrievedImages[3]
+                fourthImageView.image = retrievedImages[4]
+                profileDescriptionTextView.text = coreHairProfile.profileDescription
+              
+                self.navigationItem.title = coreHairProfile.hairstyleName
+       
+                
+                
+            } catch let err {
+                print("Error retrieving core hair profile: \(err)")
+            }
             
-            
-            print("This is the descritrpoignsdflkgnsdfgs: \(profileDescription)")
         }
     }
     
     
-    
-    let keychain = Keychain(service: "com.HairLinkCustom.HairLink")
-    
+
     var documentsUrl: URL {
         return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
     }
     
+    // REFACTOR : Separate views and their actions to the bottom.
+    // MARK: Views
     
     lazy var firstImageView: UIImageView = {
         let iv = UIImageView()
         iv.tag = 0
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
+        iv.layer.cornerRadius = 4
         iv.isUserInteractionEnabled = true
         iv.layer.borderColor = UIColor(white: 0.8, alpha: 0.9).cgColor
         iv.layer.borderWidth = 1.0
@@ -86,18 +109,13 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
     }()
     
     
-    lazy var firstAnimationView: LOTAnimationView = {
-        let animationView = LOTAnimationView(name:"blueprogress")
-        //        animationView.setValue(UIColor.purple, forKeyPath: "Ellipse Path 1.Fill.Color")
-        return animationView
-    }()
-    
     lazy var secondImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
         iv.tag = 1
         iv.clipsToBounds = true
         iv.isUserInteractionEnabled = true
+        iv.layer.cornerRadius = 4
         iv.layer.borderColor = UIColor(white: 0.8, alpha: 0.9).cgColor
         iv.layer.borderWidth = 1.0
         //        iv.image = #imageLiteral(resourceName: "Slice 1")
@@ -111,6 +129,7 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         iv.contentMode = .scaleAspectFill
         iv.isUserInteractionEnabled = true
         iv.clipsToBounds = true
+        iv.layer.cornerRadius = 4
         iv.layer.borderColor = UIColor(white: 0.8, alpha: 0.9).cgColor
         iv.layer.borderWidth = 1.0
         iv.tag = 2
@@ -124,6 +143,7 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         iv.contentMode = .scaleAspectFill
         iv.isUserInteractionEnabled = true
         iv.clipsToBounds = true
+        iv.layer.cornerRadius = 4
         iv.layer.borderColor = UIColor(white: 0.8, alpha: 0.9).cgColor
         iv.layer.borderWidth = 1.0
         iv.tag = 3
@@ -134,7 +154,8 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
     }()
     
     @objc func imageTapped(sender: UITapGestureRecognizer) {
-//        Index needs to be scope wide
+
+             print("Tap detected")
         
         guard let index = sender.view?.tag else { return }
         guard let firstImage = firstImageView.image else { return }
@@ -143,11 +164,11 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         guard let fourthImage = fourthImageView.image else { return }
         self.currentIndex = index
         
+   
 
         
         switch editButton.titleLabel?.text {
         case "Save":
-//            Patch the new url onto their own profile. Find a way to clean up oldi mages or just leave them.
             
             imageArray = [firstImage, secondImage, thirdImage, fourthImage]
             
@@ -185,8 +206,6 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         
         print("This is the changed image \(changedImageArray)")
         
-    
-//         Should only the owner be able to edit? Or should people save the profile into their own aws bucket
         
         switch indexChanged {
         case 0:
@@ -202,15 +221,6 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
 
         }
         
-
-//        if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
-//
-//            plusPhotoButton.setImage(editedImage.withRenderingMode(.alwaysOriginal), for: .normal)
-//
-//        } else if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
-//            plusPhotoButton.setImage(originalImage.withRenderingMode(.alwaysOriginal), for: .normal)
-//        }
-//
         dismiss(animated: true, completion: nil)
     }
     
@@ -222,26 +232,22 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         tv.layer.borderWidth = 0.5
         tv.layer.borderColor = UIColor.lightGray.cgColor
         tv.font = .systemFont(ofSize: 16)
+        tv.layer.cornerRadius = 4
         tv.delegate = self
-//        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
-//        self.view.addGestureRecognizer(tapRecognizer)
-        
         return tv
     }()
+
+    lazy var deleteButton: UIButton = {
+        let b = UIButton(type: .system)
+        b.isHidden = true
+        b.setTitle("Delete", for: .normal)
+        b.tintColor = UIColor.rgb(red: 188, green: 75, blue: 81)
+        b.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+        b.addTarget(self, action: #selector(deleteProfile), for: .touchUpInside)
+        return b
+    }()
     
-//    func textViewDidBeginEditing(_ textView: UITextView) {
-//        if textView.textColor == UIColor.lightGray {
-//            textView.text = nil
-//            textView.textColor = UIColor.black
-//        }
-//    }
-//    
-//    func textViewDidEndEditing(_ textView: UITextView) {
-//        if textView.text.isEmpty {
-//            textView.text = "Add any descriptions"
-//            textView.textColor = UIColor.lightGray
-//        }
-//    }
+
     
     @objc func hideKeyboard() {
         view.endEditing(true)
@@ -251,7 +257,7 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
     let uploadPhotoButton: UIButton = {
         
         let uploadButton = UIButton(type: .system)
-        uploadButton.setImage(#imageLiteral(resourceName: "right_arrow_shadow"), for: .normal)
+        uploadButton.setImage(#imageLiteral(resourceName: "upload").withRenderingMode(.alwaysOriginal), for: .normal)
         //        uploadButton.addTarget(self, action: #selector(printSomething), for: .touchUpInside)
         return uploadButton
         
@@ -262,46 +268,76 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         button.titleLabel?.text = "Edit"
         button.setTitle("Edit", for: .normal)
         button.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
+        button.titleLabel?.adjustsFontSizeToFitWidth = true 
         return button
+    }()
+    
+    lazy var rightBarButton: UIBarButtonItem = {
+        let b = UIBarButtonItem(customView: editButton)
+        return b
     }()
     
     @objc func editButtonTapped() {
         
-        
-        
-        
-        
-        
         print("Edit button tapped")
         editButton.preventRepeatedPresses()
         
+        // This won't run the first time, because editbutton is never tapped
         if editButton.currentTitle == "Edit" {
+//            editButton.setTitle("Save", for: .normal)
             editButton.setTitle("Save", for: .normal)
-        
-
             self.profileDescriptionTextView.isEditable = true
-            self.tagsTextView.isEditable = true
+//            self.tagsTextView.isEditable = true
             self.profileDescriptionTextView.isUserInteractionEnabled = true
+            self.deleteButton.isHidden = false
             
         } else {
             
-        
-       
-            let noAction = UIAlertAction(title: "noAction", style: .cancel) { (action) in
+            if let coreHairProfile = self.coreHairProfile {
+                
+                let noAction = UIAlertAction(title: "No", style: .cancel) { (action) in
+                    
+                }
+                let yesAction = UIAlertAction(title: "Yes", style: .default) { (action) in
+                    self.editButton.setTitle("Edit ", for: .normal)
+                    
+                    self.profileDescriptionTextView.isEditable = false
+                    self.deleteButton.isHidden = true
+//                    self.tagsTextView.isEditable = false
+                    
+                    for (index, image) in self.changedImageArray {
+                        do {
+                            try Disk.save(image, to: .documents, as: "\(coreHairProfile.creationDate)/\(index).png")
+                        } catch let err {
+                            print("This is an error with the disk \(err)")
+                        }
+    
+                    }
+            
+                
+                }
+                let actions = [noAction, yesAction]
+                self.alertWithActions(message: "", title: "Are you sure you want to save? This will overwrite your images", actions: actions)
+                
+             
+            } else {
+                let noAction = UIAlertAction(title: "No", style: .cancel) { (action) in
+                    
+                }
+                let yesAction = UIAlertAction(title: "Yes", style: .default) { (action) in
+                    self.editButton.setTitle("Edit", for: .normal)
+                    
+                    self.deleteButton.isHidden = true
+                    self.profileDescriptionTextView.isEditable = false
+//                    self.tagsTextView.isEditable = false
+                    self.uploadImagesToS3()
+                }
+                let actions = [noAction, yesAction]
+                self.alertWithActions(message: "", title: "Are you sure you want to save? This will overwrite your images", actions: actions)
+                
                 
             }
-            let yesAction = UIAlertAction(title: "yesAction", style: .default) { (action) in
-                self.editButton.setTitle("Edit", for: .normal)
-                
-                self.profileDescriptionTextView.isEditable = false
-                self.tagsTextView.isEditable = false
-                self.uploadImagesToS3()
-            }
-            let actions = [noAction, yesAction]
-            self.alertWithActions(message: "", title: "Are you sure you want to save? This will overwrite your images", actions: actions)
-            
-            
-
+    
             
         }
     }
@@ -323,9 +359,25 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         textView.textColor = UIColor.lightGray
         return textView
     }()
-    
+
+// For enabling tags to be edited but not the Tags label. Have to prevent sender from being profileDescriptionTextView using tags or other methods
+//    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+//        if range.location <= 6 {
+//            return false
+//        } else {
+//            return true
+//        }
+//
+//    }
     
     lazy var containerView: UIView = {
+        let containerView = UIView()
+        containerView.backgroundColor = .white
+        return containerView
+        
+    }()
+    
+    lazy var bottomContainerView: UIView = {
         let containerView = UIView()
         containerView.backgroundColor = .white
         return containerView
@@ -335,49 +387,45 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.title = "Hairstyle"
-        
-        let rightBarButton = UIBarButtonItem(customView: editButton)
+       
         self.navigationItem.rightBarButtonItem = rightBarButton
         
         
         view.backgroundColor = .white
-        
+
         view.addSubview(containerView)
-        containerView.anchor(top: topLayoutGuide.bottomAnchor, left: nil, bottom: bottomLayoutGuide.topAnchor, right: nil, paddingTop: 12, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 350, height: 0)
+        containerView.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 12, left: 0, bottom: 0, right: 0), size: .init(width: 350, height: 322))
         containerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        
-        
         containerView.addSubview(firstImageView)
         containerView.addSubview(secondImageView)
         containerView.addSubview(thirdImageView)
         containerView.addSubview(fourthImageView)
-        containerView.addSubview(profileDescriptionTextView)
-        containerView.addSubview(creatorTextView)
-        containerView.addSubview(tagsTextView)
-        containerView.addSubview(firstAnimationView)
+      
         
+        firstImageView.anchor(top: containerView.topAnchor, leading: containerView.leadingAnchor, bottom: thirdImageView.topAnchor, trailing: secondImageView.leadingAnchor, padding: .init(top: 0, left: 14, bottom: 1, right: 1), size: .init(width: 160, height: 160))
+        secondImageView.anchor(top: containerView.topAnchor, leading: firstImageView.trailingAnchor, bottom: fourthImageView.topAnchor, trailing: containerView.trailingAnchor, padding: .init(top: 0, left: 1, bottom: 1, right: 14), size: .init(width: 160, height: 160))
+        thirdImageView.anchor(top: firstImageView.bottomAnchor, leading: containerView.leadingAnchor, bottom: nil, trailing: fourthImageView.leadingAnchor, padding: .init(top: 1, left: 14, bottom: 0, right: 1), size: .init(width: 160, height: 160))
+        fourthImageView.anchor(top: secondImageView.bottomAnchor, leading: thirdImageView.trailingAnchor, bottom: nil, trailing: containerView.trailingAnchor, padding: .init(top: 1, left: 1, bottom: 0, right: 14), size: .init(width: 160, height: 160))
         
+        //bottom
         
-        firstImageView.anchor(top: containerView.topAnchor, left: containerView.leftAnchor, bottom: thirdImageView.topAnchor, right: secondImageView.leftAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 1, paddingRight: 1, width: 168, height: 168)
+        view.addSubview(bottomContainerView)
+        bottomContainerView.anchor(top: containerView.bottomAnchor, leading: nil, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: nil, padding: .init(top: 8, left: 0, bottom: 0, right: 0), size: .init(width: 320, height: 0))
+        bottomContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        bottomContainerView.addSubview(profileDescriptionTextView)
+        bottomContainerView.addSubview(creatorTextView)
+        bottomContainerView.addSubview(tagsTextView)
+        bottomContainerView.addSubview(deleteButton)
         
+        profileDescriptionTextView.anchor(top: bottomContainerView.topAnchor, leading: bottomContainerView.leadingAnchor, bottom: creatorTextView.topAnchor, trailing: bottomContainerView.trailingAnchor, padding: .init(top: 8, left: 0, bottom: 0, right: 0), size: .init(width: 0, height: 100))
         
-        secondImageView.anchor(top: containerView.topAnchor, left: firstImageView.rightAnchor, bottom: fourthImageView.topAnchor, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 1, paddingBottom: 1, paddingRight: 0, width: 168, height: 168)
+        creatorTextView.anchor(top: profileDescriptionTextView.bottomAnchor, leading: bottomContainerView.leadingAnchor, bottom: nil, trailing: bottomContainerView.trailingAnchor, padding: .init(top: 12, left: 0, bottom: 0, right: 0), size: .init(width: 0, height: 44))
+  
+        tagsTextView.anchor(top: creatorTextView.bottomAnchor, leading: bottomContainerView.leadingAnchor, bottom: nil, trailing: deleteButton.leadingAnchor, padding: .init(top: 6, left: 0, bottom: 0, right: 0), size: .init(width: 0, height: 44))
         
-        thirdImageView.anchor(top: firstImageView.bottomAnchor, left: containerView.leftAnchor, bottom: profileDescriptionTextView.topAnchor, right: fourthImageView.leftAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 1, width: 168, height: 168)
-        
-        fourthImageView.anchor(top: secondImageView.bottomAnchor, left: thirdImageView.rightAnchor, bottom: profileDescriptionTextView.topAnchor, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 1, paddingBottom: 0, paddingRight: 0, width: 168, height: 168)
-        
-        profileDescriptionTextView.anchor(top: thirdImageView.bottomAnchor, left: containerView.leftAnchor, bottom: nil, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 336, height: 89)
-        
-        creatorTextView.anchor(top: profileDescriptionTextView.bottomAnchor, left: containerView.leftAnchor, bottom: nil, right: containerView.rightAnchor, paddingTop: 8, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 100, height: 30)
+        deleteButton.anchor(top: creatorTextView.bottomAnchor, leading: tagsTextView.trailingAnchor, bottom: nil, trailing: bottomContainerView.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 4), size: .init(width: 44, height: 44 ))
 
         
-        tagsTextView.anchor(top: creatorTextView.bottomAnchor, left: containerView.leftAnchor, bottom: nil, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 150, height: 50)
-        
-        firstImageView.addSubview(firstAnimationView)
-        firstAnimationView.anchor(top: firstImageView.topAnchor, left: firstImageView.leftAnchor, bottom: firstImageView.bottomAnchor, right: firstImageView.rightAnchor, paddingTop: 2, paddingLeft: 2, paddingBottom: 2, paddingRight: 2, width: 50, height: 50)
-    
         
     }
     
@@ -413,11 +461,7 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
                     
                     if index == 0 {
                         
-                        self.firstAnimationView.play(toProgress: progressFloat, withCompletion: { (finished) in
-                            print(finished)
-                            print("Animation is finished")
-                            
-                        })
+  
                     }
                     
                 })
@@ -444,26 +488,14 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
                 print(error)
             }
             
-         
-            
-            let userDefaults = UserDefaults.standard
-            guard let email = userDefaults.string(forKey: "email") else { return }
-            
-//            let encodedEmail = email.replacingOccurrences(of: "@", with: "%40")
-//            let key = "images/\(encodedEmail)/\(String(s3StringArray[index].suffix(40)))"
-            
-            let key = "images/\(email)/\(UUID().uuidString).png"
-            let fullS3Key = "https://s3.us-east-2.amazonaws.com/hairutilityimages/\(key)"
-      
-            
-            print(fullS3Key)
-            print(s3UrlArray.count)
+            let key = s3KeyArray[index]
+            let fullKey = key.replacingOccurrences(of: ".png", with: ".png\(index)")
     
-            updateUserProfile(newS3Url: fullS3Key)
+//            updateUserProfile(newS3Key: key)
             
             let transferUtility = AWSS3TransferUtility.default()
 
-            transferUtility.uploadFile(snapshotImageURL, bucket: "hairutilityimages", key: key, contentType: "image/png",expression: expression,
+            transferUtility.uploadFile(snapshotImageURL, bucket: "hairutility-prod", key: fullKey, contentType: "image/png",expression: expression,
                                        completionHandler: completionHandler).continueWith(executor: AWSExecutor.immediate(), block: {
                                         (task) -> Any? in
                                         if let error = task.error {
@@ -486,20 +518,16 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         }
     }
 
-    var authToken: String?
+
     var profilePk: String?
     var parameters: [String: Any] = [
         :
     ]
     
-    func updateUserProfile(newS3Url: String?) {
+    func updateUserProfile(newS3Key: String?) {
 
         
-        Keychain.getAuthToken { (authToken) in
-            self.authToken = authToken
-        }
-
-        guard let authToken = authToken else { return }
+        let authToken = Keychain.getKey(name: "authToken")
         guard let profilePk = profilePk else { return }
         
 
@@ -509,16 +537,16 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
         
         guard let indexChanged = currentIndex else { return }
         
-        if let newS3Url = newS3Url {
+        if let newS3Key = newS3Key {
             switch indexChanged {
             case 0:
-                parameters["first_image_url"] = newS3Url
+                parameters["first_image_key"] = newS3Key
             case 1:
-                parameters["second_image_url"] = newS3Url
+                parameters["second_image_key"] = newS3Key
             case 2:
-                parameters["third_image_url"] = newS3Url
+                parameters["third_image_key"] = newS3Key
             case 3:
-                parameters["fourth_image_url"] = newS3Url
+                parameters["fourth_image_key"] = newS3Key
             default:
                 break
             }
@@ -531,11 +559,80 @@ class EditHairProfileController: UIViewController, UIGestureRecognizerDelegate, 
 
         Alamofire.DataRequest.userRequest(requestType: "PATCH", appendingUrl: "api/v1/hairprofiles/\(profilePk)/", headers: headers, parameters: parameters, success: { (hairProfile) in
 
-            self.alert(message: "Updated the profile successfully")
+            self.alert(message: "", title: "Updated the profile successfully")
         }) { (err) in
             print(err)
         }
         
+    }
+    
+    
+    
+    @objc func deleteProfile() {
+        
+        if let coreHairProfile = self.coreHairProfile {
+            
+            let noAction = UIAlertAction(title: "No", style: .cancel) { (action) in
+                
+            }
+            let yesAction = UIAlertAction(title: "Yes", style: .default) { (action) in
+                
+                do {
+                    
+                    
+                    // removes imageArray
+                    try Disk.remove(coreHairProfile.creationDate, from: .documents)
+                    try Disk.remove("CoreHairProfiles/\(coreHairProfile.pk).json", from: .documents)
+                
+                    self.alert(message: "", title: "Deleted the profile successfully")
+                    
+                    
+                } catch let err {
+                    self.alert(message: "", title: "Failed to delete the profile")
+                    
+                    print(err)
+                    
+                }
+
+            }
+            let actions = [noAction, yesAction]
+            self.alertWithActions(message: "", title: "Are you sure you want to delete? This will delete the hair profile information from your account", actions: actions)
+            
+
+        } else if let hairProfile = self.hairProfile {
+            
+            print(hairProfile)
+            
+            let authToken = Keychain.getKey(name: "authToken")
+            guard let profilePk = profilePk else { return }
+            
+            let headers = [
+                "Content-Type": "application/json",
+                "Authorization": "Token \(authToken)"
+            ]
+            
+            let noAction = UIAlertAction(title: "No", style: .cancel) { (action) in
+                
+            }
+            let yesAction = UIAlertAction(title: "Yes", style: .default) { (action) in
+                
+                
+                Alamofire.DataRequest.userRequest(requestType: "DELETE", appendingUrl: "api/v1/hairprofiles/\(profilePk)/", headers: headers, parameters: nil, success: { (result) in
+                    
+                    self.alert(message: "", title: "Deleted the profile successfully")
+                }) { (err) in
+                    self.alert(message: "", title: "Failed to delete the profile")
+                }
+            }
+            let actions = [noAction, yesAction]
+            self.alertWithActions(message: "", title: "Are you sure you want to delete? This will delete the hair profile information from your account", actions: actions)
+        
+            
+        } else {
+             self.alert(message: "", title: "An error occurred, this message should not appear")
+        }
+        
+
     }
     
 }

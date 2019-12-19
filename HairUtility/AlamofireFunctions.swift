@@ -14,12 +14,19 @@ import Alamofire
 extension DataRequest {
     //    When extra headers is nil. All HTTP header fields become nil. To reduce code, only set the Token header as a parameter. Or code to headers
     // Change base url from http to https
+//    Need a notificatio nwhen failed or reutrned nothing
     
-    static let baseUrl = "https://hairutility-qa.herokuapp.com/"
     
+    //    The problem with posting to the api is that we need to send an authorization header with base credientials. Authorization: Token sfdsfsf, Base64 fdsfaf=
+    
+//    Public or private var that changes where the bucket/folder is stored
+    static let baseUrl = "https://www.hairutility.com/"
+//    static let baseUrl = "http://0.0.0.0:8000/"
+//    Remove inout auth after beat
     static func userRequest(requestType: String, appendingUrl: String, headers: [String: String]?, parameters: [String: Any]?, success:@escaping (Any?) -> Void, failure:@escaping (String) -> Void){
         
         print(baseUrl)
+        
         
         
         let encodedUrl = appendingUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
@@ -61,8 +68,14 @@ extension DataRequest {
                     switch appendingUrl {
                         
                     case "api/v1/hairprofiles/":
-                        success(nil)
-                        print("Successfully saved profile")
+                        
+                        do {
+                            debugPrint(response)
+                            let hairProfile = try decoder.decode(HairProfile.self, from: data)
+                            success(hairProfile)
+                        } catch let error {
+                            print("Error converting hairprofile json: \(error)")
+                        }
                         
                     case let str where str.contains("/hairprofiles/?"):
                         
@@ -108,8 +121,10 @@ extension DataRequest {
                             print("Error converting json: \(error)")
                         }
                         
+                        
                     default:
                         debugPrint(response)
+                        success(response)
                         print("There is no object that is returned from the url")
                         break
                         
@@ -137,6 +152,3 @@ extension DataRequest {
         
     }
     
-
-
-

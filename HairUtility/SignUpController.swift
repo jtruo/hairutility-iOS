@@ -14,7 +14,7 @@ import KeychainAccess
 class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     
-    let keychain = Keychain(service: "com.HairLinkCustom.HairLink")
+
     var isStylist: Bool = false
     let defaults = UserDefaults.standard
     
@@ -34,6 +34,11 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
         return textField
     }()
 
+    lazy var stylistLabel: BaseTextLabel = {
+       let l = BaseTextLabel()
+       l.text = "Are you a stylist?"
+       return l
+    }()
     
     @objc func handleTextInputChange() {
         
@@ -42,11 +47,11 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
         if isFormValid {
             
             signUpButton.isEnabled = true
-            signUpButton.backgroundColor = UIColor.rgb(red: 17, green: 154, blue: 237)
+            signUpButton.backgroundColor = UIColor.mainCharcoal()
             
         } else {
             signUpButton.isEnabled = false
-            signUpButton.backgroundColor = UIColor.rgb(red: 149, green: 204, blue: 244)
+            signUpButton.backgroundColor = UIColor.mainGrey()
         }
         
     }
@@ -55,8 +60,10 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
     lazy var isStylistButton: UIButton = {
         let button = UIButton(type: .system)
         button.addTarget(self, action: #selector(handleIsStylist), for: .touchUpInside)
-        button.setImage(#imageLiteral(resourceName: "cancel_shadow").withRenderingMode(.alwaysOriginal), for: .normal)
-        button.setImage(#imageLiteral(resourceName: "like_selected"), for: .selected)
+        // Yes i am a stylist or no, rightbar button upload/save
+        button.tintColor = .clear
+        button.setImage(#imageLiteral(resourceName: "square").withRenderingMode(.alwaysOriginal), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "check_square").withRenderingMode(.alwaysOriginal), for: .selected)
         return button
     }()
     
@@ -65,9 +72,13 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
             isStylistButton.isSelected = false
             isStylist = false
             
+            print(isStylist)
+            
         } else {
             isStylistButton.isSelected = true
             isStylist = true
+            
+            print(isStylist)
         }
         
     }
@@ -76,7 +87,7 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
     let signUpButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Sign Up", for: .normal)
-        button.backgroundColor = UIColor.rgb(red: 149, green: 204, blue: 244)
+        button.backgroundColor = UIColor.mainGrey()
         button.layer.cornerRadius = 5
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.setTitleColor(.white, for: .normal)
@@ -109,15 +120,26 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
     
     fileprivate func setupInputFields() {
         
-        let stackView = UIStackView(arrangedSubviews: [emailTextField, passwordTextField, isStylistButton, signUpButton])
+        
+        let labelAndIsStylist = UIStackView(arrangedSubviews: [stylistLabel, isStylistButton])
+        
+        labelAndIsStylist.axis = .horizontal
+        labelAndIsStylist.distribution = .fillProportionally
+        labelAndIsStylist.spacing = 1
+        
+        
+        let stackView = UIStackView(arrangedSubviews: [emailTextField, passwordTextField, labelAndIsStylist, signUpButton])
+        
+        
         
         stackView.distribution = .fillEqually
         stackView.axis = .vertical
-        stackView.spacing = 10
-        
+        stackView.spacing = 20
         view.addSubview(stackView)
         
-        stackView.anchor(top: topLayoutGuide.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 40, paddingBottom: 0, paddingRight: 40, width: 0, height: 250)
+        
+        stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: nil, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 40, left: 40, bottom: 0, right: 40), size: .init(width: 0, height: 200))
+        
     }
     
     var user: User?
@@ -147,8 +169,10 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
             if isActive == true {
                 
                 do {
-                    try self.keychain.set(authToken, key: "authToken")
-                    try self.keychain.set(pk, key: "pk")
+                    
+                    let keychain = Keychain(service: "com.HairUtility")
+                    try keychain.set(authToken, key: "authToken")
+                    try keychain.set(pk, key: "userPk")
                     let defaults = UserDefaults.standard
                     defaults.set(isStylist, forKey: "isStylist")
                     defaults.set(isActive, forKey: "isActive")

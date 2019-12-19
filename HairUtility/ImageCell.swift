@@ -8,30 +8,52 @@
 
 import UIKit
 import Kingfisher
+import Disk
 
 class ImageCell: UICollectionViewCell {
 
     
     var hairProfile: HairProfile? {
         didSet {
-            guard let firstImageString = hairProfile?.firstImageUrl else { return }
-            guard let hairstyleName = hairProfile?.hairstyleName else { return }
-            let firstImageUrl = URL(string: firstImageString)
-            hairstyleImageView.kf.setImage(with: firstImageUrl)
-            hairstyleNameLabel.text = hairstyleName
+            
+            guard let hairProfile = hairProfile  else { return }
+            let thumbnailUrl = prefixAndConvertToThumbnailS3Url(suffix: hairProfile.thumbnailKey)
+            
+            hairstyleImageView.kf.setImage(with: thumbnailUrl)
+            
+
             
         }
     }
     
-    lazy var hairstyleNameLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Loading"
-        return label
+    var coreHairProfile: CoreHairProfile? {
+        didSet {
+            guard let coreHairProfile = coreHairProfile else { return }
+            let directory = "\(coreHairProfile.creationDate)"
+            do {
+                let retrievedImages = try Disk.retrieve(directory, from: .documents, as: [UIImage].self)
+                hairstyleImageView.image = retrievedImages[0]
+                hairstyleNameLabel.text = coreHairProfile.hairstyleName
+//                Do we need to retrieve all images?
+// DOes this even work? Maybe add images array optionallly
+            } catch let err {
+                print("Error retrieving core hair profile: \(err)")
+            }
+            
+        }
+    }
+    
+    lazy var hairstyleNameLabel: BaseTextLabel = {
+        let l = BaseTextLabel()
+        l.text = "Loading"
+        return l
     }()
 
     lazy var hairstyleImageView: UIImageView = {
         let iv = UIImageView()
-        iv.contentMode = .scaleAspectFit
+        iv.contentMode = .scaleAspectFill
+        iv.layer.masksToBounds = true
+        iv.layer.cornerRadius = 4
         
         return iv
     }()
@@ -40,12 +62,10 @@ class ImageCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        addSubview(hairstyleNameLabel)
+    
         addSubview(hairstyleImageView)
         
-        hairstyleNameLabel.anchor(top: topAnchor, left: leftAnchor, bottom: hairstyleImageView.topAnchor, right: rightAnchor, paddingTop: 2, paddingLeft: 2, paddingBottom: 2, paddingRight: 2, width: 0, height: 0)
-        
-        hairstyleImageView.anchor(top: hairstyleNameLabel.bottomAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 2, paddingBottom: 0, paddingRight: 2, width: 0, height: 0)
+        hairstyleImageView.anchor(top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 0))
         
         
     }

@@ -19,6 +19,7 @@ struct User: Decodable {
     let email: String?
     let phoneNumber: String?
     let profileImageUrl: String?
+    let companyPk: String? 
     let hairProfiles: [HairProfile]?
     
 }

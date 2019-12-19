@@ -44,9 +44,11 @@ class CompanyUserCell: UICollectionViewCell {
         addSubview(profileImageView)
         addSubview(label)
         
-        label.anchor(top: topAnchor, left: leftAnchor, bottom: profileImageView.topAnchor, right: rightAnchor, paddingTop: 2, paddingLeft: 2, paddingBottom: 2, paddingRight: 2, width: 0, height: 0)
+    
+        label.anchor(top: topAnchor, leading: leadingAnchor, bottom: profileImageView.topAnchor, trailing: trailingAnchor, padding: .init(top: 2, left: 2, bottom: 2, right: 2))
+    
         
-        profileImageView.anchor(top: label.bottomAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 2, paddingBottom: 0, paddingRight: 2, width: 0, height: 0)
+        profileImageView.anchor(top: label.bottomAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor, padding: .init(top: 0, left: 2, bottom: 0, right: 2))
         
     }
     

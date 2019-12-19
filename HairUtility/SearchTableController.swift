@@ -10,7 +10,7 @@ import UIKit
 
 
 protocol SearchTableDelegate {
-    func searchButtonTapped(tags: [String])
+    func searchButtonTapped(gender: String, length: String, tags: [String])
 }
 
 class SearchTableController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UISearchResultsUpdating, UISearchControllerDelegate {
@@ -45,7 +45,7 @@ class SearchTableController: UIViewController, UITableViewDelegate, UITableViewD
     
     lazy var cancelButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "cancel_shadow"), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "cancel").withRenderingMode(.alwaysOriginal), for: .normal)
         button.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
         return button
     }()
@@ -64,21 +64,27 @@ class SearchTableController: UIViewController, UITableViewDelegate, UITableViewD
     
     
     var tags = [String]()
+    var gender = ""
+    var length = ""
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         print("Search bar clicked")
         
         switch searchBar.selectedScopeButtonIndex {
-            
-        case 1: tags.append("men")
-        default: tags.append("women")
+//
+//        case 1: tags.append("men")
+//        default: tags.append("women")
+//
+        case 1: gender = "men"
+        default: gender = "women"
+          
             
         }
         guard let searchBarText = searchBar.text else { return }
         
         tags.append(searchBarText)
         
-        delegate?.searchButtonTapped(tags: tags)
+        delegate?.searchButtonTapped(gender: gender, length: length, tags: tags)
         
         self.presentingViewController?.dismiss(animated: false, completion: nil)
     }
@@ -86,9 +92,10 @@ class SearchTableController: UIViewController, UITableViewDelegate, UITableViewD
     
     func setupAutoLayout() {
         
-        cancelButton.anchor(top: topLayoutGuide.bottomAnchor, left: view.leftAnchor, bottom: nil, right: nil, paddingTop: 2, paddingLeft: 4, paddingBottom: 0, paddingRight: 0, width: 50, height: 50)
+        cancelButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 2, left: 4, bottom: 0, right: 0), size: .init(width: 50, height: 50))
         
-        tableView.anchor(top: cancelButton.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+    
+        tableView.anchor(top: cancelButton.bottomAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor)
         
     }
 

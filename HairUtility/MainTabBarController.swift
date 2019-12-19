@@ -20,21 +20,33 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         
         if index == 2 {
 
+            print(isStylist ?? "No is stylist set")
+            
             if isStylist == false {
                 
                 let stylistAction = UIAlertAction(title: "Stylist", style: .default) { (action) in
                     tabBarController.selectedIndex = 1
+                    self.alert(message: "", title: "Click the icon on the upper right corner to get a profile from your stylist")
                 }
                 let clientAction = UIAlertAction(title: "Client", style: .default) { (action) in
-                    let hairProfileCreationController = CreateHairProfileController()
-                    self.present(hairProfileCreationController, animated: true)
+                    let createProfileNavController = self.templateNavController(unselectedImage: #imageLiteral(resourceName: "plus_circle_unselected"), selectedImage: #imageLiteral(resourceName: "plus_circle"), rootViewController: ProfilePageController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil))
+                    self.present(createProfileNavController, animated: true, completion: nil)
+                    
                 }
                 let actions = [stylistAction, clientAction]
                 self.alertWithActions(message: "", title: "Whose phone is being used to take photos?", actions: actions)
                 
             } else {
-                let hairProfileCreationController = CreateHairProfileController()
-                self.present(hairProfileCreationController, animated: true)
+                
+                //                Check here if stylist has a profile, if not redirect. Please set up your personal profile before creating a hair profile.
+                //                Two ways to do this. Option 1: Ping the server \?user and see if a first name, last name are returned. Option 2: NSUserdefaults HasStylistSetUpProfile: Bool. Set default = false for very first launch, and true once successfully set up. Use option 2 because we don't want to ping the server every time someone is creating a profile.
+                
+                //                The problem with option 2 is that whenever someone reinstalls the app, the variabl will be reset. So in order to fix this, have the ping that the stylist checked their profile after they PATCH and when they load that view controller.
+                // if is first time launchnig, stylist profile set up is false
+                let createProfileNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "plus_circle_unselected"), selectedImage: #imageLiteral(resourceName: "plus_circle"), rootViewController: ProfilePageController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil))
+                self.present(createProfileNavController, animated: true, completion: nil)
+                
+                
             }
             
             return false
@@ -53,11 +65,8 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         
         self.isStylist = UserDefaults.standard.bool(forKey: "isStylist")
         
-        Keychain.getAuthToken { (authToken) in
-            self.authToken = authToken
-        }
-        
-        if authToken?.isEmpty ?? true {
+        let authToken = Keychain.getKey(name: "authToken")
+        if authToken.isEmpty == true {
             
             print("Loading Onboarding Controller")
             DispatchQueue.main.async {
@@ -81,24 +90,33 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
     func setupViewControllers() {
       
         
-        let homeNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "search_unselected"), selectedImage: #imageLiteral(resourceName: "search_selected"), rootViewController: HomeController(collectionViewLayout: UICollectionViewFlowLayout()))
+        let homeNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "search_unselected"), selectedImage: #imageLiteral(resourceName: "search"), rootViewController: HomeController(collectionViewLayout: UICollectionViewFlowLayout()))
         
-        let profilesNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "profile_unselected"), selectedImage: #imageLiteral(resourceName: "profile_selected"), rootViewController: ReplacementController(collectionViewLayout: UICollectionViewFlowLayout()))
+            homeNavController.tabBarItem.title = "Find"
         
-        let createProfileNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "plus_unselected"), selectedImage: #imageLiteral(resourceName: "like_selected"))
-    
-       
-        let companyNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "home_unselected"), selectedImage: #imageLiteral(resourceName: "home_selected"), rootViewController: CompanyProfileController(collectionViewLayout: UICollectionViewFlowLayout()))
+        let profilesNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "profile_unselected"), selectedImage: #imageLiteral(resourceName: "profile"), rootViewController: ReplacementController(collectionViewLayout: UICollectionViewFlowLayout()))
         
+          profilesNavController.tabBarItem.title = "Profiles"
         
-        let settingsNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "gear"), selectedImage: #imageLiteral(resourceName: "profile_unselected"), rootViewController: UserSettingsController())
+        let createProfileNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "plus_circle_unselected"), selectedImage: #imageLiteral(resourceName: "plus_circle"), rootViewController: ProfilePageController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil))
+        
+        createProfileNavController.tabBarItem.title = "Create"
+        
+//        let companyNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "home_unselected"), selectedImage: #imageLiteral(resourceName: "home_selected"), rootViewController: CompanyProfileController(collectionViewLayout: UICollectionViewFlowLayout()))
+//
+//
+        let settingsNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "settings_unselected"), selectedImage: #imageLiteral(resourceName: "settings"), rootViewController: UserSettingsController())
 
+          settingsNavController.tabBarItem.title = "Settings"
+        
+        
+        
         tabBar.tintColor = .black
-    
+
         viewControllers = [homeNavController,
                            profilesNavController,
                            createProfileNavController,
-                           companyNavController,
+//                           companyNavController,
                            settingsNavController]
         
         //modify tab bar item insets

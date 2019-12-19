@@ -15,7 +15,7 @@ class CreateCompanyController: UIViewController, UIImagePickerControllerDelegate
     
     let plusPhotoButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "photoButton").withRenderingMode(.alwaysOriginal), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "placeholder_image").withRenderingMode(.alwaysOriginal), for: .normal)
         button.addTarget(self, action: #selector(handlePlusPhoto), for: .touchUpInside)
         
         return button
@@ -130,7 +130,7 @@ class CreateCompanyController: UIViewController, UIImagePickerControllerDelegate
     let updateButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Update", for: .normal)
-        button.backgroundColor = UIColor.rgb(red: 149, green: 204, blue: 244)
+        button.backgroundColor = UIColor.mainCharcoal()
         button.layer.cornerRadius = 5
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.setTitleColor(.white, for: .normal)
@@ -156,7 +156,7 @@ class CreateCompanyController: UIViewController, UIImagePickerControllerDelegate
         
         view.addSubview(plusPhotoButton)
         
-        plusPhotoButton.anchor(top: topLayoutGuide.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 40, paddingLeft: 0, paddingBottom:0, paddingRight: 0, width: 140, height: 140)
+        plusPhotoButton.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 40, left: 0, bottom: 0, right: 0), size: .init(width: 140, height: 140))
         
         plusPhotoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
@@ -175,8 +175,8 @@ class CreateCompanyController: UIViewController, UIImagePickerControllerDelegate
         
         view.addSubview(stackView)
         
-        
-        stackView.anchor(top: plusPhotoButton.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 40, paddingBottom: 0, paddingRight: 40, width: 0, height: 250)
+    
+        stackView.anchor(top: plusPhotoButton.bottomAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: nil, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 0, left: 40, bottom: 0, right: 40), size: .init(width: 0, height: 250))
     }
     
     var user: User?
@@ -190,15 +190,10 @@ class CreateCompanyController: UIViewController, UIImagePickerControllerDelegate
         guard let phoneNumber = phoneNumberTextField.text else { return }
         
         
-        Keychain.getAuthToken { (authToken) in
-            self.authToken = authToken
-        }
-        Keychain.getPk { (pk) in
-            self.pk = pk
-        }
-        guard let authToken = authToken else { return }
-        guard let pk = pk else { return }
-        
+        let authToken = Keychain.getKey(name: "authToken")
+
+
+
         let parameters = [
             "company_name": companyName,
             "address": address,
@@ -212,9 +207,9 @@ class CreateCompanyController: UIViewController, UIImagePickerControllerDelegate
         
         Alamofire.DataRequest.userRequest(requestType: "POST", appendingUrl: "api/v1/companies/", headers: headers, parameters: parameters, success: { (user) in
 
-            self.alert(message: "Created your company successfully")
+            self.alert(message: "", title: "Created your company successfully")
         }) { (err) in
-            let string = err as? String
+            let string = err 
             self.alert(message: "", title: "Error: \(String(describing: string))")
         }
         

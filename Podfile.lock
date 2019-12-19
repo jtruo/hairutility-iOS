@@ -4,7 +4,7 @@ PODS:
   - AWSS3 (2.6.22):
     - AWSCore (= 2.6.22)
   - Cache (4.2.0)
-  - Gallery (2.0.6)
+  - Disk (0.3.3)
   - Hue (3.0.1)
   - ImagePicker (3.0.0)
   - Imaginary (3.0.3):
@@ -15,26 +15,24 @@ PODS:
   - Lightbox (2.1.2):
     - Hue (~> 3.0)
     - Imaginary (~> 3.0)
-  - lottie-ios (2.5.0)
 
 DEPENDENCIES:
   - Alamofire (~> 4.6)
   - AWSCore (~> 2.6.6)
   - AWSS3 (~> 2.6.6)
-  - Gallery
+  - Disk
   - ImagePicker
   - IQKeyboardManagerSwift (~> 6.0.4)
   - KeychainAccess (~> 3.1.0)
   - Kingfisher (~> 4.8.0)
   - Lightbox
-  - lottie-ios (~> 2.5.0)
 
 SPEC CHECKSUMS:
   Alamofire: f41a599bd63041760b26d393ec1069d9d7b917f4
   AWSCore: faae134779f0f6e46a8d426c0ccc02e34466b785
   AWSS3: 2b70463225a455ba26494f06346bddb74dedf73d
   Cache: f28f8dd64b632155aabf9b3906b036a659048251
-  Gallery: 5489ae11d8010a3cc163030f6e92d618afbdf4df
+  Disk: d1f55cd61f6ca20f368232d0c6e37e3c3dfcb63e
   Hue: 93e852fa6211ab35922ad8c293f51c43d6c79eb2
   ImagePicker: 973953c25960fe04729a7082a56194321c6762d2
   Imaginary: 9b45836a5af881f452a86e0a1215772ae4712d00
@@ -42,8 +40,7 @@ SPEC CHECKSUMS:
   KeychainAccess: 94c5540b32eabf7bc32bfb976a268e8ea05fd6da
   Kingfisher: 976d828df2b24834c6a3f2fc4d82cdbd26552be1
   Lightbox: 2dc267df8be2285bc7724cb11cbbf4aaaf59dced
-  lottie-ios: d699fdee68d7b63e721d949388b015fef1aaa4ac
 
-PODFILE CHECKSUM: 1dc1ae507ef999e20e1793a1a7426a0ed0881df2
+PODFILE CHECKSUM: 46ed793ac8c726739da9d81db0543974f34f2601
 
 COCOAPODS: 1.3.1

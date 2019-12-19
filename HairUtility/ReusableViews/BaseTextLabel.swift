@@ -14,6 +14,8 @@ class BaseTextLabel: UILabel {
         super.init(frame: frame)
         
         self.font = UIFont.boldSystemFont(ofSize: 16)
+        self.tintColor = UIColor.mainCharcoal()
+        self.textColor = UIColor.mainCharcoal()
     }
     
     required init?(coder aDecoder: NSCoder) {

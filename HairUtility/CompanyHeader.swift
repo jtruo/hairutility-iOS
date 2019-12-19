@@ -17,8 +17,6 @@ protocol CompanyHeaderDelegate {
 
 }
 
-
-
 class CompanyHeader: UICollectionViewCell, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     var delegate: CompanyHeaderDelegate?
@@ -86,11 +84,16 @@ class CompanyHeader: UICollectionViewCell, UIImagePickerControllerDelegate, UINa
         addSubview(editProfileButton)
         addSubview(bannerImageView)
         addSubview(bioTextView)
-        editProfileButton.anchor(top: nil, left: nil, bottom: nil, right: nil, paddingTop: 2, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 34)
-        bannerImageView.anchor(top: editProfileButton.bottomAnchor, left: leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 4, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 240, height: 135)
+        
+        editProfileButton.anchor(top: nil, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 2, left: 0, bottom: 0, right: 0), size: .init(width: 0, height: 34))
+        
+        bannerImageView.anchor(top: editProfileButton.bottomAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor, padding: .init(top: 4, left: 0, bottom: 0, right: 0), size: .init(width: 240, height: 135))
+        
         bannerImageView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
         bannerImageView.backgroundColor = .lightGray
-        bioTextView.anchor(top: bannerImageView.bottomAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 50)
+
+        bioTextView.anchor(top: bannerImageView.bottomAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor, size: .init(width: 0, height: 50))
+        
         bioTextView.backgroundColor = .purple
     }
     

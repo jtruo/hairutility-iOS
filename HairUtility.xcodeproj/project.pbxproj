@@ -14,10 +14,6 @@
 		6F1634421F2E66A7004E619E /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1634411F2E66A7004E619E /* LoginController.swift */; };
 		6F42C1EA210FD0DB00AA96B5 /* CreateCompany.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F42C1E9210FD0DB00AA96B5 /* CreateCompany.swift */; };
 		6F42C1EC210FDEE000AA96B5 /* Company.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F42C1EB210FDEE000AA96B5 /* Company.swift */; };
-		6F42C1FA211322A500AA96B5 /* page1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6F42C1F6211322A400AA96B5 /* page1.jpg */; };
-		6F42C1FB211322A500AA96B5 /* page3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6F42C1F7211322A400AA96B5 /* page3.jpg */; };
-		6F42C1FC211322A500AA96B5 /* page4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6F42C1F8211322A400AA96B5 /* page4.jpg */; };
-		6F42C1FD211322A500AA96B5 /* page2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6F42C1F9211322A500AA96B5 /* page2.jpg */; };
 		6F42C1FF21150DA400AA96B5 /* CompanySettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F42C1FE21150DA400AA96B5 /* CompanySettingsCell.swift */; };
 		6F42C2012115123700AA96B5 /* CompanyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F42C2002115123700AA96B5 /* CompanyController.swift */; };
 		6F42C20321151A1400AA96B5 /* CompanyPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F42C20221151A1400AA96B5 /* CompanyPageController.swift */; };
@@ -56,11 +52,15 @@
 		6F782CB32138746800359DE2 /* DifferentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F782CB22138746800359DE2 /* DifferentCell.swift */; };
 		6F8596281F3FDF6E00C8BE11 /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8596271F3FDF6E00C8BE11 /* CameraController.swift */; };
 		6F85962A1F3FDFBB00C8BE11 /* PreviewPhotoContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8596291F3FDFBB00C8BE11 /* PreviewPhotoContainerView.swift */; };
+		6FA3B2AB228F881C006616AC /* page1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6FA3B2AA228F881C006616AC /* page1.jpg */; };
+		6FA3B2AD228F8822006616AC /* page2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6FA3B2AC228F8822006616AC /* page2.jpg */; };
+		6FA3B2AF228F88B1006616AC /* page3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6FA3B2AE228F88B1006616AC /* page3.jpg */; };
+		6FA3B2B422905E37006616AC /* ContactController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA3B2B322905E37006616AC /* ContactController.swift */; };
 		6FA87C4F205D601A00008474 /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA87C4E205D601A00008474 /* ImageCell.swift */; };
-		6FA9E62820DC00CE00292566 /* PersonalProfilesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA9E62720DC00CE00292566 /* PersonalProfilesController.swift */; };
-		6FA9E62B20DC01AB00292566 /* PersonalProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA9E62A20DC01AB00292566 /* PersonalProfileCell.swift */; };
 		6FA9E62D20DC39C000292566 /* CreateHairProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA9E62C20DC39C000292566 /* CreateHairProfileController.swift */; };
 		6FA9E62F20E006B400292566 /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA9E62E20E006B400292566 /* UserInfoCell.swift */; };
+		6FBA7CFE222C5DDF00A4E504 /* ProfilePageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBA7CFD222C5DDF00A4E504 /* ProfilePageController.swift */; };
+		6FBA7D00222C5E5C00A4E504 /* ThumbnailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBA7CFF222C5E5C00A4E504 /* ThumbnailController.swift */; };
 		6FBDD0141F28D67500904F3E /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBDD0131F28D67500904F3E /* MainTabBarController.swift */; };
 		6FBDD0161F28D76900904F3E /* CompanyProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBDD0151F28D76900904F3E /* CompanyProfileController.swift */; };
 		6FBDD01A1F29572200904F3E /* CompanyHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBDD0191F29572200904F3E /* CompanyHeader.swift */; };
@@ -69,21 +69,19 @@
 		6FE1799220E2926100B687A4 /* progress_bar.json in Resources */ = {isa = PBXBuildFile; fileRef = 6FE1799120E2926100B687A4 /* progress_bar.json */; };
 		6FE1799420E2A73200B687A4 /* blueprogress.json in Resources */ = {isa = PBXBuildFile; fileRef = 6FE1799320E2A73200B687A4 /* blueprogress.json */; };
 		6FFCE1B32163845C002ED530 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6FFCE1B22163845C002ED530 /* Default-568h@2x.png */; };
+		6FFCE2132173CE66002ED530 /* SectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFCE2122173CE66002ED530 /* SectionHeaderView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		22786D829153E0BFD83AC301 /* Pods-HairUtility.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HairUtility.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HairUtility/Pods-HairUtility.debug.xcconfig"; sourceTree = "<group>"; };
 		450E37C5ADE8E58F73840749 /* Pods-HairUtility.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HairUtility.release.xcconfig"; path = "Pods/Target Support Files/Pods-HairUtility/Pods-HairUtility.release.xcconfig"; sourceTree = "<group>"; };
+		6F0116E4225A8657004AAADD /* HairUtility.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HairUtility.entitlements; sourceTree = "<group>"; };
 		6F03FCF120D0894B006C15DE /* HairProfile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HairProfile.swift; sourceTree = "<group>"; };
 		6F03FCF320D0894F006C15DE /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		6F11335420E5939200DE1D06 /* DisplayHairProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayHairProfileController.swift; sourceTree = "<group>"; };
 		6F1634411F2E66A7004E619E /* LoginController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		6F42C1E9210FD0DB00AA96B5 /* CreateCompany.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCompany.swift; sourceTree = "<group>"; };
 		6F42C1EB210FDEE000AA96B5 /* Company.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Company.swift; sourceTree = "<group>"; };
-		6F42C1F6211322A400AA96B5 /* page1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = page1.jpg; sourceTree = "<group>"; };
-		6F42C1F7211322A400AA96B5 /* page3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = page3.jpg; sourceTree = "<group>"; };
-		6F42C1F8211322A400AA96B5 /* page4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = page4.jpg; sourceTree = "<group>"; };
-		6F42C1F9211322A500AA96B5 /* page2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = page2.jpg; sourceTree = "<group>"; };
 		6F42C1FE21150DA400AA96B5 /* CompanySettingsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanySettingsCell.swift; sourceTree = "<group>"; };
 		6F42C2002115123700AA96B5 /* CompanyController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyController.swift; sourceTree = "<group>"; };
 		6F42C20221151A1400AA96B5 /* CompanyPageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyPageController.swift; sourceTree = "<group>"; };
@@ -124,11 +122,15 @@
 		6F782CB22138746800359DE2 /* DifferentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferentCell.swift; sourceTree = "<group>"; };
 		6F8596271F3FDF6E00C8BE11 /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		6F8596291F3FDFBB00C8BE11 /* PreviewPhotoContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewPhotoContainerView.swift; sourceTree = "<group>"; };
+		6FA3B2AA228F881C006616AC /* page1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = page1.jpg; sourceTree = "<group>"; };
+		6FA3B2AC228F8822006616AC /* page2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = page2.jpg; sourceTree = "<group>"; };
+		6FA3B2AE228F88B1006616AC /* page3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = page3.jpg; sourceTree = "<group>"; };
+		6FA3B2B322905E37006616AC /* ContactController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactController.swift; sourceTree = "<group>"; };
 		6FA87C4E205D601A00008474 /* ImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
-		6FA9E62720DC00CE00292566 /* PersonalProfilesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalProfilesController.swift; sourceTree = "<group>"; };
-		6FA9E62A20DC01AB00292566 /* PersonalProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalProfileCell.swift; sourceTree = "<group>"; };
 		6FA9E62C20DC39C000292566 /* CreateHairProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateHairProfileController.swift; sourceTree = "<group>"; };
 		6FA9E62E20E006B400292566 /* UserInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoCell.swift; sourceTree = "<group>"; };
+		6FBA7CFD222C5DDF00A4E504 /* ProfilePageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePageController.swift; sourceTree = "<group>"; };
+		6FBA7CFF222C5E5C00A4E504 /* ThumbnailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailController.swift; sourceTree = "<group>"; };
 		6FBDD0131F28D67500904F3E /* MainTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		6FBDD0151F28D76900904F3E /* CompanyProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompanyProfileController.swift; sourceTree = "<group>"; };
 		6FBDD0191F29572200904F3E /* CompanyHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompanyHeader.swift; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 		6FE1799120E2926100B687A4 /* progress_bar.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = progress_bar.json; sourceTree = "<group>"; };
 		6FE1799320E2A73200B687A4 /* blueprogress.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = blueprogress.json; sourceTree = "<group>"; };
 		6FFCE1B22163845C002ED530 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		6FFCE2122173CE66002ED530 /* SectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeaderView.swift; sourceTree = "<group>"; };
 		A77D17FE40FEABBF63EED833 /* Pods_HairUtility.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HairUtility.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -173,10 +176,9 @@
 		6F42C1ED211320C500AA96B5 /* PageImages */ = {
 			isa = PBXGroup;
 			children = (
-				6F42C1F6211322A400AA96B5 /* page1.jpg */,
-				6F42C1F9211322A500AA96B5 /* page2.jpg */,
-				6F42C1F7211322A400AA96B5 /* page3.jpg */,
-				6F42C1F8211322A400AA96B5 /* page4.jpg */,
+				6FA3B2AA228F881C006616AC /* page1.jpg */,
+				6FA3B2AC228F8822006616AC /* page2.jpg */,
+				6FA3B2AE228F88B1006616AC /* page3.jpg */,
 			);
 			path = PageImages;
 			sourceTree = "<group>";
@@ -205,7 +207,6 @@
 			isa = PBXGroup;
 			children = (
 				6FD4423B211B40830005D1F2 /* check_mark.json */,
-				6FA9E62720DC00CE00292566 /* PersonalProfilesController.swift */,
 				6F6137B920F034F0009A0E60 /* big_camera.json */,
 				6F6B7F5520ED1E2100EDEDE5 /* animation-w600-h600.json */,
 				6F6B7F4F20E7C84A00EDEDE5 /* camera_black.json */,
@@ -216,17 +217,19 @@
 			name = Animations;
 			sourceTree = "<group>";
 		};
-		6F46D67320D871740013E08B /* UserSettings */ = {
+		6F46D67320D871740013E08B /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				6FA3B2B022905C7B006616AC /* Contact */,
+				6F42C2092115F04000AA96B5 /* Company */,
+				6F8596261F3FDF5C00C8BE11 /* Camera */,
 				6F46D67120D86CA40013E08B /* UserSettingsController.swift */,
 				6FA9E62E20E006B400292566 /* UserInfoCell.swift */,
 				6F46D67A20D87CDA0013E08B /* UserSettingsCell.swift */,
 				6F42C1FE21150DA400AA96B5 /* CompanySettingsCell.swift */,
 				6F46D67C20D89D440013E08B /* StylistProfileController.swift */,
-				6F42C2092115F04000AA96B5 /* Company */,
 			);
-			name = UserSettings;
+			name = Settings;
 			sourceTree = "<group>";
 		};
 		6F5584811F263D06000EB4CE = {
@@ -251,18 +254,15 @@
 		6F55848C1F263D06000EB4CE /* HairUtility */ = {
 			isa = PBXGroup;
 			children = (
-				6F42C206211527F100AA96B5 /* ReusableViews */,
-				6F7568441F2F69F000015578 /* AddPhoto */,
-				6FA9E62920DC00D300292566 /* HairProfiles */,
-				6F46D67320D871740013E08B /* UserSettings */,
-				6F46D66A20D6CE010013E08B /* Animations */,
-				6F8596261F3FDF5C00C8BE11 /* Camera */,
+				6F0116E4225A8657004AAADD /* HairUtility.entitlements */,
 				6F58E6E31F32891D007EB3B1 /* Home */,
-				6F58E6DA1F326336007EB3B1 /* Models */,
-				6F1634401F2E668E004E619E /* Login */,
+				6FA9E62920DC00D300292566 /* HairProfiles */,
+				6F7568441F2F69F000015578 /* CreateProfile */,
 				6FBDD0181F29570700904F3E /* CompanyProfile */,
+				6F46D67320D871740013E08B /* Settings */,
+				6F1634401F2E668E004E619E /* Login */,
 				6F94E7AB1F530F49007C040A /* OnboardingScreen */,
-				6F42C1ED211320C500AA96B5 /* PageImages */,
+				6F58E6DA1F326336007EB3B1 /* Models */,
 				6F5584A01F264404000EB4CE /* Utilities */,
 				6FBDD0131F28D67500904F3E /* MainTabBarController.swift */,
 				6F5584911F263D06000EB4CE /* Main.storyboard */,
@@ -276,6 +276,9 @@
 		6F5584A01F264404000EB4CE /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				6F42C1ED211320C500AA96B5 /* PageImages */,
+				6F46D66A20D6CE010013E08B /* Animations */,
+				6F42C206211527F100AA96B5 /* ReusableViews */,
 				6F55848D1F263D06000EB4CE /* AppDelegate.swift */,
 				6F5584A11F26442C000EB4CE /* Extensions.swift */,
 				6F46D66F20D846F90013E08B /* AlamofireFunctions.swift */,
@@ -299,7 +302,6 @@
 			children = (
 				6F58E6E41F328929007EB3B1 /* HomeController.swift */,
 				6F782CB22138746800359DE2 /* DifferentCell.swift */,
-				6FA87C4E205D601A00008474 /* ImageCell.swift */,
 				6F11335420E5939200DE1D06 /* DisplayHairProfileController.swift */,
 				6F6137C120FA5032009A0E60 /* SearchTableController.swift */,
 				6F6137C320FA512F009A0E60 /* AutoCompleteCell.swift */,
@@ -307,13 +309,15 @@
 			name = Home;
 			sourceTree = "<group>";
 		};
-		6F7568441F2F69F000015578 /* AddPhoto */ = {
+		6F7568441F2F69F000015578 /* CreateProfile */ = {
 			isa = PBXGroup;
 			children = (
+				6FBA7CFD222C5DDF00A4E504 /* ProfilePageController.swift */,
+				6FBA7CFF222C5E5C00A4E504 /* ThumbnailController.swift */,
 				6FA9E62C20DC39C000292566 /* CreateHairProfileController.swift */,
 				6F6B7F5120EC465900EDEDE5 /* UploadOptionsView.swift */,
 			);
-			name = AddPhoto;
+			name = CreateProfile;
 			sourceTree = "<group>";
 		};
 		6F8596261F3FDF5C00C8BE11 /* Camera */ = {
@@ -335,13 +339,22 @@
 			name = OnboardingScreen;
 			sourceTree = "<group>";
 		};
+		6FA3B2B022905C7B006616AC /* Contact */ = {
+			isa = PBXGroup;
+			children = (
+				6FA3B2B322905E37006616AC /* ContactController.swift */,
+			);
+			path = Contact;
+			sourceTree = "<group>";
+		};
 		6FA9E62920DC00D300292566 /* HairProfiles */ = {
 			isa = PBXGroup;
 			children = (
 				6F6B7F4D20E6C75F00EDEDE5 /* EditHairProfileController.swift */,
 				6F782CAE21335B3100359DE2 /* ReplacementController.swift */,
-				6FA9E62A20DC01AB00292566 /* PersonalProfileCell.swift */,
+				6FA87C4E205D601A00008474 /* ImageCell.swift */,
 				6F6137BD20F43407009A0E60 /* GetHairstyleView.swift */,
+				6FFCE2122173CE66002ED530 /* SectionHeaderView.swift */,
 			);
 			name = HairProfiles;
 			sourceTree = "<group>";
@@ -403,9 +416,20 @@
 				TargetAttributes = {
 					6F5584891F263D06000EB4CE = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = X7P98V4CLA;
+						DevelopmentTeam = L89K3JJ52D;
 						LastSwiftMigration = 0910;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 0;
+							};
+							com.apple.DataProtection = {
+								enabled = 0;
+							};
+							com.apple.Keychain = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
@@ -434,16 +458,15 @@
 			files = (
 				6FD4423C211B40830005D1F2 /* check_mark.json in Resources */,
 				6FE1799420E2A73200B687A4 /* blueprogress.json in Resources */,
-				6F42C1FB211322A500AA96B5 /* page3.jpg in Resources */,
+				6FA3B2AB228F881C006616AC /* page1.jpg in Resources */,
 				6F46D66920D6CDD90013E08B /* checked_done_.json in Resources */,
 				6F5584981F263D06000EB4CE /* LaunchScreen.storyboard in Resources */,
+				6FA3B2AD228F8822006616AC /* page2.jpg in Resources */,
+				6FA3B2AF228F88B1006616AC /* page3.jpg in Resources */,
 				6F5584951F263D06000EB4CE /* Assets.xcassets in Resources */,
-				6F42C1FD211322A500AA96B5 /* page2.jpg in Resources */,
-				6F42C1FC211322A500AA96B5 /* page4.jpg in Resources */,
 				6FFCE1B32163845C002ED530 /* Default-568h@2x.png in Resources */,
 				6F6137BA20F034F0009A0E60 /* big_camera.json in Resources */,
 				6FE1799220E2926100B687A4 /* progress_bar.json in Resources */,
-				6F42C1FA211322A500AA96B5 /* page1.jpg in Resources */,
 				6F5584931F263D06000EB4CE /* Main.storyboard in Resources */,
 				6F6B7F5620ED1E2100EDEDE5 /* animation-w600-h600.json in Resources */,
 				6F6B7F5020E7C84A00EDEDE5 /* camera_black.json in Resources */,
@@ -479,7 +502,7 @@
 				"${BUILT_PRODUCTS_DIR}/AWSS3/AWSS3.framework",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/Cache/Cache.framework",
-				"${BUILT_PRODUCTS_DIR}/Gallery/Gallery.framework",
+				"${BUILT_PRODUCTS_DIR}/Disk/Disk.framework",
 				"${BUILT_PRODUCTS_DIR}/Hue/Hue.framework",
 				"${BUILT_PRODUCTS_DIR}/IQKeyboardManagerSwift/IQKeyboardManagerSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/ImagePicker/ImagePicker.framework",
@@ -487,7 +510,6 @@
 				"${BUILT_PRODUCTS_DIR}/KeychainAccess/KeychainAccess.framework",
 				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
 				"${BUILT_PRODUCTS_DIR}/Lightbox/Lightbox.framework",
-				"${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -495,7 +517,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSS3.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Cache.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Gallery.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Disk.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Hue.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManagerSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ImagePicker.framework",
@@ -503,7 +525,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainAccess.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Lightbox.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Lottie.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -537,14 +558,18 @@
 			files = (
 				6F6B7F4E20E6C75F00EDEDE5 /* EditHairProfileController.swift in Sources */,
 				6F6137BE20F43407009A0E60 /* GetHairstyleView.swift in Sources */,
+				6FA3B2B422905E37006616AC /* ContactController.swift in Sources */,
 				6F6B7F5420EC575200EDEDE5 /* Modal.swift in Sources */,
+				6FFCE2132173CE66002ED530 /* SectionHeaderView.swift in Sources */,
 				6F782CB32138746800359DE2 /* DifferentCell.swift in Sources */,
 				6FA9E62D20DC39C000292566 /* CreateHairProfileController.swift in Sources */,
 				6F46D67220D86CA40013E08B /* UserSettingsController.swift in Sources */,
 				6F5584901F263D06000EB4CE /* SignUpController.swift in Sources */,
 				6F42C20B2115F48700AA96B5 /* BaseTextLabel.swift in Sources */,
+				6FBA7CFE222C5DDF00A4E504 /* ProfilePageController.swift in Sources */,
 				6F03FCF420D0894F006C15DE /* User.swift in Sources */,
 				6F46D67D20D89D440013E08B /* StylistProfileController.swift in Sources */,
+				6FBA7D00222C5E5C00A4E504 /* ThumbnailController.swift in Sources */,
 				6F03FCF220D0894B006C15DE /* HairProfile.swift in Sources */,
 				6F493B841FC74C5B005A3D3A /* PageCell.swift in Sources */,
 				6F42C1EC210FDEE000AA96B5 /* Company.swift in Sources */,
@@ -571,9 +596,7 @@
 				6F42C2012115123700AA96B5 /* CompanyController.swift in Sources */,
 				6F55848E1F263D06000EB4CE /* AppDelegate.swift in Sources */,
 				6F1634421F2E66A7004E619E /* LoginController.swift in Sources */,
-				6FA9E62B20DC01AB00292566 /* PersonalProfileCell.swift in Sources */,
 				6FA9E62F20E006B400292566 /* UserInfoCell.swift in Sources */,
-				6FA9E62820DC00CE00292566 /* PersonalProfilesController.swift in Sources */,
 				6F42C2082115281300AA96B5 /* BottomBorderTextField.swift in Sources */,
 				6FA87C4F205D601A00008474 /* ImageCell.swift in Sources */,
 				6F85962A1F3FDFBB00C8BE11 /* PreviewPhotoContainerView.swift in Sources */,
@@ -721,11 +744,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = X7P98V4CLA;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = L89K3JJ52D;
 				INFOPLIST_FILE = HairUtility/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = HairUtility.com;
+				PRODUCT_BUNDLE_IDENTIFIER = com.HairUtility;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
@@ -739,11 +766,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = X7P98V4CLA;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = L89K3JJ52D;
 				INFOPLIST_FILE = HairUtility/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = HairUtility.com;
+				PRODUCT_BUNDLE_IDENTIFIER = com.HairUtility;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;

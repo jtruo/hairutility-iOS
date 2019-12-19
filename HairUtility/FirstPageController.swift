@@ -11,17 +11,13 @@ import IQKeyboardManagerSwift
 import Alamofire
 import KeychainAccess
 
-protocol FirstPageDelegate {
-    func nextButtonPressed()
-}
 
 
 class FirstPageController: UIViewController, UIScrollViewDelegate, UITextFieldDelegate {
+
+    var delegate: CompanyPageDelegate?
+
 //    Still need to fix returning 0
-    
-    var delegate: FirstPageDelegate?
-    let keychain = Keychain(service: "com.HairLinkCustom.HairLink")
-    
     
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -122,7 +118,7 @@ class FirstPageController: UIViewController, UIScrollViewDelegate, UITextFieldDe
     lazy var nextPageButton: UIButton = {
         
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "download"), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "right_arrow").withRenderingMode(.alwaysOriginal), for: .normal)
         button.isEnabled = false
         button.addTarget(self, action: #selector(nextPageButtonPressed), for: .touchUpInside)
         button.backgroundColor = UIColor.rgb(red: 149, green: 204, blue: 244)
@@ -134,8 +130,6 @@ class FirstPageController: UIViewController, UIScrollViewDelegate, UITextFieldDe
         print("nextpage button pressed")
         
         postCompanyInfo()
-        
-     
         
         
     }
@@ -194,10 +188,15 @@ class FirstPageController: UIViewController, UIScrollViewDelegate, UITextFieldDe
         stackView.spacing = 10
         stackView.distribution = .fillEqually
         view.addSubview(stackView)
-        stackView.anchor(top: topLayoutGuide.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 2, paddingLeft: 16, paddingBottom: 0, paddingRight: 64, width: 300, height: 400)
+        
+        // TODO Padding is bad
+
+        stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: nil, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 2, left: 16, bottom: 0, right: 64), size: .init(width: 300, height: 400))
         
         view.addSubview(nextPageButton)
-        nextPageButton.anchor(top: nil, left: nil, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 4, width: 50, height: 50)
+
+        
+        nextPageButton.anchor(top: nil, leading: nil, bottom: view.safeAreaLayoutGuide.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 0, left: 0, bottom: 0, right: 4), size: .init(width: 50, height:50))
     }
     
     
@@ -213,13 +212,9 @@ class FirstPageController: UIViewController, UIScrollViewDelegate, UITextFieldDe
         guard let city = cityTextField.text else { return }
         guard let zipCode = zipCodeTextField.text else { return }
         guard let phone = phoneNumberTextField.text else { return }
-     
         
-        Keychain.getAuthToken { (authToken) in
-            self.authToken = authToken
-        }
-        guard let authToken = authToken else { return }
-        
+        let authToken = Keychain.getKey(name: "authToken")
+       
         let headers = [
             "Content-Type": "application/json",
             "Authorization": "Token \(authToken)"
@@ -244,7 +239,10 @@ class FirstPageController: UIViewController, UIScrollViewDelegate, UITextFieldDe
             
             
             do {
-                try self.keychain.set(company.pk, key: "companyPk")
+                
+            let keychain = Keychain(service: "com.HairUtility")
+                
+                try keychain.set(company.pk, key: "companyPk")
                 
             } catch let error {
                 
@@ -253,7 +251,7 @@ class FirstPageController: UIViewController, UIScrollViewDelegate, UITextFieldDe
             
         }) { (err) in
             print(err)
-            self.alert(message: "", title: "Error: \(err)")
+            self.alert(message: "", title: "\(err)")
         }
         
     }

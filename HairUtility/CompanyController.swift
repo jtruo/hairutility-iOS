@@ -16,10 +16,10 @@ class CompanyController: UIViewController, UINavigationControllerDelegate {
     let updateButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Create", for: .normal)
-        button.backgroundColor = UIColor.rgb(red: 149, green: 204, blue: 244)
+        button.backgroundColor = UIColor.mainCharcoal()
         button.frame = CGRect(x: 0, y: 0, width: 150, height: 50)
         button.layer.cornerRadius = 4
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
 //        button.setTitleColor(.white, for: .normal)
         button.addTarget(self, action: #selector(handleSignUp), for: .touchUpInside)
         button.isEnabled = true
@@ -45,7 +45,8 @@ class CompanyController: UIViewController, UINavigationControllerDelegate {
         view.backgroundColor = .white
 //        updateButton.frame = CGRect(x: 0, y: 0, width: 150, height: 50)
         view.addSubview(updateButton)
-        updateButton.anchor(top: nil, left: nil, bottom: nil, right: nil, paddingTop: 4, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 150, height: 50)
+
+        updateButton.anchor(top: nil, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 4, left: 0, bottom: 0, right: 0), size: .init(width: 150, height: 50))
       
         updateButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         updateButton.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true

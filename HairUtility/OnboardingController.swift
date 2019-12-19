@@ -13,14 +13,12 @@ class OnboardingController: UICollectionViewController, UICollectionViewDelegate
     
 //  Images are loaded using paths instead of assets in order to deallocate memory.
     
- 
-
     
     let pages = [
      
         Page(imagePath: "page1", headerText: "Discover", bodyText: "Find detailed information about any hairstyle from our massive library!"),
-        Page(imagePath: "page3", headerText: "Connect", bodyText: "Access our tool for finding local hairstylists that best suit your needs"),
-        Page(imagePath: "page4", headerText: "Communicate", bodyText: "Save detailed information about your own hairstyle so your stylist can understand exactly what you want"),
+        Page(imagePath: "page2", headerText: "Connect", bodyText: "Access our tool for finding local hairstylists that best suit your needs"),
+        Page(imagePath: "page3", headerText: "Communicate", bodyText: "Save detailed information about your own hairstyle so your stylist can understand exactly what you want"),
      
     ]
     
@@ -30,7 +28,7 @@ class OnboardingController: UICollectionViewController, UICollectionViewDelegate
         button.setTitle("Sign Up", for: .normal)
         button.setTitleColor(UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1), for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 23)
-        button.backgroundColor = UIColor(red: 31/255, green: 182/255, blue: 255/255, alpha: 1)
+        button.backgroundColor = UIColor.mainCharcoal()
         button.translatesAutoresizingMaskIntoConstraints = false
         
         button.layer.cornerRadius = 30
@@ -61,11 +59,13 @@ class OnboardingController: UICollectionViewController, UICollectionViewDelegate
         
         let button = UIButton(type: .system)
         button.setTitle("Log In", for: .normal)
-        button.setTitleColor(UIColor(red: 163/255, green: 173/255, blue: 180/255, alpha: 1), for: .normal)
+        button.setTitleColor(UIColor.mainCharcoal(), for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 23)
         button.backgroundColor = UIColor.rgb(red: 252, green: 252, blue: 252)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 30
+        button.layer.borderWidth = 0.5
+        button.layer.borderColor = UIColor.mainCharcoal().cgColor
         button.addTarget(self, action: #selector (loginButtonTapped), for: .touchUpInside)
         
         return button
@@ -110,9 +110,9 @@ class OnboardingController: UICollectionViewController, UICollectionViewDelegate
         let pc = UIPageControl()
         pc.currentPage = 0
         pc.numberOfPages = pages.count
-        pc.currentPageIndicatorTintColor = .red
-        pc.pageIndicatorTintColor = UIColor(red: 249/255, green: 207/255, blue: 224/255, alpha: 1)
-        
+        pc.currentPageIndicatorTintColor = UIColor.mainCharcoal()
+        pc.pageIndicatorTintColor = UIColor.mainGrey()
+        pc.isUserInteractionEnabled = false
         return pc
     }()
     
@@ -122,15 +122,19 @@ class OnboardingController: UICollectionViewController, UICollectionViewDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationController?.setNavigationBarHidden(true, animated: false)
+//        navigationController?.setNavigationBarHidden(true, animated: false)
+        
+        navigationController?.navigationBar.backgroundColor = .clear
         
         
-        
+        collectionView?.contentInset = UIEdgeInsets(top: UIApplication.shared.keyWindow?.safeAreaInsets.top ?? 0, left: 0, bottom: UIApplication.shared.keyWindow?.safeAreaInsets.bottom ?? 0, right: 0)
         
         collectionView?.backgroundColor = .white
         collectionView?.register(PageCell.self, forCellWithReuseIdentifier: "cellId")
         collectionView?.showsHorizontalScrollIndicator = false 
         collectionView?.isPagingEnabled = true
+        
+        
         
         setupBottomControls()
     }
@@ -209,7 +213,7 @@ class OnboardingController: UICollectionViewController, UICollectionViewDelegate
     bottomContainerView.addSubview(pageControl)
     bottomContainerView.addSubview(signupButton)
     bottomContainerView.addSubview(loginButton)
-    bottomContainerView.addSubview(getMeStartedButton)
+
     
         // Figure out how to constrain the bottomContainerview to the description textview
         
@@ -218,16 +222,20 @@ class OnboardingController: UICollectionViewController, UICollectionViewDelegate
     bottomContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     bottomContainerView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.4).isActive = true
     
-    pageControl.anchor(top: bottomContainerView.topAnchor, left: bottomContainerView.leftAnchor, bottom: signupButton.topAnchor, right: bottomContainerView.rightAnchor, paddingTop: -12, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 50)
-    signupButton.anchor(top: pageControl.bottomAnchor, left: nil, bottom: loginButton.topAnchor, right: nil, paddingTop: 12, paddingLeft: 0, paddingBottom: 4, paddingRight: 0, width: 300, height: 60)
-    loginButton.anchor(top: signupButton.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 300, height: 60)
-    getMeStartedButton.anchor(top: loginButton.bottomAnchor, left: nil, bottom: nil, right: nil, paddingTop: 20, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 200, height: 20)
+       
     
+        
+    pageControl.anchor(top: bottomContainerView.topAnchor, leading: bottomContainerView.leadingAnchor, bottom: nil, trailing: bottomContainerView.trailingAnchor, padding: .init(top: 12, left: 0, bottom: 0, right: 0), size: .init(width: 0, height: 50))
+        
+    signupButton.anchor(top: pageControl.bottomAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 12, left: 0, bottom: 4, right: 0), size: .init(width: 300, height: 60))
+    
+    loginButton.anchor(top: signupButton.bottomAnchor, leading: nil, bottom: nil, trailing: nil, padding: .init(top: 12, left: 0, bottom: 0, right: 0), size: .init(width: 300, height: 60))
+    
+
     
     signupButton.centerXAnchor.constraint(equalTo: bottomContainerView.centerXAnchor).isActive = true
     loginButton.centerXAnchor.constraint(equalTo: bottomContainerView.centerXAnchor).isActive = true
-    getMeStartedButton.centerXAnchor.constraint(equalTo: bottomContainerView.centerXAnchor).isActive = true
-        
+
 
         
     }

@@ -16,7 +16,7 @@ import KeychainAccess
 class LoginController: UIViewController {
     
     var user: User?
-    let keychain = Keychain(service: "com.HairLinkCustom.HairLink")
+
     
     lazy var emailTextField: BottomBorderTextField = {
         let textField = BottomBorderTextField()
@@ -39,10 +39,10 @@ class LoginController: UIViewController {
         
         if isFormValid {
             loginButton.isEnabled = true
-            loginButton.backgroundColor = UIColor.rgb(red: 17, green: 154, blue: 237)
+            loginButton.backgroundColor = UIColor.mainCharcoal()
         } else {
             loginButton.isEnabled = false
-            loginButton.backgroundColor = UIColor.rgb(red: 149, green: 204, blue: 244)
+            loginButton.backgroundColor = UIColor.mainGrey()
         }
     }
     
@@ -50,7 +50,7 @@ class LoginController: UIViewController {
     let loginButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Login", for: .normal)
-        button.backgroundColor = UIColor.rgb(red: 149, green: 204, blue: 244)
+        button.backgroundColor = UIColor.mainGrey()
         button.layer.cornerRadius = 5
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.setTitleColor(.white, for: .normal)
@@ -82,10 +82,11 @@ class LoginController: UIViewController {
     fileprivate func setupInputFields() {
         let stackView = UIStackView(arrangedSubviews: [emailTextField, passwordTextField, loginButton])
         stackView.axis = .vertical
-        stackView.spacing = 10
+        stackView.spacing = 20
         stackView.distribution = .fillEqually
         view.addSubview(stackView)
-        stackView.anchor(top: topLayoutGuide.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 40, paddingLeft: 40, paddingBottom: 0, paddingRight: 40, width: 0, height: 140)
+
+        stackView.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: nil, trailing: view.safeAreaLayoutGuide.trailingAnchor, padding: .init(top: 40, left: 40, bottom: 0, right: 40), size: .init(width: 0, height: 150))
     }
     
     
@@ -99,7 +100,8 @@ class LoginController: UIViewController {
             "password": password
         ]
         let headers = [
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+
         ]
         
         Alamofire.DataRequest.userRequest(requestType: "POST", appendingUrl: "api-token-auth/", headers: headers, parameters: parameters, success: { (user) in
@@ -112,16 +114,22 @@ class LoginController: UIViewController {
             let isActive = user.isActive
             let isStylist = user.isStylist
 
+            
+            print("This is the user pk \(pk)")
+            
             if isActive == true {
                 
                 do {
-                    try self.keychain.set(authToken, key: "authToken")
-                    try self.keychain.set(pk, key: "pk")
+                    let keychain = Keychain(service: "com.HairUtility")
+                    try keychain.set(authToken, key: "authToken")
+                    try keychain.set(pk, key: "userPk")
+                    
                     let defaults = UserDefaults.standard
                     defaults.set(isStylist, forKey: "isStylist")
                     defaults.set(isActive, forKey: "isActive")
-                    print("Keychain and user defaults data was set")
                     defaults.setValue(email, forKeyPath: "email")
+                    
+                    print("Keychain and user defaults data was set")
                 }
                 catch let error {
                     print(error)
@@ -137,7 +145,11 @@ class LoginController: UIViewController {
             }
             
         }) { (err) in
+          
             print(err)
+            self.alert(message: "", title: "Could not log in")
+            
+            
         }
         
     }

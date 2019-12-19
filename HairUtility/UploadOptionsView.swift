@@ -40,7 +40,7 @@ class CustomAlert: UIView, Modal {
         let choices = ["Short", "Medium", "Long"]
         let segmentedControl = UISegmentedControl(items: choices)
         segmentedControl.layer.cornerRadius = 4.0
-        segmentedControl.tintColor = UIColor.mainBlue()
+        segmentedControl.tintColor = UIColor.mainCharcoal()
         segmentedControl.addTarget(self, action: #selector(lengthTapped), for: .valueChanged)
         return segmentedControl
         
@@ -51,7 +51,7 @@ class CustomAlert: UIView, Modal {
         let choices = ["Women", "Men"]
         let segmentedControl = UISegmentedControl(items: choices)
         segmentedControl.layer.cornerRadius = 4.0
-        segmentedControl.tintColor = UIColor.mainBlue()
+        segmentedControl.tintColor = UIColor.mainCharcoal()
         segmentedControl.addTarget(self, action: #selector(genderTapped), for: .valueChanged)
         return segmentedControl
         
@@ -62,7 +62,7 @@ class CustomAlert: UIView, Modal {
         let choices = ["Private", "Public"]
         let segmentedControl = UISegmentedControl(items: choices)
         segmentedControl.layer.cornerRadius = 4.0
-        segmentedControl.tintColor = UIColor.mainBlue()
+        segmentedControl.tintColor = UIColor.mainCharcoal()
         segmentedControl.addTarget(self, action: #selector(publicTapped), for: .valueChanged)
         return segmentedControl
         
@@ -95,7 +95,7 @@ class CustomAlert: UIView, Modal {
     
     lazy var tagsTextField: UITextField = {
         let tf = UITextField()
-        tf.placeholder = "two-layered, undercut, jennifer-lawrence"
+        tf.placeholder = "two-layered, undercut, ethnicity"
         tf.backgroundColor = UIColor(white: 0, alpha: 0.03)
         tf.borderStyle = .roundedRect
         tf.font = UIFont.systemFont(ofSize: 14)
@@ -110,7 +110,7 @@ class CustomAlert: UIView, Modal {
     lazy var uploadButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Upload", for: .normal)
-        button.backgroundColor = UIColor.mainBlue()
+        button.backgroundColor = UIColor.mainCharcoal()
         button.layer.cornerRadius = 4
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.setTitleColor(.white, for: .normal)

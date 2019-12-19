@@ -16,48 +16,109 @@ extension UIColor {
     static func rgb(red: CGFloat, green: CGFloat, blue: CGFloat) -> UIColor {
         return UIColor(red: red/255, green: green/255, blue: blue/255, alpha: 1)
     }
+    
+    static func mainGrey() -> UIColor {
+        return UIColor(red: 163/255, green: 173/255, blue: 180/255, alpha: 1)
+    }
+    
+  
  
     
-    static func mainBlue() -> UIColor {
-        return UIColor.rgb(red: 74, green: 162, blue: 249)
+    static func mainCharcoal() -> UIColor {
+        return UIColor.rgb(red: 72, green: 67, blue: 73)
     }
     
 }
 
 // Sets all constraints and frames
 
+//extension UIView {
+//    func anchor(top: NSLayoutYAxisAnchor?, left: NSLayoutXAxisAnchor?, bottom: NSLayoutYAxisAnchor?, right: NSLayoutXAxisAnchor?,  paddingTop: CGFloat, paddingLeft: CGFloat, paddingBottom: CGFloat, paddingRight: CGFloat, width: CGFloat, height: CGFloat) {
+//
+//        translatesAutoresizingMaskIntoConstraints = false
+//
+//
+//        if let top = top {
+//            self.topAnchor.constraint(equalTo: top, constant: paddingTop).isActive = true
+//        }
+//
+//        if let left = left {
+//            self.leftAnchor.constraint(equalTo: left, constant: paddingLeft).isActive = true
+//        }
+//
+//        if let bottom = bottom {
+//            bottomAnchor.constraint(equalTo: bottom, constant: -paddingBottom).isActive = true
+//        }
+//
+//        if let right = right {
+//            rightAnchor.constraint(equalTo: right, constant: -paddingRight).isActive = true
+//        }
+//
+//        if width != 0 {
+//            widthAnchor.constraint(equalToConstant: width).isActive = true
+//        }
+//
+//        if height != 0 {
+//            heightAnchor.constraint(equalToConstant: height).isActive = true
+//        }
+//    }
+//
+//}
+
+
 extension UIView {
-    func anchor(top: NSLayoutYAxisAnchor?, left: NSLayoutXAxisAnchor?, bottom: NSLayoutYAxisAnchor?, right: NSLayoutXAxisAnchor?,  paddingTop: CGFloat, paddingLeft: CGFloat, paddingBottom: CGFloat, paddingRight: CGFloat, width: CGFloat, height: CGFloat) {
-
+    
+    func fillSuperview() {
+        anchor(top: superview?.topAnchor, leading: superview?.leadingAnchor, bottom: superview?.bottomAnchor, trailing: superview?.trailingAnchor)
+    }
+    
+    func anchorSize(to view: UIView) {
+        widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
+    }
+    
+    func anchor(top: NSLayoutYAxisAnchor?, leading: NSLayoutXAxisAnchor?, bottom: NSLayoutYAxisAnchor?, trailing: NSLayoutXAxisAnchor?,  padding: UIEdgeInsets = .zero, size: CGSize = .zero) {
         translatesAutoresizingMaskIntoConstraints = false
-
-
+        
         if let top = top {
-            self.topAnchor.constraint(equalTo: top, constant: paddingTop).isActive = true
+            topAnchor.constraint(equalTo: top, constant: padding.top).isActive = true
         }
-
-        if let left = left {
-            self.leftAnchor.constraint(equalTo: left, constant: paddingLeft).isActive = true
+        
+        if let leading = leading {
+            leadingAnchor.constraint(equalTo: leading, constant: padding.left).isActive = true
         }
-
+        
         if let bottom = bottom {
-            bottomAnchor.constraint(equalTo: bottom, constant: -paddingBottom).isActive = true
+            bottomAnchor.constraint(equalTo: bottom, constant: -padding.bottom).isActive = true
         }
-
-        if let right = right {
-            rightAnchor.constraint(equalTo: right, constant: -paddingRight).isActive = true
+        
+        if let trailing = trailing {
+            trailingAnchor.constraint(equalTo: trailing, constant: -padding.right).isActive = true
         }
+        
+        
 
-        if width != 0 {
-            widthAnchor.constraint(equalToConstant: width).isActive = true
+        if size.width != 0 {
+            widthAnchor.constraint(equalToConstant: size.width).isActive = true
         }
-
-        if height != 0 {
-            heightAnchor.constraint(equalToConstant: height).isActive = true
+        
+        if size.height != 0 {
+            heightAnchor.constraint(equalToConstant: size.height).isActive = true
         }
     }
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 extension Date {
     func timeAgoDisplay() -> String {
@@ -104,17 +165,6 @@ extension UIApplication {
     }
 }
 
-
-//extension UIView {
-//
-//    func constraintsAligningAllEdges(toView view2: UIView) -> [NSLayoutConstraint] {
-//
-//        return [ topAnchor.constraint(equalTo: view2.topAnchor),
-//                 bottomAnchor.constraint(equalTo: view2.bottomAnchor),
-//                 leadingAnchor.constraint(equalTo: view2.leadingAnchor),
-//                 trailingAnchor.constraint(equalTo: view2.trailingAnchor) ]
-//    }
-//}
 
 //Prevents repeated presses
 
@@ -186,7 +236,6 @@ enum UserDefaultsKeys : String {
     
 }
 
-
 extension UserDefaults{
     
     //MARK: Check Login
@@ -204,7 +253,6 @@ extension UserDefaults{
         set(value, forKey: UserDefaultsKeys.pk.rawValue)
         //synchronize()
     }
-    
     
     //MARK: Retrieve User Data
     func getUserID() -> Int{
@@ -224,83 +272,28 @@ extension UserDefaults{
 
 extension Keychain {
     
-    static let keychain = Keychain(service: "com.HairLinkCustom.HairLink")
+    static let keychain = Keychain(service: "com.HairUtility")
     
-    static func getAuthToken(completion: @escaping (String) -> Void)  {
-        var authToken: String?
+    static func getKey(name: String) -> String {
+        
+        var result: String
         
         do {
-            authToken = try self.keychain.get("authToken")
+            result = try self.keychain.get(name) ?? ""
+            return result
         } catch let error {
             print("Error: \(error)")
+            return "Pk is empty"
+   
         }
         
-        if authToken?.isEmpty ?? true {
-            print("Token is empty")
-        } else {
-            completion(authToken!)
-        }
-        
-    }
-    
-    static func getPk(completion: @escaping (String) -> Void) {
-        var pk: String?
-        
-        do {
-            pk = try self.keychain.get("pk")
-        } catch let error {
-            print("Error: \(error)")
-        }
-        
-        if pk?.isEmpty ?? true {
-            print("PK is empty")
-        } else {
-            completion(pk!)
-        }
-
-    }
-    
-    static func getKeychainValue(name: String, completion: @escaping (String) -> Void) {
-        
-        var result: String?
-        
-        do {
-            result = try self.keychain.get(name)
-        } catch let error {
-            print("Error: \(error)")
-        }
-        
-        if result?.isEmpty ?? true {
-            print("PK is empty")
-        } else {
-            completion(result!)
-        }
     }
     
 }
 
 
-//func randomString(length: Int) -> String {
-//    
-//    let letters : NSString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-//    let length = UInt32(letters.length)
-//    
-//    var randomString = ""
-//    
-//    for _ in 0 ..< length {
-//        let rand = arc4random_uniform(length)
-//        var nextChar = letters.character(at: Int(rand))
-//        randomString += NSString(characters: &nextChar, length: 1) as String
-//    }
-//    
-//    return randomString
-//}
-
-   /// Returns the element at the specified index if it is within bounds, otherwise nil.
-
 extension Collection {
     
- 
     subscript (safe index: Index) -> Element? {
         return indices.contains(index) ? self[index] : nil
     }
@@ -372,9 +365,6 @@ extension UIView {
 }
 
 
-// Allows for multiple characters of a string to be replaced in one line
-
-
 
 
 
@@ -390,5 +380,61 @@ extension Array where Element: Equatable {
             return true
         }
         return false
+    }
+}
+
+
+// Removes images at document directory
+
+func removeImage(itemName:String, fileExtension: String) {
+    let fileManager = FileManager.default
+    let nsDocumentDirectory = FileManager.SearchPathDirectory.documentDirectory
+    let nsUserDomainMask = FileManager.SearchPathDomainMask.userDomainMask
+    let paths = NSSearchPathForDirectoriesInDomains(nsDocumentDirectory, nsUserDomainMask, true)
+    guard let dirPath = paths.first else {
+        return
+    }
+    let filePath = "\(dirPath)/\(itemName).\(fileExtension)"
+    do {
+        try fileManager.removeItem(atPath: filePath)
+    } catch let error as NSError {
+        print(error.debugDescription)
+    }}
+
+//Converts date to string
+extension Date {
+    func convertDateToString( dateFormat format  : String ) -> String
+    {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format
+        return dateFormatter.string(from: self)
+    }
+    
+}
+
+extension UICollectionViewCell {
+//    Better practice to fix the failed return value
+    func prefixAndConvertToThumbnailS3Url(suffix: String) -> URL {
+        
+        if let url = URL(string: "https://hairutility-prod.s3.amazonaws.com/thumbnails/" + suffix) {
+            return url
+        } else {
+            return URL(string: "Empty url")!
+        }
+        
+    }
+    
+    
+}
+
+extension UIViewController {
+    func prefixAndConvertToImageS3Url(suffix: String) -> URL {
+        
+        if let url = URL(string: "https://hairutility-prod.s3.amazonaws.com/images/" + suffix) {
+            return url
+        } else {
+            return URL(string: "Empty url")!
+        }
+        
     }
 }
