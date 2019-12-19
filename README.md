@@ -17,7 +17,7 @@ lottie-ios (json animations) \
 Kingfisher (caching images) \
 IQKeyboardManagerSwift (better keyboard UX) \
 Lightbox (image viewer) \
-Disk (extremely easy local storage access)
+Disk (easy local storage access)
 
 The app sends requests to a Django REST API to https://www.hairutility.com/.
 
