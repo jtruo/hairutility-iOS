@@ -9,14 +9,14 @@ All UIViews were created using Swift (without storyboard builder). I did this so
 # Third-Party Libraries Used
 
 ImagePicker (multi-select for images) \
-AWSCore (accessing aws services)
-AWSS3 (uploading images to awss3)
-Alamofire (easy-to-read api requests)
-KeychainAccess (storing secure data)
-lottie-ios (json animations)
-Kingfisher (caching images)
-IQKeyboardManagerSwift (better keyboard UX)
-Lightbox (image viewer)
+AWSCore (accessing aws services) \
+AWSS3 (uploading images to awss3) \
+Alamofire (easy-to-read api requests) \
+KeychainAccess (storing secure data) \
+lottie-ios (json animations) \
+Kingfisher (caching images) \
+IQKeyboardManagerSwift (better keyboard UX) \
+Lightbox (image viewer) \
 Disk (extremely easy local storage access)
 
 The app sends requests to a Django REST API to https://www.hairutility.com/.
