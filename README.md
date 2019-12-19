@@ -23,6 +23,11 @@ The app sends requests to a Django REST API to https://www.hairutility.com/.
 
 
 
+
+
+
+
+
 # Screens
 
 ![img](https://github.com/jtruo/hairutility-iOS/blob/master/AppScreens/hair-profile.png)
