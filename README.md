@@ -19,7 +19,7 @@ IQKeyboardManagerSwift (better keyboard UX) \
 Lightbox (image viewer) \
 Disk (easy local storage access)
 
-The app sends requests to a Django REST API to https://www.hairutility.com/.
+The app sends requests to a Django REST API at https://www.hairutility.com/.
 
 
 
